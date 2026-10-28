@@ -62,9 +62,10 @@ public extension LKAudioBuffer {
 
 public extension CMSampleBuffer {
     func toAVAudioPCMBuffer() -> AVAudioPCMBuffer? {
-        let format = AVAudioFormat(cmAudioFormatDescription: formatDescription!)
+        guard let formatDescription else { return nil }
+        let format = AVAudioFormat(cmAudioFormatDescription: formatDescription)
         let numSamples = AVAudioFrameCount(numSamples)
-        let pcmBuffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: numSamples)!
+        guard let pcmBuffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: numSamples) else { return nil }
         pcmBuffer.frameLength = numSamples
         CMSampleBufferCopyPCMDataIntoAudioBufferList(self, at: 0, frameCount: Int32(numSamples), into: pcmBuffer.mutableAudioBufferList)
         return pcmBuffer

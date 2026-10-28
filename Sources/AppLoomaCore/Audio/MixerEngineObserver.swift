@@ -187,6 +187,25 @@ public final class MixerEngineObserver: AudioEngineObserver, Loggable {
             ($0.appNode, $0.appMixerNode, $0.micNode, $0.micMixerNode, $0.soundPlayerNodes)
         }
 
+        // connect() raises an uncatchable ObjC exception on an invalid format (seen on some
+        // route changes) or an unattached node, so validate first and skip the mixer instead.
+        guard format.sampleRate > 0, format.channelCount > 0 else {
+            log("Skipping mixer wiring: invalid input format \(format)", .warning)
+            return next?.engineWillConnectInput(engine, src: src, dst: dst, format: format, context: context) ?? 0
+        }
+
+        // Our nodes are expected to be attached since engineDidCreate; re-attach any that were lost.
+        let ownNodes: [AVAudioNode] = [appNode, appMixerNode, micNode, micMixerNode, soundPlayerNodes.mixerNode] + soundPlayerNodes.playerNodes
+        for node in ownNodes where node.engine == nil {
+            engine.attach(node)
+        }
+
+        // Every node must belong to this engine (engine-owned ones we cannot attach); otherwise skip.
+        guard (ownNodes + [mainMixerNode]).allSatisfy({ $0.engine === engine }), src.map({ $0.engine === engine }) ?? true else {
+            log("Skipping mixer wiring: input nodes not attached to engine", .warning)
+            return next?.engineWillConnectInput(engine, src: src, dst: dst, format: format, context: context) ?? 0
+        }
+
         // AVAudioPlayerNode doesn't support Int16 so we ensure to use Float32
         guard let playerNodeFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32,
                                                    sampleRate: format.sampleRate,
