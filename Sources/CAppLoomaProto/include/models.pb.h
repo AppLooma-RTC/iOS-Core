@@ -5,7 +5,7 @@
 #define PB_LIVEKIT_LIVEKIT_MODELS_PB_H_INCLUDED
 #include <pb.h>
 #include "timestamp.pb.h"
-#include "applooma_metrics.pb.h"
+#include "metrics.pb.h"
 #include "options.pb.h"
 
 #if PB_PROTO_HEADER_VERSION != 40

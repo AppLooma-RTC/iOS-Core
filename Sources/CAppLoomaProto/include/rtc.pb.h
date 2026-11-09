@@ -4,7 +4,7 @@
 #ifndef PB_LIVEKIT_LIVEKIT_RTC_PB_H_INCLUDED
 #define PB_LIVEKIT_LIVEKIT_RTC_PB_H_INCLUDED
 #include <pb.h>
-#include "applooma_models.pb.h"
+#include "models.pb.h"
 #include "options.pb.h"
 
 #if PB_PROTO_HEADER_VERSION != 40
