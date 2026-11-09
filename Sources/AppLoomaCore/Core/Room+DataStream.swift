@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ public extension Room {
     ///
     func registerByteStreamHandler(for topic: String, onNewStream: @escaping ByteStreamHandler) async throws {
         guard !topic.hasPrefix(Room.reservedTopicPrefix) else {
-            throw LiveKitError(.invalidParameter,
+            throw TransportError(.invalidParameter,
                                message: "Stream topic prefix '\(Room.reservedTopicPrefix)' is reserved for internal SDK use")
         }
         try await incomingStreamManager.registerByteStreamHandler(for: topic, onNewStream)
@@ -47,7 +47,7 @@ public extension Room {
     ///
     func registerTextStreamHandler(for topic: String, onNewStream: @escaping TextStreamHandler) async throws {
         guard !topic.hasPrefix(Room.reservedTopicPrefix) else {
-            throw LiveKitError(.invalidParameter,
+            throw TransportError(.invalidParameter,
                                message: "Stream topic prefix '\(Room.reservedTopicPrefix)' is reserved for internal SDK use")
         }
         try await incomingStreamManager.registerTextStreamHandler(for: topic, onNewStream)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ actor RTC {
     // MARK: - Executor plumbing
 
     fileprivate static let queue: DispatchQueue = {
-        let queue = DispatchQueue(label: "LiveKitSDK.webRTC", qos: .default)
+        let queue = DispatchQueue(label: "TransportSDK.webRTC", qos: .default)
         queue.setSpecific(key: queueKey, value: true)
         return queue
     }()
@@ -63,7 +63,7 @@ actor RTC {
     /// channel deinit) through the single serial executor head-of-lines all other RTC work and can
     /// wedge it. A concurrent queue drains them in parallel and lets libdispatch grow workers when
     /// they block.
-    fileprivate static let releaseQueue = DispatchQueue(label: "LiveKitSDK.webRTC.release", attributes: .concurrent)
+    fileprivate static let releaseQueue = DispatchQueue(label: "TransportSDK.webRTC.release", attributes: .concurrent)
 }
 
 // MARK: - Hop primitive
@@ -284,5 +284,5 @@ extension RTC {
 
 public extension DispatchQueue {
     @available(*, deprecated, message: "The SDK isolates its WebRTC calls to the RTC executor; this queue is no longer part of its public contract.")
-    static let liveKitWebRTC: DispatchQueue = RTC.queue
+    static let transportWebRTC: DispatchQueue = RTC.queue
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ internal import LiveKitWebRTC
 
 // MARK: - EncryptedPacket
 
-extension Livekit_EncryptedPacket {
+extension Applooma_EncryptedPacket {
     init(rtcPacket: LKRTCEncryptedPacket) {
         self = .with {
             $0.encryptionType = .gcm
@@ -41,8 +41,8 @@ extension Livekit_EncryptedPacket {
 
 // MARK: - EncryptedPacketPayload
 
-extension Livekit_EncryptedPacketPayload {
-    init?(dataPacket: Livekit_DataPacket) {
+extension Applooma_EncryptedPacketPayload {
+    init?(dataPacket: Applooma_DataPacket) {
         switch dataPacket.value {
         case let .user(user):
             self = .with { $0.user = user }
@@ -65,7 +65,7 @@ extension Livekit_EncryptedPacketPayload {
         }
     }
 
-    func applyTo(_ builder: inout Livekit_DataPacket.Builder) {
+    func applyTo(_ builder: inout Applooma_DataPacket.Builder) {
         switch value {
         case let .user(userPacket):
             builder.user = userPacket
@@ -91,9 +91,9 @@ extension Livekit_EncryptedPacketPayload {
 
 // MARK: - DataPacket
 
-extension Livekit_DataPacket {
+extension Applooma_DataPacket {
     // Skip the default value returned from protobufs
-    var encryptedPacketOrNil: Livekit_EncryptedPacket? {
+    var encryptedPacketOrNil: Applooma_EncryptedPacket? {
         switch value {
         case .encryptedPacket: encryptedPacket
         default: nil

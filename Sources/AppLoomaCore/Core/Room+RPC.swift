@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import Foundation
 
 public extension Room {
     /// Establishes the participant as a receiver for calls of the specified RPC method.
-    /// Throws ``LiveKitError`` with type ``LiveKitErrorType/invalidState`` if a handler is
+    /// Throws ``TransportError`` with type ``TransportErrorType/invalidState`` if a handler is
     /// already registered for `method`; call ``unregisterRpcMethod(_:)`` first to replace it.
     /// Registered handlers persist across reconnects.
     ///

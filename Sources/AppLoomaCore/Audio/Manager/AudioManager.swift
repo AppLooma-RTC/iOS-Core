@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -432,8 +432,8 @@ public class AudioManager: Loggable {
     /// - Note: If `audioSession.isAutomaticConfigurationEnabled` is `true`, the session category is configured to `.playAndRecord`.
     /// - Note: Microphone permission is required to enable, but is not requested here: prewarming is not a
     ///   user-initiated capture, so prompting from it would surprise the user. Request it up front with
-    ///   ``LiveKitSDK/ensureDeviceAccess(for:)``, otherwise this throws ``LiveKitError`` of type
-    ///   ``LiveKitErrorType/deviceAccessDenied`` when the audio device module reports the missing permission.
+    ///   ``TransportSDK/ensureDeviceAccess(for:)``, otherwise this throws ``TransportError`` of type
+    ///   ``TransportErrorType/deviceAccessDenied`` when the audio device module reports the missing permission.
     /// - Note: This persists across ``Room`` lifecycles and connections until disabled.
     /// - Throws: An error if microphone permission is not granted, or if the underlying audio device module fails to apply the setting.
     public func setRecordingAlwaysPreparedMode(
@@ -454,7 +454,7 @@ public class AudioManager: Loggable {
     /// Audio buffers will flow into ``LocalAudioTrack/add(audioRenderer:)`` and ``capturePostProcessingDelegate``.
     ///
     /// - Note: Being synchronous, this cannot request microphone permission. Ensure permission is granted first (for example via
-    ///   ``LiveKitSDK/ensureDeviceAccess(for:)``), otherwise it throws ``LiveKitError`` of type ``LiveKitErrorType/deviceAccessDenied``.
+    ///   ``TransportSDK/ensureDeviceAccess(for:)``), otherwise it throws ``TransportError`` of type ``TransportErrorType/deviceAccessDenied``.
     public func startLocalRecording(audioProcessingOptions: AudioProcessingOptions? = nil) throws {
         updateExpectedPlatformVoiceProcessing(for: audioProcessingOptions)
         // Always unmute APM if muted by last session.
@@ -490,8 +490,8 @@ public class AudioManager: Loggable {
     ///
     /// - Note: Microphone permission is not requested here. If recording was requested while input
     ///   was unavailable, ensure permission is granted (for example via
-    ///   ``LiveKitSDK/ensureDeviceAccess(for:)``) before restoring input availability, otherwise
-    ///   this throws ``LiveKitError`` of type ``LiveKitErrorType/deviceAccessDenied``.
+    ///   ``TransportSDK/ensureDeviceAccess(for:)``) before restoring input availability, otherwise
+    ///   this throws ``TransportError`` of type ``TransportErrorType/deviceAccessDenied``.
     public func setEngineAvailability(_ availability: AudioEngineAvailability) throws {
         let result = RTC.audioDeviceModule.setEngineAvailability(availability.toRTCType())
         try checkAdmResult(code: result)
@@ -639,13 +639,13 @@ let kAudioEngineErrorAudioSessionInvalidCategory = -9001
 extension AudioManager {
     func checkAdmResult(code: Int) throws {
         if code == kAudioEngineErrorFailedToConfigureAudioSession {
-            throw LiveKitError(.audioSession, message: "Failed to configure audio session")
+            throw TransportError(.audioSession, message: "Failed to configure audio session")
         } else if code == kAudioEngineErrorInsufficientDevicePermission {
-            throw LiveKitError(.deviceAccessDenied, message: "Microphone permission is not granted")
+            throw TransportError(.deviceAccessDenied, message: "Microphone permission is not granted")
         } else if code == kAudioEngineErrorAudioSessionInvalidCategory {
-            throw LiveKitError(.audioSession, message: "Audio session category does not support recording")
+            throw TransportError(.audioSession, message: "Audio session category does not support recording")
         } else if code != 0 {
-            throw LiveKitError(.audioEngine, message: "Audio engine returned error code: \(code)")
+            throw TransportError(.audioEngine, message: "Audio engine returned error code: \(code)")
         }
     }
 }

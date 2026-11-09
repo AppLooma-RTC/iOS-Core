@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,20 +33,20 @@
 
 // Single-module builds compile these sources into the product directly:
 // CocoaPods surfaces the C declarations through the umbrella header, while the
-// prebuilt xcframework resolves CLiveKitProto via its modulemap (package import
+// prebuilt xcframework resolves CAppLoomaProto via its modulemap (package import
 // so `package` declarations may expose C types without entering the public
 // .swiftinterface).
 #if LK_XCFRAMEWORK
-package import CLiveKitProto
+package import CAppLoomaProto
 #elseif !COCOAPODS
-import CLiveKitProto
+import CAppLoomaProto
 #endif
 import Foundation
 import os
 
 // MARK: - Errors
 
-private let nanopbLog = OSLog(subsystem: "io.livekit.nanopb", category: "runtime")
+private let nanopbLog = OSLog(subsystem: "com.applooma.rtc.nanopb", category: "runtime")
 
 /// Reports a failure on a path that cannot throw (builder setters, copies).
 /// These only fail on allocation exhaustion or a descriptor bug; the callers
@@ -122,7 +122,7 @@ package final class NanopbBox<Storage>: NanopbAnyBox, @unchecked Sendable {
 
 /// The only way to mutate a message. One generic builder serves every message
 /// type; the generated code adds just the field setters in a constrained
-/// extension (`extension NanopbBuilder where S == livekit_Room`), which is
+/// extension (`extension NanopbBuilder where S == applooma_Room`), which is
 /// what SE-0427 noncopyable generics makes possible.
 ///
 /// `~Copyable` means the compiler proves there is never a second live handle
@@ -188,8 +188,8 @@ package extension NanopbStorage {
 
 /// An immutable protobuf message whose storage and wire format are nanopb's.
 ///
-/// One type serves the whole schema: `Livekit_Room` is a typealias for
-/// `NanopbMsg<livekit_Room>`, and the generated code adds field accessors in a
+/// One type serves the whole schema: `Applooma_Room` is a typealias for
+/// `NanopbMsg<applooma_Room>`, and the generated code adds field accessors in a
 /// constrained extension. A value is in one of two states:
 ///
 /// - **Owning**: `_owner` is its own `NanopbBox`; `box.pointer == _pointer`.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,13 +69,13 @@ final class AsyncCompleter<T: Sendable>: @unchecked Sendable, Loggable {
         let continuation: CheckedContinuation<T, Error>
         let timeoutBlock: DispatchWorkItem
 
-        func cancel(throwing error: LiveKitError? = nil) {
-            continuation.resume(throwing: error ?? LiveKitError(.cancelled))
+        func cancel(throwing error: TransportError? = nil) {
+            continuation.resume(throwing: error ?? TransportError(.cancelled))
             timeoutBlock.cancel()
         }
 
         func timeout() {
-            continuation.resume(throwing: LiveKitError(.timedOut))
+            continuation.resume(throwing: TransportError(.timedOut))
             timeoutBlock.cancel()
         }
 
@@ -87,7 +87,7 @@ final class AsyncCompleter<T: Sendable>: @unchecked Sendable, Loggable {
 
     let label: String
 
-    private let _timerQueue = DispatchQueue(label: "LiveKitSDK.AsyncCompleter", qos: .utility)
+    private let _timerQueue = DispatchQueue(label: "TransportSDK.AsyncCompleter", qos: .utility)
 
     // Internal states
     private var _defaultTimeout: DispatchTimeInterval
@@ -118,7 +118,7 @@ final class AsyncCompleter<T: Sendable>: @unchecked Sendable, Loggable {
     func reset(throwing error: Error? = nil) {
         _lock.sync {
             for entry in _entries.values {
-                entry.cancel(throwing: LiveKitError.from(error: error))
+                entry.cancel(throwing: TransportError.from(error: error))
             }
             _entries.removeAll()
             _result = nil

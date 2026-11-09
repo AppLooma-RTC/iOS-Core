@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -114,7 +114,7 @@ extension Room {
         }
     }
 
-    func engine(_ engine: Room, didUpdateSpeakers speakers: [Livekit_SpeakerInfo]) {
+    func engine(_ engine: Room, didUpdateSpeakers speakers: [Applooma_SpeakerInfo]) {
         let activeSpeakers = _state.mutate { state -> [Participant] in
             var activeSpeakers: [Participant] = []
             var seenParticipantSids = [Participant.Sid: Bool]()
@@ -203,7 +203,7 @@ extension Room {
         await publication.set(track: nil)
     }
 
-    func engine(_ engine: Room, didReceiveUserPacket packet: Livekit_UserPacket, encryptionType: EncryptionType) {
+    func engine(_ engine: Room, didReceiveUserPacket packet: Applooma_UserPacket, encryptionType: EncryptionType) {
         // participant could be null if data broadcasted from server
         let identity = Participant.Identity(from: packet.participantIdentity)
         let participant = _state.remoteParticipants[identity]
@@ -222,7 +222,7 @@ extension Room {
         }
     }
 
-    func room(didReceiveTranscriptionPacket packet: Livekit_Transcription) {
+    func room(didReceiveTranscriptionPacket packet: Applooma_Transcription) {
         // Try to find matching Participant.
         guard let participant = allParticipants[Participant.Identity(from: packet.transcribedParticipantIdentity)] else {
             log("[Transcription] Could not find participant: \(packet.transcribedParticipantIdentity)", .warning)
@@ -267,7 +267,7 @@ extension Room {
         }
     }
 
-    func room(didReceiveRpcResponse response: Livekit_RpcResponse) {
+    func room(didReceiveRpcResponse response: Applooma_RpcResponse) {
         let (payload, error): (String?, RpcError?) = switch response.value {
         case let .payload(v): (v, nil)
         case let .error(e): (nil, RpcError.fromProto(e))
@@ -281,13 +281,13 @@ extension Room {
         }
     }
 
-    func room(didReceiveRpcAck ack: Livekit_RpcAck) {
+    func room(didReceiveRpcAck ack: Applooma_RpcAck) {
         Task.discarding { [rpcClient] in
             await rpcClient.handleIncomingAck(requestId: ack.requestID)
         }
     }
 
-    func room(didReceiveRpcRequest request: Livekit_RpcRequest, from participantIdentity: String) {
+    func room(didReceiveRpcRequest request: Applooma_RpcRequest, from participantIdentity: String) {
         let callerIdentity = Participant.Identity(from: participantIdentity)
         let requestId = request.id
         let method = request.method

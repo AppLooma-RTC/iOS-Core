@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ extension Room {
         _state.mutate { $0.hasPublished = true }
     }
 
-    func send(userPacket: Livekit_UserPacket, kind: Livekit_DataPacket_Kind) async throws {
+    func send(userPacket: Applooma_UserPacket, kind: Applooma_DataPacket_Kind) async throws {
         try await send(dataPacket: .with {
             $0.user = userPacket
             $0.kind = kind
@@ -94,7 +94,7 @@ extension Room {
         _ = try await (transportReady, dataChannelReady)
     }
 
-    func send(dataPacket packet: consuming Livekit_DataPacket) async throws {
+    func send(dataPacket packet: consuming Applooma_DataPacket) async throws {
         try await ensurePublisherConnected()
 
         // At this point publisher should be .connected and dc should be .open
@@ -130,7 +130,7 @@ extension Room {
             let connectOptions = _state.connectOptions
 
             // Make a copy, instead of modifying the user-supplied RTCConfiguration object.
-            let rtcConfiguration = LKRTCConfiguration.liveKitDefault()
+            let rtcConfiguration = LKRTCConfiguration.transportDefault()
 
             // Set iceServers provided by the server
             rtcConfiguration.iceServers = connectResponse.rtcIceServers
@@ -158,7 +158,7 @@ extension Room {
 
             guard case let .connecting(connection) = _state.stage else {
                 log("Received JOIN without a connecting stage", .error)
-                throw LiveKitError(.invalidState, message: "Received JOIN without a connecting stage")
+                throw TransportError(.invalidState, message: "Received JOIN without a connecting stage")
             }
 
             let join = try await JoinDependencies.make(room: self,
@@ -232,7 +232,7 @@ extension Room {
                                                              adaptiveStream: _state.roomOptions.adaptiveStream,
                                                              singlePeerConnection: singlePC,
                                                              connectSpan: connectSpan)
-        } catch let error as LiveKitError where error.type == .serviceNotFound && singlePC {
+        } catch let error as TransportError where error.type == .serviceNotFound && singlePC {
             log("v1 RTC path not supported, retrying with legacy path", .warning)
             singlePC = false
             connectResponse = try await signalClient.connect(url,
@@ -282,23 +282,23 @@ extension Room {
 
         guard case .connected = _state.connectionState else {
             log("[Connect] Must be called with connected state", .error)
-            throw LiveKitError(.invalidState)
+            throw TransportError(.invalidState)
         }
 
         let url = _state.read { $0.connectedUrl ?? $0.providedUrl }
         guard let url, let token = _state.token else {
             log("[Connect] Url or token is nil", .error)
-            throw LiveKitError(.invalidState)
+            throw TransportError(.invalidState)
         }
 
         guard _state.transport != nil else {
             log("[Connect] Transport is nil", .error)
-            throw LiveKitError(.invalidState)
+            throw TransportError(.invalidState)
         }
 
         guard _state.isReconnectingWithMode == nil else {
             log("[Connect] Reconnect already in progress...", .warning)
-            throw LiveKitError(.invalidState)
+            throw TransportError(.invalidState)
         }
 
         _state.mutate {
@@ -375,14 +375,14 @@ extension Room {
 
             guard let providedUrl, let connectedUrl, let token else {
                 log("[Connect] Url or token is nil")
-                throw LiveKitError(.invalidState)
+                throw TransportError(.invalidState)
             }
 
             let finalUrl: URL
             await cleanUp(isFullReconnect: true)
             if providedUrl.isCloud {
                 guard let regionManager = await regionManager(for: providedUrl) else {
-                    throw LiveKitError(.onlyForCloud)
+                    throw TransportError(.onlyForCloud)
                 }
 
                 finalUrl = try await connectWithCloudRegionFailover(regionManager: regionManager,
@@ -507,7 +507,7 @@ extension Room {
 
         log("trackSids: \(trackSids)")
 
-        let subscription = Livekit_UpdateSubscription.with {
+        let subscription = Applooma_UpdateSubscription.with {
             $0.trackSids = trackSids.map(\.stringValue)
             $0.participantTracks = []
             $0.subscribe = !autoSubscribe
@@ -531,7 +531,7 @@ extension Room {
     func requirePublisher() throws -> Transport {
         guard let publisher = _state.transport?.publisher else {
             log("Publisher is nil", .error)
-            throw LiveKitError(.invalidState, message: "Publisher is nil")
+            throw TransportError(.invalidState, message: "Publisher is nil")
         }
 
         return publisher

@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ extension TransportMode {
     }
 
     /// Resolve a signal target to the appropriate transport.
-    func transport(for target: Livekit_SignalTarget) -> Transport {
+    func transport(for target: Applooma_SignalTarget) -> Transport {
         switch self {
         case let .publisherOnly(publisher):
             publisher

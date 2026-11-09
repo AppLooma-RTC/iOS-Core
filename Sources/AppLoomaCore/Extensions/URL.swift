@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,10 @@ extension URL {
         scheme == "https" || scheme == "wss"
     }
 
-    /// Checks whether the URL is a LiveKit Cloud URL.
+    /// Checks whether the URL is a the hosted media service URL.
     var isCloud: Bool {
         guard let host else { return false }
-        return host.hasSuffix(".livekit.cloud") || host.hasSuffix(".livekit.run")
+        return host.hasSuffix(".applooma.cloud") || host.hasSuffix(".applooma.run")
     }
 
     func cloudConfigUrl() -> URL {

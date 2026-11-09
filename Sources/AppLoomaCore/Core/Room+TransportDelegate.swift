@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ extension Room: TransportDelegate {
     func transport(_ transport: Transport, didUpdateState pcState: LKRTCPeerConnectionState) {
         log("target: \(transport.target), connectionState: \(pcState.description)")
 
-        let pcError: LiveKitError? = _state.connectionState.isTearingDown ? nil : LiveKitError(
+        let pcError: TransportError? = _state.connectionState.isTearingDown ? nil : TransportError(
             .network, message: "Transport \(transport.target) state changed to \(pcState.description)",
         )
 

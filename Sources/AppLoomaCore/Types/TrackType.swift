@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import Foundation
 
-extension Livekit_TrackType {
+extension Applooma_TrackType {
     func toLKType() -> Track.Kind {
         switch self {
         case .audio:
@@ -30,7 +30,7 @@ extension Livekit_TrackType {
 }
 
 extension Track.Kind {
-    func toPBType() -> Livekit_TrackType {
+    func toPBType() -> Applooma_TrackType {
         switch self {
         case .audio:
             .audio
@@ -39,7 +39,7 @@ extension Track.Kind {
         default:
             // 10 is outside the schema: proto3 enums are open, so an unknown
             // value is carried as itself rather than a distinct case
-            Livekit_TrackType(rawValue: 10)
+            Applooma_TrackType(rawValue: 10)
         }
     }
 }

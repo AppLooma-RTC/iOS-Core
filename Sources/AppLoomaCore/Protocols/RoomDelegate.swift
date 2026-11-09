@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import Foundation
 ///   }
 /// }
 /// ```
-/// See the source code of [Swift Example App](https://github.com/livekit/client-example-swift) for more examples.
+/// See the source code of [Swift Example App](https://docs.applooma.dev/) for more examples.
 @objc
 public protocol RoomDelegate: AnyObject, Sendable {
     // MARK: - Connection Events
@@ -71,11 +71,11 @@ public protocol RoomDelegate: AnyObject, Sendable {
 
     /// Could not connect to the room. Only triggered when the initial connect attempt fails.
     @objc optional
-    func room(_ room: Room, didFailToConnectWithError error: LiveKitError?)
+    func room(_ room: Room, didFailToConnectWithError error: TransportError?)
 
     /// Client disconnected from the room unexpectedly after a successful connection.
     @objc optional
-    func room(_ room: Room, didDisconnectWithError error: LiveKitError?)
+    func room(_ room: Room, didDisconnectWithError error: TransportError?)
 
     // MARK: - Room State Updates
 
@@ -161,7 +161,7 @@ public protocol RoomDelegate: AnyObject, Sendable {
     func room(_ room: Room, participant: RemoteParticipant, didUnsubscribeTrack publication: RemoteTrackPublication)
 
     @objc optional
-    func room(_ room: Room, participant: RemoteParticipant, didFailToSubscribeTrackWithSid trackSid: Track.Sid, error: LiveKitError)
+    func room(_ room: Room, participant: RemoteParticipant, didFailToSubscribeTrackWithSid trackSid: Track.Sid, error: TransportError)
 
     // MARK: - Data and Encryption
 
@@ -186,7 +186,7 @@ public protocol RoomDelegate: AnyObject, Sendable {
 
     /// Failed to decrypt a data packet when encryption is enabled.
     @objc optional
-    func room(_ room: Room, didFailToDecryptDataWithEror error: LiveKitError)
+    func room(_ room: Room, didFailToDecryptDataWithEror error: TransportError)
 
     @objc optional
     func room(_ room: Room, trackPublication: TrackPublication, didUpdateE2EEState state: E2EEState)

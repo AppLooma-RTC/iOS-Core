@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@
 
 // Single-module builds compile these sources into the product directly:
 // CocoaPods surfaces the C declarations through the umbrella header, while the
-// prebuilt xcframework resolves CLiveKitProto via its modulemap (package import
+// prebuilt xcframework resolves CAppLoomaProto via its modulemap (package import
 // so `package` declarations may expose C types without entering the public
 // .swiftinterface).
 #if LK_XCFRAMEWORK
-package import CLiveKitProto
+package import CAppLoomaProto
 #elseif !COCOAPODS
-import CLiveKitProto
+import CAppLoomaProto
 #endif
 import Foundation
 

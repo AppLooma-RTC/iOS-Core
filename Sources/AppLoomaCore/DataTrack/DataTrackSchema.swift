@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,9 +53,9 @@ public final class DataTrackSchemaId: NSObject, Sendable {
     }
 
     /// As a data blob key, for storing and reading back the schema's definition.
-    var blobKey: Livekit_DataBlobKey {
-        Livekit_DataBlobKey.with {
-            $0.schemaID = Livekit_DataTrackSchemaId.with {
+    var blobKey: Applooma_DataBlobKey {
+        Applooma_DataBlobKey.with {
+            $0.schemaID = Applooma_DataTrackSchemaId.with {
                 $0.name = name
                 $0.encoding = encoding.proto
             }
@@ -160,8 +160,8 @@ public enum DataTrackSchemaEncoding: Sendable, Equatable, Hashable {
         }
     }
 
-    var proto: Livekit_DataTrackSchemaEncoding {
-        Livekit_DataTrackSchemaEncoding.with {
+    var proto: Applooma_DataTrackSchemaEncoding {
+        Applooma_DataTrackSchemaEncoding.with {
             switch self {
             case .protobuf: $0.wellKnown = .protobuf
             case .flatbuffer: $0.wellKnown = .flatbuffer

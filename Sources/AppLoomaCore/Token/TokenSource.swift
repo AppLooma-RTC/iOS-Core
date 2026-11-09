@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,8 +35,8 @@ public protocol TokenSourceFixed: Sendable {
 /// production applications that need flexible authentication and room management.
 ///
 /// Common implementations:
-/// - ``DevelopmentTokenSource``: For testing with LiveKit Cloud [development token server](https://docs.livekit.io/frontends/build/authentication/sandbox-token-server/)
-/// - ``EndpointTokenSource``: For custom backend endpoints using LiveKit's JSON format
+/// - ``DevelopmentTokenSource``: For testing with the hosted media service [development token server](https://docs.applooma.dev/
+/// - ``EndpointTokenSource``: For custom backend endpoints using the transport's JSON format
 /// - ``CachingTokenSource``: For caching credentials (or use the `.cached()` extension)
 public protocol TokenSourceConfigurable: Sendable {
     func fetch(_ options: TokenRequestOptions) async throws -> TokenSourceResponse
@@ -119,9 +119,9 @@ struct TokenSourceRequest: Encodable {
     }
 }
 
-/// Response containing the credentials needed to connect to a LiveKit room.
+/// Response containing the credentials needed to connect to a the transport room.
 public struct TokenSourceResponse: Decodable, Sendable {
-    /// The WebSocket URL for the LiveKit server. Use this to establish the connection.
+    /// The WebSocket URL for the media server. Use this to establish the connection.
     public let serverURL: URL
     /// The JWT token containing participant permissions and metadata. Required for authentication.
     public let participantToken: String

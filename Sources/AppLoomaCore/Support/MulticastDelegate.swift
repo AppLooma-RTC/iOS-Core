@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class MulticastDelegate<T: Sendable>: NSObject, @unchecked Sendable, Logg
     private let _state = StateSync(State())
 
     init(label: String, qos: DispatchQoS = .default) {
-        _queue = DispatchQueue(label: "LiveKitSDK.Multicast.\(label)", qos: qos, attributes: [])
+        _queue = DispatchQueue(label: "TransportSDK.Multicast.\(label)", qos: qos, attributes: [])
     }
 
     /// Add a single delegate.

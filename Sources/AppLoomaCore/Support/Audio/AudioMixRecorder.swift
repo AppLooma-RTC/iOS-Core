@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,8 +94,8 @@ public class AudioMixRecorder: Loggable, @unchecked Sendable {
     private let renderBlock: AVAudioEngineManualRenderingBlock
 
     // Use higher priority for render queue to ensure timely audio processing
-    private let renderQueue = DispatchQueue(label: "com.livekit.AudioMixRecorder.render", qos: .userInteractive)
-    private let writeQueue = DispatchQueue(label: "com.livekit.AudioMixRecorder.write", qos: .utility)
+    private let renderQueue = DispatchQueue(label: "com.applooma.rtc.AudioMixRecorder.render", qos: .userInteractive)
+    private let writeQueue = DispatchQueue(label: "com.applooma.rtc.AudioMixRecorder.write", qos: .utility)
 
     private var audioFile: AVAudioFile?
     private var renderTimer: DispatchSourceTimer?
@@ -111,7 +111,7 @@ public class AudioMixRecorder: Loggable, @unchecked Sendable {
         maxFrameCount = frameCount
         // Create render buffer
         guard let newBuffer = AVAudioPCMBuffer(pcmFormat: processingFormat, frameCapacity: AVAudioFrameCount(maxFrameCount)) else {
-            throw LiveKitError(.invalidState, message: "Failed to create PCM buffer")
+            throw TransportError(.invalidState, message: "Failed to create PCM buffer")
         }
         renderBuffer = newBuffer
         // Enable realtime rendering

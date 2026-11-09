@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ extension LKRTCDataChannel {
         static let dataTrack = "_data_track"
     }
 
-    func toLKInfoType() -> Livekit_DataChannelInfo {
-        Livekit_DataChannelInfo.with {
+    func toLKInfoType() -> Applooma_DataChannelInfo {
+        Applooma_DataChannelInfo.with {
             $0.id = UInt32(max(0, channelId))
             $0.label = label
         }

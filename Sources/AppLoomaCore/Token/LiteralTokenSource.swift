@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import Foundation
 ///
 /// - Note: For dynamic token fetching, use ``EndpointTokenSource`` or implement ``TokenSourceConfigurable``.
 public struct LiteralTokenSource: TokenSourceFixed {
-    /// The LiveKit server URL to connect to.
+    /// The media server URL to connect to.
     let serverURL: URL
     /// The JWT token for participant authentication.
     let participantToken: String
@@ -35,7 +35,7 @@ public struct LiteralTokenSource: TokenSourceFixed {
     /// Initialize with fixed credentials.
     ///
     /// - Parameters:
-    ///   - serverURL: The LiveKit server URL to connect to
+    ///   - serverURL: The media server URL to connect to
     ///   - participantToken: The JWT token for participant authentication
     ///   - participantName: The display name for the participant (optional)
     ///   - roomName: The name of the room to join (optional)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@ internal import LiveKitWebRTC
 actor SignalClient: Loggable {
     // MARK: - Types
 
-    typealias AddTrackRequestPopulator = @Sendable (inout Livekit_AddTrackRequest.Builder) throws -> Void
+    typealias AddTrackRequestPopulator = @Sendable (inout Applooma_AddTrackRequest.Builder) throws -> Void
 
     enum ConnectResponse {
-        case join(Livekit_JoinResponse)
-        case reconnect(Livekit_ReconnectResponse)
+        case join(Applooma_JoinResponse)
+        case reconnect(Applooma_ReconnectResponse)
 
         var rtcIceServers: [LKRTCIceServer] {
             switch self {
@@ -36,7 +36,7 @@ actor SignalClient: Loggable {
             }
         }
 
-        var clientConfiguration: Livekit_ClientConfiguration {
+        var clientConfiguration: Applooma_ClientConfiguration {
             switch self {
             case let .join(response): response.clientConfiguration
             case let .reconnect(response): response.clientConfiguration
@@ -56,24 +56,24 @@ actor SignalClient: Loggable {
 
     var connectionState: ConnectionState { _state.connectionState }
 
-    var disconnectError: LiveKitError? { _state.disconnectError }
+    var disconnectError: TransportError? { _state.disconnectError }
 
     var useV0SignalPath: Bool { _state.useV0SignalPath }
 
     // MARK: - Private
 
     let _delegate = AsyncSerialDelegate<SignalClientDelegate>()
-    private let _queue = DispatchQueue(label: "LiveKitSDK.signalClient", qos: .default)
+    private let _queue = DispatchQueue(label: "TransportSDK.signalClient", qos: .default)
 
     // Queue to store requests while reconnecting
-    private lazy var _requestQueue = QueueActor<Livekit_SignalRequest>(onProcess: { [weak self] request in
+    private lazy var _requestQueue = QueueActor<Applooma_SignalRequest>(onProcess: { [weak self] request in
         guard let self else { return }
 
         do {
             // Prepare request data...
             guard let data = try? request.serializedData() else {
                 log("Could not serialize request data", .error)
-                throw LiveKitError(.failedToConvertData, message: "Failed to convert data")
+                throw TransportError(.failedToConvertData, message: "Failed to convert data")
             }
 
             let webSocket = try await requireWebSocket()
@@ -88,23 +88,23 @@ actor SignalClient: Loggable {
     // wire format themselves (the data track managers) need the original encoding, and
     // re-encoding our decoded copy would drop every field this client's protocol pin doesn't
     // know — nanopb discards unknown fields on decode.
-    private lazy var _responseQueue = QueueActor<(response: Livekit_SignalResponse, encoded: Data)>(onProcess: { [weak self] element in
+    private lazy var _responseQueue = QueueActor<(response: Applooma_SignalResponse, encoded: Data)>(onProcess: { [weak self] element in
         guard let self else { return }
 
         await _process(element.response, encoded: element.encoded)
     })
 
     private let _connectResponseCompleter = AsyncCompleter<ConnectResponse>(label: "Join response", defaultTimeout: .defaultJoinResponse)
-    private let _addTrackCompleters = CompleterMapActor<Livekit_TrackInfo>(label: "Completers for add track", defaultTimeout: .defaultPublish)
+    private let _addTrackCompleters = CompleterMapActor<Applooma_TrackInfo>(label: "Completers for add track", defaultTimeout: .defaultPublish)
     private let _pingIntervalTimer = AsyncTimer(interval: 1)
     private let _pingTimeoutTimer = AsyncTimer(interval: 1)
 
     struct State {
         var connectionState: ConnectionState = .disconnected
-        var disconnectError: LiveKitError?
+        var disconnectError: TransportError?
         var socket: WebSocket?
         var messageLoopTask: AnyTaskCancellable?
-        var lastJoinResponse: Livekit_JoinResponse?
+        var lastJoinResponse: Applooma_JoinResponse?
         var rtt: Int64 = 0
         // Tracks whether the v0 signal path (/rtc) is in use, set during connect.
         // Reused by reconnect to avoid re-attempting the unsupported v1 path.
@@ -221,7 +221,7 @@ actor SignalClient: Loggable {
             // Skip validation if reconnect mode
             if reconnectMode != nil {
                 await cleanUp(withError: connectionError)
-                throw LiveKitError(.network, internalError: connectionError)
+                throw TransportError(.network, internalError: connectionError)
             }
 
             await cleanUp(withError: connectionError)
@@ -232,21 +232,21 @@ actor SignalClient: Loggable {
             do {
                 try await HTTP.requestValidation(from: validateUrl, token: token)
                 // Re-throw original error since validation passed
-                throw LiveKitError(.network, internalError: connectionError)
-            } catch let error as LiveKitError where error.type == .serviceNotFound {
+                throw TransportError(.network, internalError: connectionError)
+            } catch let error as TransportError where error.type == .serviceNotFound {
                 throw error
-            } catch let validationError as LiveKitError where validationError.type == .validation {
+            } catch let validationError as TransportError where validationError.type == .validation {
                 // Re-throw validation error
                 throw validationError
             } catch {
-                let validationMessage = if let liveKitError = error as? LiveKitError {
-                    liveKitError.message ?? liveKitError.localizedDescription
+                let validationMessage = if let transportError = error as? TransportError {
+                    transportError.message ?? transportError.localizedDescription
                 } else {
                     error.localizedDescription
                 }
 
                 // Preserve validation request failure details while keeping the original connection error.
-                throw LiveKitError(.network,
+                throw TransportError(.network,
                                    message: "Validation request failed: \(validationMessage)",
                                    internalError: connectionError)
             }
@@ -296,7 +296,7 @@ actor SignalClient: Loggable {
         stopDataTrackResponses()
 
         _state.mutate {
-            $0.disconnectError = LiveKitError.from(error: disconnectError)
+            $0.disconnectError = TransportError.from(error: disconnectError)
             $0.connectionState = .disconnected
         }
     }
@@ -306,10 +306,10 @@ actor SignalClient: Loggable {
 
 private extension SignalClient {
     // Send request or enqueue while reconnecting
-    func _sendRequest(_ request: Livekit_SignalRequest) async throws {
+    func _sendRequest(_ request: Applooma_SignalRequest) async throws {
         guard connectionState != .disconnected else {
             log("connectionState is .disconnected", .error)
-            throw LiveKitError(.invalidState, message: "connectionState is .disconnected")
+            throw TransportError(.invalidState, message: "connectionState is .disconnected")
         }
 
         await _requestQueue.processIfResumed(request, elseEnqueue: request.canBeQueued())
@@ -345,7 +345,7 @@ private extension SignalClient {
         }
 
         guard case let .data(rawData) = message,
-              let response = try? Livekit_SignalResponse(serializedBytes: rawData)
+              let response = try? Applooma_SignalResponse(serializedBytes: rawData)
         else {
             log("Failed to decode SignalResponse", .warning)
             return
@@ -371,7 +371,7 @@ private extension SignalClient {
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    func _process(_ signalResponse: Livekit_SignalResponse, encoded: Data) async {
+    func _process(_ signalResponse: Applooma_SignalResponse, encoded: Data) async {
         guard connectionState != .disconnected else {
             log("connectionState is .disconnected", .error)
             return
@@ -492,7 +492,7 @@ private extension SignalClient {
             let isFailure = response.reason != .ok && response.reason != .queued
             if isFailure, let completer = _dataBlobCompleters[response.requestID] {
                 let message = response.message.isEmpty ? "Request rejected (reason \(response.reason.rawValue))" : response.message
-                completer.resume(throwing: LiveKitError(.invalidState, message: message))
+                completer.resume(throwing: TransportError(.invalidState, message: message))
             }
 
         case .publishDataTrackResponse, .dataTrackSubscriberHandles:
@@ -522,17 +522,17 @@ extension SignalClient {
 // MARK: - Send methods
 
 extension SignalClient {
-    func sendRequest(_ request: Livekit_SignalRequest) async throws {
+    func sendRequest(_ request: Applooma_SignalRequest) async throws {
         try await _sendRequest(request)
     }
 
     /// Stores a blob on the server under `key`, replacing nothing — a key can only be written once.
-    func sendStoreDataBlob(key: Livekit_DataBlobKey, contents: Data) async throws {
+    func sendStoreDataBlob(key: Applooma_DataBlobKey, contents: Data) async throws {
         _ = try await _sendIdCorrelatedRequest { requestId in
-            Livekit_SignalRequest.with {
-                $0.storeDataBlobRequest = Livekit_StoreDataBlobRequest.with {
+            Applooma_SignalRequest.with {
+                $0.storeDataBlobRequest = Applooma_StoreDataBlobRequest.with {
                     $0.requestID = requestId
-                    $0.blob = Livekit_DataBlob.with {
+                    $0.blob = Applooma_DataBlob.with {
                         $0.key = key
                         $0.contents = contents
                     }
@@ -542,10 +542,10 @@ extension SignalClient {
     }
 
     /// Reads back a blob `participantIdentity` stored under `key`.
-    func sendGetDataBlob(key: Livekit_DataBlobKey, participantIdentity: String) async throws -> Data {
+    func sendGetDataBlob(key: Applooma_DataBlobKey, participantIdentity: String) async throws -> Data {
         try await _sendIdCorrelatedRequest { requestId in
-            Livekit_SignalRequest.with {
-                $0.getDataBlobRequest = Livekit_GetDataBlobRequest.with {
+            Applooma_SignalRequest.with {
+                $0.getDataBlobRequest = Applooma_GetDataBlobRequest.with {
                     $0.requestID = requestId
                     $0.participantIdentity = participantIdentity
                     $0.key = key
@@ -555,7 +555,7 @@ extension SignalClient {
     }
 
     /// Sends a request the SFU answers by echoing its id, and waits for that answer.
-    private func _sendIdCorrelatedRequest(_ build: (UInt32) -> Livekit_SignalRequest) async throws -> Data {
+    private func _sendIdCorrelatedRequest(_ build: (UInt32) -> Applooma_SignalRequest) async throws -> Data {
         _nextRequestId += 1
         let requestId = _nextRequestId
         let completer = AsyncCompleter<Data>(label: "Signal request \(requestId)", defaultTimeout: .defaultDataBlobRequest)
@@ -566,7 +566,7 @@ extension SignalClient {
     }
 
     func send(offer: LKRTCSessionDescription, offerId: UInt32) async throws {
-        let r = Livekit_SignalRequest.with {
+        let r = Applooma_SignalRequest.with {
             $0.offer = offer.toPBType(offerId: offerId)
         }
 
@@ -574,16 +574,16 @@ extension SignalClient {
     }
 
     func send(answer: LKRTCSessionDescription, offerId: UInt32) async throws {
-        let r = Livekit_SignalRequest.with {
+        let r = Applooma_SignalRequest.with {
             $0.answer = answer.toPBType(offerId: offerId)
         }
 
         try await _sendRequest(r)
     }
 
-    func sendCandidate(candidate: IceCandidate, target: Livekit_SignalTarget) async throws {
-        let r = try Livekit_SignalRequest.with {
-            $0.trickle = try Livekit_TrickleRequest.with {
+    func sendCandidate(candidate: IceCandidate, target: Applooma_SignalTarget) async throws {
+        let r = try Applooma_SignalRequest.with {
+            $0.trickle = try Applooma_TrickleRequest.with {
                 $0.target = target
                 $0.candidateInit = try candidate.toJsonString()
             }
@@ -593,8 +593,8 @@ extension SignalClient {
     }
 
     func sendMuteTrack(trackSid: Track.Sid, muted: Bool) async throws {
-        let r = Livekit_SignalRequest.with {
-            $0.mute = Livekit_MuteTrackRequest.with {
+        let r = Applooma_SignalRequest.with {
+            $0.mute = Applooma_MuteTrackRequest.with {
                 $0.sid = trackSid.stringValue
                 $0.muted = muted
             }
@@ -605,12 +605,12 @@ extension SignalClient {
 
     func sendAddTrack(cid: String,
                       name: String,
-                      type: Livekit_TrackType,
-                      source: Livekit_TrackSource = .unknown,
-                      encryption: Livekit_Encryption.TypeEnum = .none,
-                      _ populator: AddTrackRequestPopulator) async throws -> Livekit_TrackInfo
+                      type: Applooma_TrackType,
+                      source: Applooma_TrackSource = .unknown,
+                      encryption: Applooma_Encryption.TypeEnum = .none,
+                      _ populator: AddTrackRequestPopulator) async throws -> Applooma_TrackInfo
     {
-        let addTrackRequest = try Livekit_AddTrackRequest.with {
+        let addTrackRequest = try Applooma_AddTrackRequest.with {
             $0.cid = cid
             $0.name = name
             $0.type = type
@@ -619,7 +619,7 @@ extension SignalClient {
             try populator(&$0)
         }
 
-        let request = Livekit_SignalRequest.with {
+        let request = Applooma_SignalRequest.with {
             $0.addTrack = addTrackRequest
         }
 
@@ -634,8 +634,8 @@ extension SignalClient {
     }
 
     func sendUpdateTrackSettings(trackSid: Track.Sid, settings: TrackSettings) async throws {
-        let r = Livekit_SignalRequest.with {
-            $0.trackSetting = Livekit_UpdateTrackSettings.with {
+        let r = Applooma_SignalRequest.with {
+            $0.trackSetting = Applooma_UpdateTrackSettings.with {
                 $0.trackSids = [trackSid.stringValue]
                 $0.disabled = !settings.isEnabled
                 $0.width = UInt32(settings.dimensions.width)
@@ -648,9 +648,9 @@ extension SignalClient {
         try await _sendRequest(r)
     }
 
-    func sendUpdateVideoLayers(trackSid: Track.Sid, layers: [Livekit_VideoLayer]) async throws {
-        let r = Livekit_SignalRequest.with {
-            $0.updateLayers = Livekit_UpdateVideoLayers.with {
+    func sendUpdateVideoLayers(trackSid: Track.Sid, layers: [Applooma_VideoLayer]) async throws {
+        let r = Applooma_SignalRequest.with {
+            $0.updateLayers = Applooma_UpdateVideoLayers.with {
                 $0.trackSid = trackSid.stringValue
                 $0.layers = layers
             }
@@ -663,13 +663,13 @@ extension SignalClient {
                                 trackSid: Track.Sid,
                                 isSubscribed: Bool) async throws
     {
-        let p = Livekit_ParticipantTracks.with {
+        let p = Applooma_ParticipantTracks.with {
             $0.participantSid = participantSid.stringValue
             $0.trackSids = [trackSid.stringValue]
         }
 
-        let r = Livekit_SignalRequest.with {
-            $0.subscription = Livekit_UpdateSubscription.with {
+        let r = Applooma_SignalRequest.with {
+            $0.subscription = Applooma_UpdateSubscription.with {
                 $0.trackSids = [trackSid.stringValue]
                 $0.participantTracks = [p]
                 $0.subscribe = isSubscribed
@@ -682,8 +682,8 @@ extension SignalClient {
     func sendUpdateSubscriptionPermission(allParticipants: Bool,
                                           trackPermissions: [ParticipantTrackPermission]) async throws
     {
-        let r = Livekit_SignalRequest.with {
-            $0.subscriptionPermission = Livekit_SubscriptionPermission.with {
+        let r = Applooma_SignalRequest.with {
+            $0.subscriptionPermission = Applooma_SubscriptionPermission.with {
                 $0.allParticipants = allParticipants
                 $0.trackPermissions = trackPermissions.map { $0.toPBType() }
             }
@@ -696,8 +696,8 @@ extension SignalClient {
                                metadata: String? = nil,
                                attributes: [String: String]? = nil) async throws
     {
-        let r = Livekit_SignalRequest.with {
-            $0.updateMetadata = Livekit_UpdateParticipantMetadata.with {
+        let r = Applooma_SignalRequest.with {
+            $0.updateMetadata = Applooma_UpdateParticipantMetadata.with {
                 $0.name = name ?? ""
                 $0.metadata = metadata ?? ""
                 $0.attributes = attributes ?? [:]
@@ -707,9 +707,9 @@ extension SignalClient {
         try await _sendRequest(r)
     }
 
-    func sendUpdateLocalAudioTrack(trackSid: Track.Sid, features: Set<Livekit_AudioTrackFeature>) async throws {
-        let r = Livekit_SignalRequest.with {
-            $0.updateAudioTrack = Livekit_UpdateLocalAudioTrack.with {
+    func sendUpdateLocalAudioTrack(trackSid: Track.Sid, features: Set<Applooma_AudioTrackFeature>) async throws {
+        let r = Applooma_SignalRequest.with {
+            $0.updateAudioTrack = Applooma_UpdateLocalAudioTrack.with {
                 $0.trackSid = trackSid.stringValue
                 $0.features = Array(features)
             }
@@ -718,16 +718,16 @@ extension SignalClient {
         try await _sendRequest(r)
     }
 
-    func sendSyncState(answer: Livekit_SessionDescription?,
-                       offer: Livekit_SessionDescription?,
-                       subscription: Livekit_UpdateSubscription,
-                       publishTracks: [Livekit_TrackPublishedResponse]? = nil,
-                       publishDataTracks: [Livekit_PublishDataTrackResponse]? = nil,
-                       dataChannels: [Livekit_DataChannelInfo]? = nil,
-                       dataChannelReceiveStates: [Livekit_DataChannelReceiveState]? = nil) async throws
+    func sendSyncState(answer: Applooma_SessionDescription?,
+                       offer: Applooma_SessionDescription?,
+                       subscription: Applooma_UpdateSubscription,
+                       publishTracks: [Applooma_TrackPublishedResponse]? = nil,
+                       publishDataTracks: [Applooma_PublishDataTrackResponse]? = nil,
+                       dataChannels: [Applooma_DataChannelInfo]? = nil,
+                       dataChannelReceiveStates: [Applooma_DataChannelReceiveState]? = nil) async throws
     {
-        let r = Livekit_SignalRequest.with {
-            $0.syncState = Livekit_SyncState.with {
+        let r = Applooma_SignalRequest.with {
+            $0.syncState = Applooma_SyncState.with {
                 if let answer {
                     $0.answer = answer
                 }
@@ -746,8 +746,8 @@ extension SignalClient {
     }
 
     func sendLeave() async throws {
-        let r = Livekit_SignalRequest.with {
-            $0.leave = Livekit_LeaveRequest.with {
+        let r = Applooma_SignalRequest.with {
+            $0.leave = Applooma_LeaveRequest.with {
                 $0.canReconnect = false
                 $0.reason = .clientInitiated
             }
@@ -759,18 +759,18 @@ extension SignalClient {
     func sendSimulate(scenario: SimulateScenario) async throws {
         var shouldDisconnect = false
 
-        let r = Livekit_SignalRequest.with {
-            $0.simulate = Livekit_SimulateScenario.with {
+        let r = Applooma_SignalRequest.with {
+            $0.simulate = Applooma_SimulateScenario.with {
                 switch scenario {
                 case .nodeFailure: $0.nodeFailure = true
                 case .migration: $0.migration = true
                 case .serverLeave: $0.serverLeave = true
                 case let .speakerUpdate(secs): $0.speakerUpdate = Int32(secs)
                 case .forceTCP:
-                    $0.switchCandidateProtocol = Livekit_CandidateProtocol.tcp
+                    $0.switchCandidateProtocol = Applooma_CandidateProtocol.tcp
                     shouldDisconnect = true
                 case .forceTLS:
-                    $0.switchCandidateProtocol = Livekit_CandidateProtocol.tls
+                    $0.switchCandidateProtocol = Applooma_CandidateProtocol.tls
                     shouldDisconnect = true
                 default: break
                 }
@@ -793,13 +793,13 @@ extension SignalClient {
         let rtt = _state.read { $0.rtt }
 
         // Send both ping and pingReq for compatibility with older and newer servers
-        let pingRequest = Livekit_SignalRequest.with {
+        let pingRequest = Applooma_SignalRequest.with {
             $0.ping = timestamp
         }
 
         // Include the current RTT value in pingReq to report back to server
-        let pingReqRequest = Livekit_SignalRequest.with {
-            $0.pingReq = Livekit_Ping.with {
+        let pingReqRequest = Applooma_SignalRequest.with {
+            $0.pingReq = Applooma_Ping.with {
                 $0.timestamp = timestamp
                 $0.rtt = rtt // Send current RTT back to server
             }
@@ -822,7 +822,7 @@ private extension SignalClient {
         _pingTimeoutTimer.setTimerBlock { [weak self] in
             guard let self else { return }
             log("ping/pong timed out", .error)
-            await cleanUp(withError: LiveKitError(.serverPingTimedOut))
+            await cleanUp(withError: TransportError(.serverPingTimedOut))
         }
 
         // Arm without resetting a running countdown, else every ping pushes the deadline out and it never fires.
@@ -834,7 +834,7 @@ private extension SignalClient {
         _pingTimeoutTimer.cancel()
     }
 
-    func _onReceivedPongResp(_ pongResp: Livekit_Pong) async {
+    func _onReceivedPongResp(_ pongResp: Applooma_Pong) async {
         let currentTimeMs = Int64(Date().timeIntervalSince1970 * 1000)
         let rtt = currentTimeMs - pongResp.lastPingTimestamp
         _state.mutate { $0.rtt = rtt }
@@ -865,7 +865,7 @@ private extension SignalClient {
     }
 }
 
-extension Livekit_SignalRequest {
+extension Applooma_SignalRequest {
     func canBeQueued() -> Bool {
         switch message {
         case .syncState, .trickle, .offer, .answer, .simulate, .leave: false
@@ -878,7 +878,7 @@ private extension SignalClient {
     func requireWebSocket() async throws -> WebSocket {
         guard let result = _state.socket else {
             log("WebSocket is nil", .error)
-            throw LiveKitError(.invalidState, message: "WebSocket is nil")
+            throw TransportError(.invalidState, message: "WebSocket is nil")
         }
 
         return result

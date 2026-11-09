@@ -33,7 +33,7 @@ let package = Package(
         // are internal build units, never written by anyone integrating the SDK,
         // and renaming them would mean rewriting module maps and headers.
         .target(
-            name: "CLiveKitProto",
+            name: "CAppLoomaProto",
             exclude: ["LICENSE-nanopb.txt", "module.modulemap"],
             publicHeadersPath: "include",
             cSettings: [
@@ -41,8 +41,8 @@ let package = Package(
             ],
         ),
         .target(
-            name: "LiveKitNanopb",
-            dependencies: ["CLiveKitProto"],
+            name: "AppLoomaNanopb",
+            dependencies: ["CAppLoomaProto"],
         ),
         .target(
             name: "LKObjCHelpers",
@@ -53,7 +53,7 @@ let package = Package(
             dependencies: [
                 .product(name: "AppLoomaWebRTC", package: "iOS-WebRTC"),
                 .product(name: "AppLoomaUniFFI", package: "iOS-UniFFI"),
-                "LiveKitNanopb",
+                "AppLoomaNanopb",
                 "LKObjCHelpers",
             ],
             exclude: [

@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import Foundation
 
-/// Describes the state of a ``Participant``'s connection to the LiveKit server.
+/// Describes the state of a ``Participant``'s connection to the media server.
 @objc
 public enum ParticipantState: Int, Sendable, CaseIterable {
     /// Websocket is connected, but no offer has been sent yet
@@ -38,7 +38,7 @@ public enum ParticipantState: Int, Sendable, CaseIterable {
 // MARK: - Conversions from/to protobuf types
 
 extension ParticipantState {
-    init(from protoState: Livekit_ParticipantInfo_State) {
+    init(from protoState: Applooma_ParticipantInfo_State) {
         switch protoState {
         case .joining:
             self = .joining
@@ -53,7 +53,7 @@ extension ParticipantState {
         }
     }
 
-    var protoState: Livekit_ParticipantInfo_State {
+    var protoState: Applooma_ParticipantInfo_State {
         switch self {
         case .joining:
             .joining
@@ -69,7 +69,7 @@ extension ParticipantState {
     }
 }
 
-extension Livekit_ParticipantInfo_State {
+extension Applooma_ParticipantInfo_State {
     func toLKType() -> ParticipantState {
         ParticipantState(from: self)
     }

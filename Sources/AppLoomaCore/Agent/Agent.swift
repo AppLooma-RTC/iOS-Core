@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 import Foundation
 
-/// Represents a LiveKit Agent.
+/// Represents a the transport Agent.
 ///
-/// The ``Agent`` struct represents the state of a LiveKit agent within a ``Session``.
+/// The ``Agent`` struct represents the state of a the transport agent within a ``Session``.
 /// It provides information about the agent's connection status, its current state
 /// (e.g., listening, thinking, speaking), and its media tracks.
 ///
@@ -28,8 +28,8 @@ import Foundation
 /// The ``agentState`` property is particularly useful for building UIs that reflect
 /// the agent's current activity.
 ///
-/// - SeeAlso: [LiveKit SwiftUI Agent Starter](https://github.com/livekit-examples/agent-starter-swift).
-/// - SeeAlso: [LiveKit Agents documentation](https://docs.livekit.io/agents/).
+/// - SeeAlso: [the transport SwiftUI Agent Starter](https://docs.applooma.dev/).
+/// - SeeAlso: [the transport Agents documentation](https://docs.applooma.dev/
 public struct Agent: Loggable {
     // MARK: - Error
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,9 +112,9 @@ final class DataTracks: NSObject, @unchecked Sendable {
         do {
             try await room?.ensurePublisherConnected()
             try await _publisherChannelOpen.wait()
-        } catch let error as LiveKitError where error.type == .timedOut {
+        } catch let error as TransportError where error.type == .timedOut {
             throw DataTrackPublishError.timeout("Timed out establishing the publisher data track channel")
-        } catch let error as LiveKitError where error.type == .cancelled {
+        } catch let error as TransportError where error.type == .cancelled {
             // Cancellation is the caller's own doing; laundering it into a publish error would
             // make a cancelled publish indistinguishable from a lost connection.
             throw error
@@ -166,7 +166,7 @@ final class DataTracks: NSObject, @unchecked Sendable {
         reattachRemoteTracks()
     }
 
-    func handleRoomMoved(_ participants: [Livekit_ParticipantInfo], localIdentity: String) {
+    func handleRoomMoved(_ participants: [Applooma_ParticipantInfo], localIdentity: String) {
         // The old room's tracks are gone for good, so forget them instead of keeping them for
         // re-attach. Dropped silently: the move tears every participant down first, and
         // `unpublishAll` has already reported each attached track — reporting again here would
@@ -176,8 +176,8 @@ final class DataTracks: NSObject, @unchecked Sendable {
         _local.copy()?.republishTracks()
         // The one place bytes can't be threaded: the SFU sends a `RoomMovedResponse` while the
         // manager consumes a `ParticipantUpdate`, so this one is built — and stays lossy.
-        let response = Livekit_SignalResponse.with {
-            $0.update = Livekit_ParticipantUpdate.with { $0.participants = participants }
+        let response = Applooma_SignalResponse.with {
+            $0.update = Applooma_ParticipantUpdate.with { $0.participants = participants }
         }
         guard let encoded = try? response.serializedData() else { return }
         handleParticipantUpdate(encoded, localIdentity: localIdentity)
@@ -212,9 +212,9 @@ final class DataTracks: NSObject, @unchecked Sendable {
 
     /// Publish responses for the local data tracks, for `SyncState.publishDataTracks` on quick
     /// reconnect (so the SFU keeps the publications without a full republish).
-    func syncStatePublishResponses() async -> [Livekit_PublishDataTrackResponse] {
+    func syncStatePublishResponses() async -> [Applooma_PublishDataTrackResponse] {
         guard let local = _local.copy() else { return [] }
-        return await local.publishResponsesForSyncState().compactMap { try? Livekit_PublishDataTrackResponse(serializedBytes: $0) }
+        return await local.publishResponsesForSyncState().compactMap { try? Applooma_PublishDataTrackResponse(serializedBytes: $0) }
     }
 
     func handlePacket(_ data: Data) {
@@ -329,7 +329,7 @@ final class DataTracks: NSObject, @unchecked Sendable {
             Task { [weak room] in
                 for await request in stream {
                     guard let room else { break }
-                    guard let signalRequest = try? Livekit_SignalRequest(serializedBytes: request) else {
+                    guard let signalRequest = try? Applooma_SignalRequest(serializedBytes: request) else {
                         room.log("Failed to decode data track signal request", .warning)
                         continue
                     }

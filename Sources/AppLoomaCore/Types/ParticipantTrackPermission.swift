@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,8 +46,8 @@ public final class ParticipantTrackPermission: NSObject, Sendable {
 }
 
 extension ParticipantTrackPermission {
-    func toPBType() -> Livekit_TrackPermission {
-        Livekit_TrackPermission.with {
+    func toPBType() -> Applooma_TrackPermission {
+        Applooma_TrackPermission.with {
             $0.participantSid = self.participantSid
             $0.allTracks = self.allTracksAllowed
             $0.trackSids = self.allowedTrackSids

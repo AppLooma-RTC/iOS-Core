@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,17 @@
  */
 
 #if LK_XCFRAMEWORK
-internal import CLiveKitProto
+internal import CAppLoomaProto
 #elseif !COCOAPODS
-import CLiveKitProto
-import LiveKitNanopb
+import CAppLoomaProto
+import AppLoomaNanopb
 #endif
 @preconcurrency import AVFoundation
 import Foundation
 
 internal import LiveKitWebRTC
 
-public let kLiveKitKrispAudioProcessorName = "livekit_krisp_noise_cancellation"
+public let kTransportKrispAudioProcessorName = "applooma_krisp_noise_cancellation"
 
 /// Used to modify audio buffers before they are sent to the network or played to the user
 @objc

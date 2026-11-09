@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,9 +60,9 @@ struct RetryBuffer {
 
 /// The lossy channel: serialize and go. Nothing is sequenced and nothing is replayed.
 struct LossyStage: SendStage {
-    typealias Input = Livekit_DataPacket
+    typealias Input = Applooma_DataPacket
 
-    mutating func prepare(_ input: Livekit_DataPacket, into prepared: inout [PreparedBytes]) throws {
+    mutating func prepare(_ input: Applooma_DataPacket, into prepared: inout [PreparedBytes]) throws {
         try prepared.append(PreparedBytes(bytes: input.serializedData()))
     }
 }
@@ -72,7 +72,7 @@ struct LossyStage: SendStage {
 /// The reliable channel: stamps the per-publisher sequence the SFU dedups on, and retains
 /// dispatched writes so a resume can replay whatever the peer missed.
 struct ReliableStage: SendStage, Loggable {
-    typealias Input = Livekit_DataPacket
+    typealias Input = Applooma_DataPacket
 
     enum Command: Sendable {
         /// The SFU asked for everything after `sequence` to be sent again.
@@ -86,7 +86,7 @@ struct ReliableStage: SendStage, Loggable {
         retry = RetryBuffer(minAmount: retryFloor)
     }
 
-    mutating func prepare(_ input: Livekit_DataPacket, into prepared: inout [PreparedBytes]) throws {
+    mutating func prepare(_ input: Applooma_DataPacket, into prepared: inout [PreparedBytes]) throws {
         var bytes = try input.serializedData()
         var sequence = input.sequence
 
@@ -100,7 +100,7 @@ struct ReliableStage: SendStage, Loggable {
             // Stamped by appending an encoded packet carrying only that field: concatenation is
             // protobuf merge and scalar fields take the last occurrence, so this writes a few bytes
             // rather than re-encoding the whole payload.
-            try bytes.append(Livekit_DataPacket.with { $0.sequence = sequence }.serializedData())
+            try bytes.append(Applooma_DataPacket.with { $0.sequence = sequence }.serializedData())
         }
 
         prepared.append(PreparedBytes(bytes: bytes, sequence: sequence))

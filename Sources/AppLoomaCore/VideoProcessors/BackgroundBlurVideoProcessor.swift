@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public final class BackgroundBlurVideoProcessor: NSObject, @unchecked Sendable, 
     private let segmentationRequest = VNGeneratePersonSegmentationRequest()
     private let segmentationRequestHandler = VNSequenceRequestHandler()
     // Matches Vision internal QoS to avoid priority inversion
-    private let segmentationQueue = DispatchQueue(label: "io.livekit.backgroundblur.segmentation", qos: .default, autoreleaseFrequency: .workItem)
+    private let segmentationQueue = DispatchQueue(label: "com.applooma.rtc.backgroundblur.segmentation", qos: .default, autoreleaseFrequency: .workItem)
 
     // MARK: CoreImage
 

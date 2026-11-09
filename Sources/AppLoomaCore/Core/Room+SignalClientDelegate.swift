@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 // swiftlint:disable file_length
 
 #if !COCOAPODS && !LK_XCFRAMEWORK
-import LiveKitNanopb
+import AppLoomaNanopb
 #endif
 import Foundation
 
@@ -26,7 +26,7 @@ internal import LiveKitWebRTC
 extension Room: SignalClientDelegate {
     func signalClient(_: SignalClient, didUpdateConnectionState connectionState: ConnectionState,
                       oldState: ConnectionState,
-                      disconnectError: LiveKitError?) async
+                      disconnectError: TransportError?) async
     {
         // connectionState did update
         if connectionState != oldState,
@@ -47,14 +47,14 @@ extension Room: SignalClientDelegate {
         }
     }
 
-    func signalClient(_: SignalClient, didReceiveLeave action: Livekit_LeaveRequest_Action, reason: Livekit_DisconnectReason, regions: Livekit_RegionSettings?) async {
+    func signalClient(_: SignalClient, didReceiveLeave action: Applooma_LeaveRequest_Action, reason: Applooma_DisconnectReason, regions: Applooma_RegionSettings?) async {
         log("action: \(action), reason: \(reason)")
 
         if let regions, let providedUrl = _state.providedUrl, let regionManager = await regionManager(for: providedUrl) {
             await regionManager.updateFromServerReportedRegions(regions)
         }
 
-        let error = LiveKitError.from(reason: reason)
+        let error = TransportError.from(reason: reason)
         switch action {
         case .reconnect:
             // Force .full for next reconnect
@@ -70,8 +70,8 @@ extension Room: SignalClientDelegate {
         }
     }
 
-    func signalClient(_: SignalClient, didUpdateSubscribedCodecs codecs: [Livekit_SubscribedCodec],
-                      qualities: [Livekit_SubscribedQuality],
+    func signalClient(_: SignalClient, didUpdateSubscribedCodecs codecs: [Applooma_SubscribedCodec],
+                      qualities: [Applooma_SubscribedQuality],
                       forTrackSid trackSid: String) async
     {
         // Check if dynacast is enabled
@@ -130,11 +130,11 @@ extension Room: SignalClientDelegate {
         }
     }
 
-    func signalClient(_: SignalClient, didUpdateRoom room: Livekit_Room) async {
+    func signalClient(_: SignalClient, didUpdateRoom room: Applooma_Room) async {
         _state.mutate { $0.apply(roomInfo: room) }
     }
 
-    func signalClient(_: SignalClient, didReceiveRoomMoved response: Livekit_RoomMovedResponse) async {
+    func signalClient(_: SignalClient, didReceiveRoomMoved response: Applooma_RoomMovedResponse) async {
         log("didReceiveRoomMoved to room: \(response.hasRoom ? response.room.name : "unknown")")
 
         _updateState(for: response)
@@ -159,7 +159,7 @@ extension Room: SignalClientDelegate {
         }
     }
 
-    func signalClient(_: SignalClient, didUpdateSpeakers speakers: [Livekit_SpeakerInfo]) async {
+    func signalClient(_: SignalClient, didUpdateSpeakers speakers: [Applooma_SpeakerInfo]) async {
         let activeSpeakers = _state.mutate { state -> [Participant] in
             var lastSpeakers = state.activeSpeakers.reduce(into: [Sid: Participant]()) { $0[$1.sid] = $1 }
             for speaker in speakers {
@@ -195,7 +195,7 @@ extension Room: SignalClientDelegate {
         }
     }
 
-    func signalClient(_: SignalClient, didUpdateConnectionQuality connectionQuality: [Livekit_ConnectionQualityInfo]) async {
+    func signalClient(_: SignalClient, didUpdateConnectionQuality connectionQuality: [Applooma_ConnectionQualityInfo]) async {
         for entry in connectionQuality {
             let participantSid = Participant.Sid(from: entry.participantSid)
             if participantSid == localParticipant.sid {
@@ -227,7 +227,7 @@ extension Room: SignalClientDelegate {
         }
     }
 
-    func signalClient(_: SignalClient, didUpdateSubscriptionPermission subscriptionPermission: Livekit_SubscriptionPermissionUpdate) async {
+    func signalClient(_: SignalClient, didUpdateSubscriptionPermission subscriptionPermission: Applooma_SubscriptionPermissionUpdate) async {
         log("did update subscriptionPermission: \(subscriptionPermission)")
 
         let participantSid = Participant.Sid(from: subscriptionPermission.participantSid)
@@ -242,7 +242,7 @@ extension Room: SignalClientDelegate {
         publication.set(subscriptionAllowed: subscriptionPermission.allowed)
     }
 
-    func signalClient(_: SignalClient, didUpdateTrackStreamStates trackStates: [Livekit_StreamStateInfo]) async {
+    func signalClient(_: SignalClient, didUpdateTrackStreamStates trackStates: [Applooma_StreamStateInfo]) async {
         log("did update trackStates: \(trackStates.map { "(\($0.trackSid): \(String(describing: $0.state)))" }.joined(separator: ", "))")
 
         for update in trackStates {
@@ -258,7 +258,7 @@ extension Room: SignalClientDelegate {
         }
     }
 
-    func signalClient(_: SignalClient, didUpdateParticipants participants: [Livekit_ParticipantInfo]) async {
+    func signalClient(_: SignalClient, didUpdateParticipants participants: [Applooma_ParticipantInfo]) async {
         log("participants: \(participants)")
 
         var disconnectedParticipantIdentities = [Participant.Identity]()
@@ -312,7 +312,7 @@ extension Room: SignalClientDelegate {
         }
     }
 
-    func signalClient(_: SignalClient, didUnpublishLocalTrack localTrack: Livekit_TrackUnpublishedResponse) async {
+    func signalClient(_: SignalClient, didUnpublishLocalTrack localTrack: Applooma_TrackUnpublishedResponse) async {
         log()
 
         let trackSid = Track.Sid(from: localTrack.trackSid)
@@ -330,7 +330,7 @@ extension Room: SignalClientDelegate {
         }
     }
 
-    func signalClient(_: SignalClient, didReceiveIceCandidate iceCandidate: IceCandidate, target: Livekit_SignalTarget) async {
+    func signalClient(_: SignalClient, didReceiveIceCandidate iceCandidate: IceCandidate, target: Applooma_SignalTarget) async {
         guard let mode = _state.transport else {
             log("Failed to add ice candidate, transport is nil for target: \(target)", .error)
             return
@@ -347,7 +347,7 @@ extension Room: SignalClientDelegate {
         log("Received answer for offerId: \(offerId)")
 
         // Clamp to the SDK default — libwebrtc advertises larger (~256 KiB)
-        // than LiveKit/pion can deliver end-to-end (~64 KiB), so we trust
+        // than the transport/pion can deliver end-to-end (~64 KiB), so we trust
         // the answer no more than our compiled-in ceiling.
         let parsed = parseSDPMaxMessageSize(answer.sdp) ?? DataChannelPair.defaultMaxMessageSize
         let maxMessageSize = min(parsed, DataChannelPair.defaultMaxMessageSize)
@@ -424,7 +424,7 @@ extension Room: SignalClientDelegate {
         dataTracks?.handleSignalResponse(data)
     }
 
-    func signalClient(_: SignalClient, didReceiveMediaSectionsRequirement requirement: Livekit_MediaSectionsRequirement) async {
+    func signalClient(_: SignalClient, didReceiveMediaSectionsRequirement requirement: Applooma_MediaSectionsRequirement) async {
         guard case let .publisherOnly(publisher) = _state.transport else { return }
 
         let transceiverInit = LKRTCRtpTransceiverInit()
@@ -447,7 +447,7 @@ extension Room: SignalClientDelegate {
 }
 
 private extension Room {
-    func _updateState(for response: Livekit_RoomMovedResponse) {
+    func _updateState(for response: Applooma_RoomMovedResponse) {
         // Update token
         if !response.token.isEmpty {
             _state.mutate { $0.token = response.token }
@@ -495,7 +495,7 @@ private extension Room {
         }
     }
 
-    func _addNewParticipants(from infos: [Livekit_ParticipantInfo]) -> [RemoteParticipant] {
+    func _addNewParticipants(from infos: [Applooma_ParticipantInfo]) -> [RemoteParticipant] {
         // Re-add participants
         var newParticipants: [RemoteParticipant] = []
         for info in infos {

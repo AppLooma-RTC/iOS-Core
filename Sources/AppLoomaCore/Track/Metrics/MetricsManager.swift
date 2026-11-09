@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import Foundation
 
 // Extending the generic builder needs the runtime module by name; the facades
-// themselves are re-exported through LiveKit.
+// themselves are re-exported through the transport.
 
 // MARK: - Triggers
 
@@ -56,7 +56,7 @@ extension MetricsManager: TrackDelegate {
 
 /// An actor that converts track statistics into metrics and sends them to the server as data packets.
 actor MetricsManager: Loggable {
-    private typealias Transport = @Sendable (Livekit_DataPacket) async throws -> Void
+    private typealias Transport = @Sendable (Applooma_DataPacket) async throws -> Void
     private struct TrackProperties {
         let identity: LocalParticipant.Identity?
         let transport: Transport
@@ -90,9 +90,9 @@ actor MetricsManager: Loggable {
         let hash = statistics.hashValue
         guard hash != props.lastSentHash else { return }
 
-        let dataPacket = Livekit_DataPacket.with {
+        let dataPacket = Applooma_DataPacket.with {
             $0.kind = .reliable
-            $0.metrics = Livekit_MetricsBatch(statistics: statistics, identity: props.identity)
+            $0.metrics = Applooma_MetricsBatch(statistics: statistics, identity: props.identity)
         }
         do {
             try await props.transport(dataPacket)
@@ -105,7 +105,7 @@ actor MetricsManager: Loggable {
 
 // MARK: - Statistics -> protobufs
 
-private extension Livekit_MetricsBatch {
+private extension Applooma_MetricsBatch {
     init(statistics: TrackStatistics, identity: Participant.Identity?) {
         self = .with { batch in
             var strings = OrderedSet<String>()
@@ -121,7 +121,7 @@ private extension Livekit_MetricsBatch {
 }
 
 // Mutation helpers live on the builder; the message itself is immutable.
-private extension Livekit_MetricsBatch.Builder {
+private extension Applooma_MetricsBatch.Builder {
     func addOutboundMetrics(from statistics: [OutboundRtpStreamStatistics], strings: inout OrderedSet<String>, identity: Participant.Identity?) {
         for stat in statistics where stat.kind == "video" {
             if let durations = stat.qualityLimitationDurations {
@@ -166,7 +166,7 @@ private extension Livekit_MetricsBatch.Builder {
     func addMetric(
         _ value: (some Numeric)?,
         at timestampUs: Double,
-        label: Livekit_MetricLabel,
+        label: Applooma_MetricLabel,
         strings: inout OrderedSet<String>,
         identity: Participant.Identity? = nil,
         sid: String? = nil,
@@ -184,25 +184,25 @@ private extension Livekit_MetricsBatch.Builder {
         self.timeSeries.append(timeSeries)
     }
 
-    func createSample(timestampUs: Double, value: (some Numeric)?) -> Livekit_MetricSample? {
+    func createSample(timestampUs: Double, value: (some Numeric)?) -> Applooma_MetricSample? {
         guard let floatValue = value?.floatValue else { return nil }
         guard floatValue != .zero else { return nil }
 
-        return Livekit_MetricSample.with {
+        return Applooma_MetricSample.with {
             $0.timestampMs = Int64(timestampUs / 1000)
             $0.value = floatValue
         }
     }
 
     func createTimeSeries(
-        label: Livekit_MetricLabel,
+        label: Applooma_MetricLabel,
         strings: inout OrderedSet<String>,
-        samples: [Livekit_MetricSample],
+        samples: [Applooma_MetricSample],
         identity: Participant.Identity? = nil,
         sid: String? = nil,
         rid: String? = nil,
-    ) -> Livekit_TimeSeriesMetric {
-        Livekit_TimeSeriesMetric.with { series in
+    ) -> Applooma_TimeSeriesMetric {
+        Applooma_TimeSeriesMetric.with { series in
             series.label = UInt32(label.rawValue)
             series.samples = samples
 
@@ -230,7 +230,7 @@ private extension Livekit_MetricsBatch.Builder {
     /// }
     /// ```
     func getOrCreateIndex(in set: inout OrderedSet<String>, inserting string: String) -> UInt32 {
-        let offset = Livekit_MetricLabel.predefinedMaxValue.rawValue
+        let offset = Applooma_MetricLabel.predefinedMaxValue.rawValue
         let index = set.append(string).index
         return UInt32(index + offset)
     }

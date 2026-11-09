@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ public class LocalTrackPublication: TrackPublication, @unchecked Sendable {
 
     private var _cancellable: AnyCancellable?
 
-    override init(info: Livekit_TrackInfo, participant: Participant) {
+    override init(info: Applooma_TrackInfo, participant: Participant) {
         super.init(info: info, participant: participant)
 
         // Watch audio manager processor changes.
@@ -44,7 +44,7 @@ public class LocalTrackPublication: TrackPublication, @unchecked Sendable {
 
     public func mute() async throws {
         guard let track = track as? LocalTrack else {
-            throw LiveKitError(.invalidState, message: "track is nil or not a LocalTrack")
+            throw TransportError(.invalidState, message: "track is nil or not a LocalTrack")
         }
 
         try await track._mute()
@@ -52,7 +52,7 @@ public class LocalTrackPublication: TrackPublication, @unchecked Sendable {
 
     public func unmute() async throws {
         guard let track = track as? LocalTrack else {
-            throw LiveKitError(.invalidState, message: "track is nil or not a LocalTrack")
+            throw TransportError(.invalidState, message: "track is nil or not a LocalTrack")
         }
 
         try await track._unmute()
@@ -144,7 +144,7 @@ extension LocalTrackPublication {
 
         // Check if Krisp is enabled.
         if let processingDelegate = AudioManager.shared.capturePostProcessingDelegate,
-           processingDelegate.audioProcessingName == kLiveKitKrispAudioProcessorName
+           processingDelegate.audioProcessingName == kTransportKrispAudioProcessorName
         {
             newFeatures.insert(.tfEnhancedNoiseCancellation)
         }

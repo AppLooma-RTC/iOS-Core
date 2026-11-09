@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,7 +141,7 @@ extension SoundPlayer {
                                          channels: outputFormat.channelCount,
                                          interleaved: outputFormat.isInterleaved)
         else {
-            throw LiveKitError(.soundPlayer, message: "Failed to create player node format")
+            throw TransportError(.soundPlayer, message: "Failed to create player node format")
         }
         return format
     }
@@ -184,7 +184,7 @@ extension SoundPlayer {
     @discardableResult
     func startEngineIfNeeded() throws -> AVAudioFormat {
         guard let outputFormat else {
-            throw LiveKitError(.soundPlayer, message: "Invalid output format")
+            throw TransportError(.soundPlayer, message: "Invalid output format")
         }
         let playerNodeFormat = try makePlayerNodeFormat(for: outputFormat)
         let needsReconnect = localEngineState.needsReconnect
@@ -247,13 +247,13 @@ extension SoundPlayer {
 
     func play(_ sound: SoundHandle, options: SoundPlaybackOptions = SoundPlaybackOptions()) async throws {
         guard let soundState = sounds[sound.id] else {
-            throw LiveKitError(.soundPlayer, message: "Sound not prepared")
+            throw TransportError(.soundPlayer, message: "Sound not prepared")
         }
 
         if options.mode == .replace {
             await soundState.stop(destination: .localAndRemote)
             guard sounds[sound.id] != nil else {
-                throw LiveKitError(.soundPlayer, message: "Sound not prepared")
+                throw TransportError(.soundPlayer, message: "Sound not prepared")
             }
         }
 
@@ -274,7 +274,7 @@ extension SoundPlayer {
 
     static func decodeBuffer(from fileURL: URL) async throws -> AVAudioPCMBuffer {
         guard fileURL.isFileURL else {
-            throw LiveKitError(.invalidParameter, message: "Only file URLs are supported")
+            throw TransportError(.invalidParameter, message: "Only file URLs are supported")
         }
 
         return try await Task.detached(priority: .userInitiated) {
@@ -282,7 +282,7 @@ extension SoundPlayer {
             guard let readBuffer = AVAudioPCMBuffer(pcmFormat: audioFile.processingFormat,
                                                     frameCapacity: AVAudioFrameCount(audioFile.length))
             else {
-                throw LiveKitError(.soundPlayer, message: "Failed to allocate audio buffer")
+                throw TransportError(.soundPlayer, message: "Failed to allocate audio buffer")
             }
             try audioFile.read(into: readBuffer, frameCount: AVAudioFrameCount(audioFile.length))
             return readBuffer

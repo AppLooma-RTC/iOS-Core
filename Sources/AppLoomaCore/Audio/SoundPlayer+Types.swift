@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -165,7 +165,7 @@ class PreparedSound {
                                                  to: playerNodeFormat,
                                                  outputBufferCapacity: outputBufferCapacity)
             else {
-                throw LiveKitError(.soundPlayer, message: "Failed to create audio converter")
+                throw TransportError(.soundPlayer, message: "Failed to create audio converter")
             }
             localBuffer = converter.convert(from: sourceBuffer)
         }

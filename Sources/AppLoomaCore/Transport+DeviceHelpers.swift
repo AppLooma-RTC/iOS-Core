@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ private func isApplicationForegrounded() -> Bool {
 }
 #endif
 
-public extension LiveKitSDK {
+public extension TransportSDK {
     /// Helper method to ensure authorization for video(camera) / audio(microphone) permissions in a single call.
     static func ensureDeviceAccess(for types: Set<AVMediaType>) async -> Bool {
         for type in types {
@@ -117,7 +117,7 @@ public extension LiveKitSDK {
     }
 }
 
-extension LiveKitSDK {
+extension TransportSDK {
     /// Requests authorization for the given media types, but only while the app can present the
     /// system permission dialog.
     ///
@@ -142,7 +142,7 @@ extension LiveKitSDK {
     /// requests it here while the app is foregrounded. When permission is undetermined and the app
     /// cannot present the prompt (backgrounded or app extension), this fails fast instead of blocking.
     ///
-    /// - Throws: ``LiveKitError`` of type ``LiveKitErrorType/deviceAccessDenied`` when microphone
+    /// - Throws: ``TransportError`` of type ``TransportErrorType/deviceAccessDenied`` when microphone
     ///   access is denied or restricted, or when permission is undetermined and cannot be requested.
     static func ensureMicrophoneAccessForRecording() async throws {
         switch AVCaptureDevice.authorizationStatus(for: .audio) {
@@ -153,18 +153,18 @@ extension LiveKitSDK {
                 // Distinguish "could not present the prompt" from "the user denied it".
                 if AVCaptureDevice.authorizationStatus(for: .audio) == .notDetermined {
                     if kIsAppExtension {
-                        throw LiveKitError(.deviceAccessDenied,
+                        throw TransportError(.deviceAccessDenied,
                                            message: "Microphone permission cannot be requested from an app extension. Request it in the host app before enabling recording.")
                     }
-                    throw LiveKitError(.deviceAccessDenied,
+                    throw TransportError(.deviceAccessDenied,
                                        message: "Microphone permission could not be requested. Request it while the app is in the foreground before enabling recording.")
                 }
-                throw LiveKitError(.deviceAccessDenied, message: "Microphone permission was denied.")
+                throw TransportError(.deviceAccessDenied, message: "Microphone permission was denied.")
             }
         case .denied, .restricted:
-            throw LiveKitError(.deviceAccessDenied, message: "Microphone permission is not granted.")
+            throw TransportError(.deviceAccessDenied, message: "Microphone permission is not granted.")
         @unknown default:
-            throw LiveKitError(.deviceAccessDenied, message: "Microphone permission is not granted.")
+            throw TransportError(.deviceAccessDenied, message: "Microphone permission is not granted.")
         }
     }
 }

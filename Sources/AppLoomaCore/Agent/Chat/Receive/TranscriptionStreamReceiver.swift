@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import Foundation
 
-/// An actor that converts raw text streams from the LiveKit `Room` into `Message` objects.
+/// An actor that converts raw text streams from the the transport `Room` into `Message` objects.
 /// - Note: Streams are supported by `livekit-agents` >= 1.0.0.
 /// - SeeAlso: ``TranscriptionDelegateReceiver``
 ///

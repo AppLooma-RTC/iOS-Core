@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public extension AudioManager {
 
     func set(microphoneMuteMode mode: MicrophoneMuteMode) throws {
         guard mode != .unknown else {
-            throw LiveKitError(.invalidState, message: "Unsupported mute mode specified")
+            throw TransportError(.invalidState, message: "Unsupported mute mode specified")
         }
         let result = RTC.audioDeviceModule.setMuteMode(mode.toRTCType())
         try checkAdmResult(code: result)

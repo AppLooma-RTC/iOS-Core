@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,7 +143,7 @@ public final class PreConnectAudioBuffer: NSObject, Sendable, Loggable {
     public func sendAudioData(to room: Room, agents: [Participant.Identity], on topic: String = dataTopic) async throws {
         guard !agents.isEmpty, state.audioStream != nil else { return }
         guard let trackSid = state.recorder?.track.sid else {
-            throw LiveKitError(.invalidState, message: "Track is not published")
+            throw TransportError(.invalidState, message: "Track is not published")
         }
         try await sendAudioData(to: room, trackSid: trackSid, agents: agents, on: topic)
     }
@@ -163,7 +163,7 @@ public final class PreConnectAudioBuffer: NSObject, Sendable, Loggable {
         // A nil stream means it was already sent or flushed — expected teardown, not an error
         let claim = try state.mutate { state -> (recorder: LocalAudioTrackRecorder, audioStream: LocalAudioTrackRecorder.Stream)? in
             guard let recorder = state.recorder else {
-                throw LiveKitError(.invalidState, message: "Recorder is nil")
+                throw TransportError(.invalidState, message: "Recorder is nil")
             }
             guard let audioStream = state.audioStream.take() else { return nil }
             return (recorder, audioStream)
@@ -221,7 +221,7 @@ extension PreConnectAudioBuffer: RoomDelegate {
             do {
                 try await sendAudioData(to: room, trackSid: publication.sid)
                 room.remove(delegate: self)
-            } catch let error as LiveKitError where error.type == .cancelled || error.type == .timedOut {
+            } catch let error as TransportError where error.type == .cancelled || error.type == .timedOut {
                 // Recording was flushed or no agent became active in time; nothing to send
                 log("Preconnect audio not sent: \(error)")
             } catch {

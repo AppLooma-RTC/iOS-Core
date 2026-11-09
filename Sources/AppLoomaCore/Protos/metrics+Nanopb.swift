@@ -4,27 +4,27 @@
 // one generic NanopbMsg<Storage> — this file adds only a storage
 // conformance, a typealias and the field accessors, so the schema
 // contributes no Swift types of its own. Mutation goes through the
-// noncopyable Builder. See Sources/LiveKitNanopb.
+// noncopyable Builder. See Sources/AppLoomaNanopb.
 
 import Foundation
 
 // Single-module builds compile these sources into the product directly:
 // CocoaPods surfaces the C declarations through the umbrella header, while
-// the prebuilt xcframework resolves CLiveKitProto via its modulemap — the
+// the prebuilt xcframework resolves CAppLoomaProto via its modulemap — the
 // internal import keeps it out of the emitted .swiftinterface.
 #if LK_XCFRAMEWORK
-package import CLiveKitProto
+package import CAppLoomaProto
 #elseif !COCOAPODS
-import CLiveKitProto
-import LiveKitNanopb
+import CAppLoomaProto
+import AppLoomaNanopb
 #endif
 
-extension livekit_MetricsBatch: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_MetricsBatch_msg }
-    package static let _emptyBox = NanopbBox<livekit_MetricsBatch>(zero: livekit_MetricsBatch(), descriptor: livekit_MetricsBatch_msg)
+extension applooma_MetricsBatch: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_MetricsBatch_msg }
+    package static let _emptyBox = NanopbBox<applooma_MetricsBatch>(zero: applooma_MetricsBatch(), descriptor: applooma_MetricsBatch_msg)
 }
-typealias Livekit_MetricsBatch = NanopbMsg<livekit_MetricsBatch>
-extension Livekit_MetricsBatch {
+typealias Applooma_MetricsBatch = NanopbMsg<applooma_MetricsBatch>
+extension Applooma_MetricsBatch {
     var timestampMs: Int64 {
         _pointer.pointee.timestamp_ms?.pointee ?? 0
     }
@@ -39,17 +39,17 @@ extension Livekit_MetricsBatch {
         lkRepeated(_pointer.pointee.str_data_count, _pointer.pointee.str_data)
     }
 
-    var timeSeries: [Livekit_TimeSeriesMetric] {
+    var timeSeries: [Applooma_TimeSeriesMetric] {
         lkViews(_pointer.pointee.time_series_count, _pointer.pointee.time_series, owner: _owner)
     }
 
-    var events: [Livekit_EventMetric] {
+    var events: [Applooma_EventMetric] {
         lkViews(_pointer.pointee.events_count, _pointer.pointee.events, owner: _owner)
     }
 
 }
 
-extension Livekit_MetricsBatch.Builder {
+extension Applooma_MetricsBatch.Builder {
     var timestampMs: Int64 {
         get { _pointer.pointee.timestamp_ms?.pointee ?? 0 }
         nonmutating set { lkSetValue(&_pointer.pointee.timestamp_ms, newValue) }
@@ -69,7 +69,7 @@ extension Livekit_MetricsBatch.Builder {
         }
     }
 
-    var timeSeries: [Livekit_TimeSeriesMetric] {
+    var timeSeries: [Applooma_TimeSeriesMetric] {
         get { lkViews(_pointer.pointee.time_series_count, _pointer.pointee.time_series, owner: _box) }
         nonmutating set {
             var count = _pointer.pointee.time_series_count, base = _pointer.pointee.time_series
@@ -78,7 +78,7 @@ extension Livekit_MetricsBatch.Builder {
         }
     }
 
-    var events: [Livekit_EventMetric] {
+    var events: [Applooma_EventMetric] {
         get { lkViews(_pointer.pointee.events_count, _pointer.pointee.events, owner: _box) }
         nonmutating set {
             var count = _pointer.pointee.events_count, base = _pointer.pointee.events
@@ -89,12 +89,12 @@ extension Livekit_MetricsBatch.Builder {
 
 }
 
-extension livekit_TimeSeriesMetric: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_TimeSeriesMetric_msg }
-    package static let _emptyBox = NanopbBox<livekit_TimeSeriesMetric>(zero: livekit_TimeSeriesMetric(), descriptor: livekit_TimeSeriesMetric_msg)
+extension applooma_TimeSeriesMetric: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_TimeSeriesMetric_msg }
+    package static let _emptyBox = NanopbBox<applooma_TimeSeriesMetric>(zero: applooma_TimeSeriesMetric(), descriptor: applooma_TimeSeriesMetric_msg)
 }
-typealias Livekit_TimeSeriesMetric = NanopbMsg<livekit_TimeSeriesMetric>
-extension Livekit_TimeSeriesMetric {
+typealias Applooma_TimeSeriesMetric = NanopbMsg<applooma_TimeSeriesMetric>
+extension Applooma_TimeSeriesMetric {
     var label: UInt32 {
         _pointer.pointee.label?.pointee ?? 0
     }
@@ -110,7 +110,7 @@ extension Livekit_TimeSeriesMetric {
     }
     var hasTrackSid: Bool { _pointer.pointee.track_sid != nil }
 
-    var samples: [Livekit_MetricSample] {
+    var samples: [Applooma_MetricSample] {
         lkViews(_pointer.pointee.samples_count, _pointer.pointee.samples, owner: _owner)
     }
 
@@ -121,7 +121,7 @@ extension Livekit_TimeSeriesMetric {
 
 }
 
-extension Livekit_TimeSeriesMetric.Builder {
+extension Applooma_TimeSeriesMetric.Builder {
     var label: UInt32 {
         get { _pointer.pointee.label?.pointee ?? 0 }
         nonmutating set { lkSetValue(&_pointer.pointee.label, newValue) }
@@ -137,7 +137,7 @@ extension Livekit_TimeSeriesMetric.Builder {
         nonmutating set { lkSetValue(&_pointer.pointee.track_sid, newValue) }
     }
 
-    var samples: [Livekit_MetricSample] {
+    var samples: [Applooma_MetricSample] {
         get { lkViews(_pointer.pointee.samples_count, _pointer.pointee.samples, owner: _box) }
         nonmutating set {
             var count = _pointer.pointee.samples_count, base = _pointer.pointee.samples
@@ -153,12 +153,12 @@ extension Livekit_TimeSeriesMetric.Builder {
 
 }
 
-extension livekit_MetricSample: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_MetricSample_msg }
-    package static let _emptyBox = NanopbBox<livekit_MetricSample>(zero: livekit_MetricSample(), descriptor: livekit_MetricSample_msg)
+extension applooma_MetricSample: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_MetricSample_msg }
+    package static let _emptyBox = NanopbBox<applooma_MetricSample>(zero: applooma_MetricSample(), descriptor: applooma_MetricSample_msg)
 }
-typealias Livekit_MetricSample = NanopbMsg<livekit_MetricSample>
-extension Livekit_MetricSample {
+typealias Applooma_MetricSample = NanopbMsg<applooma_MetricSample>
+extension Applooma_MetricSample {
     var timestampMs: Int64 {
         _pointer.pointee.timestamp_ms?.pointee ?? 0
     }
@@ -176,7 +176,7 @@ extension Livekit_MetricSample {
 
 }
 
-extension Livekit_MetricSample.Builder {
+extension Applooma_MetricSample.Builder {
     var timestampMs: Int64 {
         get { _pointer.pointee.timestamp_ms?.pointee ?? 0 }
         nonmutating set { lkSetValue(&_pointer.pointee.timestamp_ms, newValue) }
@@ -194,12 +194,12 @@ extension Livekit_MetricSample.Builder {
 
 }
 
-extension livekit_EventMetric: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_EventMetric_msg }
-    package static let _emptyBox = NanopbBox<livekit_EventMetric>(zero: livekit_EventMetric(), descriptor: livekit_EventMetric_msg)
+extension applooma_EventMetric: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_EventMetric_msg }
+    package static let _emptyBox = NanopbBox<applooma_EventMetric>(zero: applooma_EventMetric(), descriptor: applooma_EventMetric_msg)
 }
-typealias Livekit_EventMetric = NanopbMsg<livekit_EventMetric>
-extension Livekit_EventMetric {
+typealias Applooma_EventMetric = NanopbMsg<applooma_EventMetric>
+extension Applooma_EventMetric {
     var label: UInt32 {
         _pointer.pointee.label?.pointee ?? 0
     }
@@ -247,7 +247,7 @@ extension Livekit_EventMetric {
 
 }
 
-extension Livekit_EventMetric.Builder {
+extension Applooma_EventMetric.Builder {
     var label: UInt32 {
         get { _pointer.pointee.label?.pointee ?? 0 }
         nonmutating set { lkSetValue(&_pointer.pointee.label, newValue) }
@@ -295,7 +295,7 @@ extension Livekit_EventMetric.Builder {
 
 }
 
-struct Livekit_MetricLabel: NanopbEnum {
+struct Applooma_MetricLabel: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }

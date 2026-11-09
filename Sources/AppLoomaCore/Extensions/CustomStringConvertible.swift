@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 
 #if LK_XCFRAMEWORK
-package import CLiveKitProto
+package import CAppLoomaProto
 #elseif !COCOAPODS
-import CLiveKitProto
-import LiveKitNanopb
+import CAppLoomaProto
+import AppLoomaNanopb
 #endif
 import AVFoundation
 import Foundation
@@ -40,8 +40,8 @@ extension TrackSettings: CustomStringConvertible {
     }
 }
 
-package extension livekit_VideoLayer {
-    static func _describe(_ message: NanopbMsg<livekit_VideoLayer>) -> String {
+package extension applooma_VideoLayer {
+    static func _describe(_ message: NanopbMsg<applooma_VideoLayer>) -> String {
         "VideoLayer(quality: \(message.quality), dimensions: \(message.width)x\(message.height), bitrate: \(message.bitrate))"
     }
 }
@@ -52,14 +52,14 @@ public extension TrackPublication {
     }
 }
 
-package extension livekit_AddTrackRequest {
-    static func _describe(_ message: NanopbMsg<livekit_AddTrackRequest>) -> String {
+package extension applooma_AddTrackRequest {
+    static func _describe(_ message: NanopbMsg<applooma_AddTrackRequest>) -> String {
         "AddTrackRequest(cid: \(message.cid), name: \(message.name), type: \(message.type), source: \(message.source), width: \(message.width), height: \(message.height), muted: \(message.muted))"
     }
 }
 
-package extension livekit_TrackInfo {
-    static func _describe(_ message: NanopbMsg<livekit_TrackInfo>) -> String {
+package extension applooma_TrackInfo {
+    static func _describe(_ message: NanopbMsg<applooma_TrackInfo>) -> String {
         "TrackInfo(sid: \(message.sid), " +
             "name: \(message.name), " +
             "type: \(message.type), " +
@@ -73,20 +73,20 @@ package extension livekit_TrackInfo {
     }
 }
 
-package extension livekit_SubscribedQuality {
-    static func _describe(_ message: NanopbMsg<livekit_SubscribedQuality>) -> String {
+package extension applooma_SubscribedQuality {
+    static func _describe(_ message: NanopbMsg<applooma_SubscribedQuality>) -> String {
         "SubscribedQuality(quality: \(message.quality), enabled: \(message.enabled))"
     }
 }
 
-package extension livekit_SubscribedCodec {
-    static func _describe(_ message: NanopbMsg<livekit_SubscribedCodec>) -> String {
+package extension applooma_SubscribedCodec {
+    static func _describe(_ message: NanopbMsg<applooma_SubscribedCodec>) -> String {
         "SubscribedCodec(codec: \(message.codec), qualities: \(message.qualities.map { String(describing: $0) }.joined(separator: ", "))"
     }
 }
 
-package extension livekit_ServerInfo {
-    static func _describe(_ message: NanopbMsg<livekit_ServerInfo>) -> String {
+package extension applooma_ServerInfo {
+    static func _describe(_ message: NanopbMsg<applooma_ServerInfo>) -> String {
         "ServerInfo(edition: \(message.edition), " +
             "version: \(message.version), " +
             "protocol: \(message.protocol), " +
@@ -163,9 +163,9 @@ extension ReconnectMode: CustomStringConvertible {
     }
 }
 
-extension Livekit_SignalResponse {
+extension Applooma_SignalResponse {
     var description: String {
-        "Livekit_SignalResponse(\(String(describing: message)))"
+        "Applooma_SignalResponse(\(String(describing: message)))"
     }
 }
 

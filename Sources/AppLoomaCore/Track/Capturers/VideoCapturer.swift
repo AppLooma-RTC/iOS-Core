@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class VideoCapturer: NSObject, @unchecked Sendable, Loggable, VideoCaptur
     public let delegates = MulticastDelegate<VideoCapturerDelegate>(label: "VideoCapturerDelegate")
     public let rendererDelegates = MulticastDelegate<VideoRenderer>(label: "VideoCapturerRendererDelegate")
 
-    private let processingQueue = DispatchQueue(label: "io.livekit.videocapturer.processing", autoreleaseFrequency: .workItem)
+    private let processingQueue = DispatchQueue(label: "com.applooma.rtc.videocapturer.processing", autoreleaseFrequency: .workItem)
 
     // Constant set, no libwebrtc proxy: nothing to wait on.
     /// Array of supported pixel formats that can be used to capture a frame.

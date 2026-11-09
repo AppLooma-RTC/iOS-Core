@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,14 +72,14 @@ actor RegionManager: Loggable {
     func resolveBest(token: String) async throws -> RegionInfo {
         try await requestSettingsIfNeeded(token: token)
         guard let selected = state.remaining.first else {
-            throw LiveKitError(.regionManager, message: "No more remaining regions.")
+            throw TransportError(.regionManager, message: "No more remaining regions.")
         }
 
         log("[Region] Resolved region: \(String(describing: selected))", .debug)
         return selected
     }
 
-    func updateFromServerReportedRegions(_ regions: Livekit_RegionSettings) {
+    func updateFromServerReportedRegions(_ regions: Applooma_RegionSettings) {
         guard providedUrl.isCloud else { return }
 
         let allRegions = regions.regions.compactMap { $0.toLKType() }
@@ -134,7 +134,7 @@ actor RegionManager: Loggable {
 
     private func requestSettingsIfNeeded(token: String) async throws {
         guard providedUrl.isCloud else {
-            throw LiveKitError(.onlyForCloud)
+            throw TransportError(.onlyForCloud)
         }
 
         guard shouldRequestSettings() else { return }
@@ -164,7 +164,7 @@ actor RegionManager: Loggable {
 
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse else {
-            throw LiveKitError(.regionManager, message: "Failed to fetch region settings")
+            throw TransportError(.regionManager, message: "Failed to fetch region settings")
         }
 
         let statusCode = httpResponse.statusCode
@@ -178,10 +178,10 @@ actor RegionManager: Loggable {
             }
 
             if (400 ..< 500).contains(statusCode) {
-                throw LiveKitError(.validation, message: "Region settings error: HTTP \(statusCode): \(body)")
+                throw TransportError(.validation, message: "Region settings error: HTTP \(statusCode): \(body)")
             }
 
-            throw LiveKitError(.regionManager, message: "Failed to fetch region settings: HTTP \(statusCode): \(body)")
+            throw TransportError(.regionManager, message: "Failed to fetch region settings: HTTP \(statusCode): \(body)")
         }
 
         return data
@@ -217,18 +217,18 @@ actor RegionManager: Loggable {
         do {
             let json = try JSONDecoder().decode(RegionSettingsJSON.self, from: data)
             let allRegions = (json.regions ?? []).compactMap { region in
-                Livekit_RegionInfo.with {
+                Applooma_RegionInfo.with {
                     $0.region = region.region ?? ""
                     $0.url = region.url ?? ""
                     $0.distance = region.distance?.value ?? 0
                 }.toLKType()
             }
             guard !allRegions.isEmpty else {
-                throw LiveKitError(.regionManager, message: "Fetched region data is empty.")
+                throw TransportError(.regionManager, message: "Fetched region data is empty.")
             }
             return allRegions
         } catch {
-            throw LiveKitError(.regionManager, message: "Failed to parse region settings with error: \(error)")
+            throw TransportError(.regionManager, message: "Failed to parse region settings with error: \(error)")
         }
     }
 }

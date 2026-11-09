@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ actor RpcServerManager: Loggable {
 
     func registerHandler(_ method: String, handler: @escaping RpcHandler) throws {
         guard !isRpcMethodRegistered(method) else {
-            throw LiveKitError(.invalidState, message: "RPC method '\(method)' already registered")
+            throw TransportError(.invalidState, message: "RPC method '\(method)' already registered")
         }
         handlers[method] = handler
     }
@@ -283,10 +283,10 @@ actor RpcServerManager: Loggable {
             outgoingError = RpcError.builtIn(.responsePayloadTooLarge)
         }
 
-        let dataPacket = Livekit_DataPacket.with {
+        let dataPacket = Applooma_DataPacket.with {
             $0.destinationIdentities = [destinationIdentity.stringValue]
             $0.kind = .reliable
-            $0.rpcResponse = Livekit_RpcResponse.with {
+            $0.rpcResponse = Applooma_RpcResponse.with {
                 $0.requestID = requestId
                 if let outgoingError {
                     $0.error = outgoingError.toProto()
@@ -318,10 +318,10 @@ actor RpcServerManager: Loggable {
                             destinationIdentity: Participant.Identity,
                             requestId: String) async throws
     {
-        let dataPacket = Livekit_DataPacket.with {
+        let dataPacket = Applooma_DataPacket.with {
             $0.destinationIdentities = [destinationIdentity.stringValue]
             $0.kind = .reliable
-            $0.rpcAck = Livekit_RpcAck.with {
+            $0.rpcAck = Applooma_RpcAck.with {
                 $0.requestID = requestId
             }
         }
@@ -332,7 +332,7 @@ actor RpcServerManager: Loggable {
     // MARK: - Helpers
 
     private func requireRoom() throws -> Room {
-        guard let room else { throw LiveKitError(.invalidState, message: "Room is nil") }
+        guard let room else { throw TransportError(.invalidState, message: "Room is nil") }
         return room
     }
 }

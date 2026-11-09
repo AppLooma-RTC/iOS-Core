@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -150,15 +150,15 @@ extension Dimensions {
         return VideoQuality.RIDs.compactMap { rid in result.first(where: { $0.rid == rid }) }
     }
 
-    func videoLayers(for encodings: [LKRTCRtpEncodingParameters]) -> [Livekit_VideoLayer] {
+    func videoLayers(for encodings: [LKRTCRtpEncodingParameters]) -> [Applooma_VideoLayer] {
         if let firstEncoding = encodings.first,
            let scalabilityMode = ScalabilityMode.fromString(firstEncoding.scalabilityMode)
         {
             (0 ... (scalabilityMode.spatial - 1)).map { idx in
-                Livekit_VideoLayer.with {
+                Applooma_VideoLayer.with {
                     $0.width = UInt32((Double(width) / pow(2, Double(idx))).rounded(.down))
                     $0.height = UInt32((Double(height) / pow(2, Double(idx))).rounded(.down))
-                    $0.quality = Livekit_VideoQuality(rawValue: scalabilityMode.spatial - idx - 1) ?? .off
+                    $0.quality = Applooma_VideoQuality(rawValue: scalabilityMode.spatial - idx - 1) ?? .off
                     $0.bitrate = UInt32((Double(truncating: firstEncoding.maxBitrateBps ?? 0) / pow(3, Double(idx))).rounded(.up))
                 }
             }
@@ -166,10 +166,10 @@ extension Dimensions {
         } else {
             encodings.filter(\.isActive).map { encoding in
                 let scaleDownBy = encoding.scaleResolutionDownBy?.doubleValue ?? 1.0
-                return Livekit_VideoLayer.with {
+                return Applooma_VideoLayer.with {
                     $0.width = UInt32((Double(width) / scaleDownBy).rounded(.down))
                     $0.height = UInt32((Double(height) / scaleDownBy).rounded(.down))
-                    $0.quality = Livekit_VideoQuality.from(rid: encoding.rid) ?? .high
+                    $0.quality = Applooma_VideoQuality.from(rid: encoding.rid) ?? .high
                     $0.bitrate = encoding.maxBitrateBps?.uint32Value ?? 0
                 }
             }

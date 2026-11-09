@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public extension Participant {
         case egress
         /// SIP participants.
         case sip
-        /// LiveKit agents.
+        /// the transport agents.
         case agent
     }
 }
@@ -48,7 +48,7 @@ extension Participant.Kind: CustomStringConvertible {
 
 // MARK: - Internal
 
-extension Livekit_ParticipantInfo_Kind {
+extension Applooma_ParticipantInfo_Kind {
     func toLKType() -> Participant.Kind {
         switch self {
         case .standard: .standard

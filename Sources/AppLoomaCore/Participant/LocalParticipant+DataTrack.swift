@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ public extension LocalParticipant {
     /// - Throws: ``DataTrackPublishError`` if the track cannot be published, or a cancellation
     ///   error if the calling task is cancelled while the publish is in flight.
     ///
-    /// - Note: When self-hosting the LiveKit SFU, a ``DataTrackPublishError/timeout(_:)`` may
+    /// - Note: When self-hosting the the transport SFU, a ``DataTrackPublishError/timeout(_:)`` may
     ///   indicate a release that predates data track support.
     func publishDataTrack(name: String) async throws -> LocalDataTrack {
         try await publishDataTrack(name: name, options: nil)
@@ -58,10 +58,10 @@ public extension LocalParticipant {
     ///   - id: Identifies the schema; the same ID goes into ``DataTrackPublishOptions``.
     ///   - definition: The definition, stored as-is. It is neither parsed nor validated against
     ///     its ``DataTrackSchemaId/encoding``, so it's up to the caller to keep it well-formed.
-    /// - Throws: ``LiveKitError`` if the room is disconnected or the server rejects the schema.
+    /// - Throws: ``TransportError`` if the room is disconnected or the server rejects the schema.
     func defineSchema(_ id: DataTrackSchemaId, definition: String) async throws {
         guard let room = _room else {
-            throw LiveKitError(.invalidState, message: "Not connected to a room")
+            throw TransportError(.invalidState, message: "Not connected to a room")
         }
         try await room.signalClient.sendStoreDataBlob(key: id.blobKey, contents: Data(definition.utf8))
     }
@@ -72,16 +72,16 @@ public extension LocalParticipant {
     /// - Parameters:
     ///   - id: Identifies the schema, as carried by ``DataTrackInfo/schema``.
     ///   - participant: Identity of the participant that defined it.
-    /// - Throws: ``LiveKitError`` if the room is disconnected, no such schema was defined, or the
+    /// - Throws: ``TransportError`` if the room is disconnected, no such schema was defined, or the
     ///   stored definition is not valid UTF-8.
     func getSchema(_ id: DataTrackSchemaId, publishedBy participant: Participant.Identity) async throws -> String {
         guard let room = _room else {
-            throw LiveKitError(.invalidState, message: "Not connected to a room")
+            throw TransportError(.invalidState, message: "Not connected to a room")
         }
         let contents = try await room.signalClient.sendGetDataBlob(key: id.blobKey,
                                                                    participantIdentity: participant.stringValue)
         guard let definition = String(data: contents, encoding: .utf8) else {
-            throw LiveKitError(.failedToConvertData, message: "Schema definition is not valid UTF-8")
+            throw TransportError(.failedToConvertData, message: "Schema definition is not valid UTF-8")
         }
         return definition
     }

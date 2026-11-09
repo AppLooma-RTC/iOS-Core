@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ func withThrowingTimeout<T: Sendable>(timeout: TimeInterval,
 
         group.addTask {
             try await Task.sleep(nanoseconds: UInt64(timeout * 1_000_000_000))
-            throw LiveKitError(.timedOut)
+            throw TransportError(.timedOut)
         }
 
         let result = try await group.next()
@@ -43,7 +43,7 @@ func withThrowingTimeout<T: Sendable>(timeout: TimeInterval,
 
         guard let result else {
             // This should never happen since we know we added tasks
-            throw LiveKitError(.invalidState)
+            throw TransportError(.invalidState)
         }
 
         return result

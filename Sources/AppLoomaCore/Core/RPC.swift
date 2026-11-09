@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,7 +91,7 @@ public struct RpcError: Error {
     static let MAX_MESSAGE_BYTES = 256
     static let MAX_DATA_BYTES = 15360 // 15 KB
 
-    static func fromProto(_ proto: Livekit_RpcError) -> RpcError {
+    static func fromProto(_ proto: Applooma_RpcError) -> RpcError {
         RpcError(
             code: Int(proto.code),
             message: (proto.message).truncate(maxBytes: MAX_MESSAGE_BYTES),
@@ -99,8 +99,8 @@ public struct RpcError: Error {
         )
     }
 
-    func toProto() -> Livekit_RpcError {
-        Livekit_RpcError.with {
+    func toProto() -> Applooma_RpcError {
+        Applooma_RpcError.with {
             $0.code = UInt32(code)
             $0.message = message
             $0.data = data

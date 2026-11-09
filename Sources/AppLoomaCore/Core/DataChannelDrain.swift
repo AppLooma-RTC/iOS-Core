@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -234,7 +234,7 @@ final class DataChannelDrain<Stage: SendStage>: NSObject, LKRTCDataChannelDelega
         eventContinuation.yield(.fail(error))
     }
 
-    func info() -> Livekit_DataChannelInfo? {
+    func info() -> Applooma_DataChannelInfo? {
         (_state.sendTarget as? LKRTCDataChannel)?.toLKInfoType()
     }
 
@@ -269,7 +269,7 @@ final class DataChannelDrain<Stage: SendStage>: NSObject, LKRTCDataChannelDelega
         case .wakeup:
             break
         case let .fail(error):
-            state.queue.settleAll(.failure(error ?? LiveKitError(.cancelled, message: "Data channel reset")))
+            state.queue.settleAll(.failure(error ?? TransportError(.cancelled, message: "Data channel reset")))
             state.stage.reset()
             parkChannelRelease(state.sendTarget)
             state.sendTarget = nil
@@ -358,7 +358,7 @@ final class DataChannelDrain<Stage: SendStage>: NSObject, LKRTCDataChannelDelega
             guard channel.send(write.payload) else {
                 // Never reached the transport, so they are not outstanding after all.
                 state.meter.didDrain(UInt64(write.byteCount))
-                let failure = LiveKitError(.invalidState, message: "sendData failed")
+                let failure = TransportError(.invalidState, message: "sendData failed")
                 // Removed *before* it is settled, so no later cleanup can reach this write's
                 // continuation a second time — dropFailedWrite settles only what remains.
                 state.queue.advance()
@@ -379,7 +379,7 @@ final class DataChannelDrain<Stage: SendStage>: NSObject, LKRTCDataChannelDelega
     /// of the group goes with it, since half a frame on the wire is worse than none — and a group's
     /// continuation rides its *last* write, so the discarded remainder is failed rather than
     /// dropped, or a caller awaiting a multi-write group would hang forever.
-    private func dropFailedWrite(state: inout LoopState, throwing failure: LiveKitError) {
+    private func dropFailedWrite(state: inout LoopState, throwing failure: TransportError) {
         switch overflow {
         case .park:
             break // the failed write was already removed; the rest belongs to other submitters

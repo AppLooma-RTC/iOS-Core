@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import Foundation
 
 internal import LiveKitWebRTC
 
-public enum LiveKitErrorType: Int, Sendable {
+public enum TransportErrorType: Int, Sendable {
     case unknown = 0
     case cancelled = 100
     case timedOut = 101
@@ -65,12 +65,12 @@ public enum LiveKitErrorType: Int, Sendable {
     case encryptionFailed = 1001
     case decryptionFailed = 1002
 
-    // LiveKit Cloud
+    // the hosted media service
     case onlyForCloud = 1101
     case regionManager = 1102
 }
 
-extension LiveKitErrorType: CustomStringConvertible {
+extension TransportErrorType: CustomStringConvertible {
     public var description: String {
         switch self {
         case .cancelled:
@@ -128,7 +128,7 @@ extension LiveKitErrorType: CustomStringConvertible {
         case .decryptionFailed:
             "Decryption failed"
         case .onlyForCloud:
-            "Only for LiveKit Cloud"
+            "Only for the hosted media service"
         case .regionManager:
             "Region manager error"
         default: "Unknown"
@@ -137,8 +137,8 @@ extension LiveKitErrorType: CustomStringConvertible {
 }
 
 @objcMembers
-public class LiveKitError: NSError, @unchecked Sendable, Loggable {
-    public let type: LiveKitErrorType
+public class TransportError: NSError, @unchecked Sendable, Loggable {
+    public let type: TransportErrorType
     public let message: String?
     public let internalError: Error?
 
@@ -149,7 +149,7 @@ public class LiveKitError: NSError, @unchecked Sendable, Loggable {
         [internalError].compactMap(\.self)
     }
 
-    public init(_ type: LiveKitErrorType,
+    public init(_ type: TransportErrorType,
                 message: String? = nil,
                 internalError: Error? = nil)
     {
@@ -171,7 +171,7 @@ public class LiveKitError: NSError, @unchecked Sendable, Loggable {
         if let internalError {
             userInfo[NSUnderlyingErrorKey] = internalError as NSError
         }
-        super.init(domain: "io.livekit.swift-sdk",
+        super.init(domain: "com.applooma.rtc.swift-sdk",
                    code: type.rawValue,
                    userInfo: userInfo)
     }
@@ -182,27 +182,27 @@ public class LiveKitError: NSError, @unchecked Sendable, Loggable {
     }
 }
 
-extension LiveKitError {
-    static func from(error: Error?) -> LiveKitError? {
+extension TransportError {
+    static func from(error: Error?) -> TransportError? {
         guard let error else { return nil }
-        if let error = error as? LiveKitError {
+        if let error = error as? TransportError {
             return error
         }
 
         if error is CancellationError {
-            return LiveKitError(.cancelled)
+            return TransportError(.cancelled)
         }
 
         if error.isNetworkError {
-            return LiveKitError(.network, internalError: error)
+            return TransportError(.network, internalError: error)
         }
 
         log("Uncategorized error for: \(String(describing: error))")
-        return LiveKitError(.unknown)
+        return TransportError(.unknown)
     }
 
-    static func from(reason: Livekit_DisconnectReason) -> LiveKitError {
-        LiveKitError(reason.toLKType())
+    static func from(reason: Applooma_DisconnectReason) -> TransportError {
+        TransportError(reason.toLKType())
     }
 }
 
@@ -232,8 +232,8 @@ extension Error {
 
     /// Returns `true` for network/timeouts that should trigger region failover.
     var isRetryableForRegionFailover: Bool {
-        if let liveKitError = self as? LiveKitError {
-            switch liveKitError.type {
+        if let transportError = self as? TransportError {
+            switch transportError.type {
             case .network, .timedOut:
                 return true
             default:
@@ -245,8 +245,8 @@ extension Error {
     }
 }
 
-extension Livekit_DisconnectReason {
-    func toLKType() -> LiveKitErrorType {
+extension Applooma_DisconnectReason {
+    func toLKType() -> TransportErrorType {
         switch self {
         case .clientInitiated: .cancelled
         case .duplicateIdentity: .duplicateIdentity
@@ -263,7 +263,7 @@ extension Livekit_DisconnectReason {
 // MARK: - LocalizedError
 
 // Conform to LocalizedError for convenience with SwiftUI etc.
-extension LiveKitError: LocalizedError {
+extension TransportError: LocalizedError {
     public var errorDescription: String? {
         // Simply return description for now
         description

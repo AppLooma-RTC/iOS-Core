@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,30 @@
 
 import Foundation
 
-/// A token source that queries LiveKit's development token server for development and testing.
+/// A token source that queries the transport's development token server for development and testing.
 ///
-/// This token source connects to LiveKit Cloud's [development token server](https://docs.livekit.io/frontends/build/authentication/sandbox-token-server/),
-/// which is perfect for quick prototyping and getting started with LiveKit development.
+/// This token source connects to the hosted media service's [development token server](https://docs.applooma.dev/
+/// which is perfect for quick prototyping and getting started with the transport development.
 ///
 /// - Warning: This token source is **insecure** and should **never** be used in production.
 /// - Note: For production use, implement ``EndpointTokenSource`` or your own ``TokenSourceConfigurable``.
 public struct DevelopmentTokenSource: EndpointTokenSource {
-    public let url = URL(string: "https://cloud-api.livekit.io/api/v2/sandbox/connection-details")!
+    public let url = URL(string: "https://api.applooma.dev/
     public var headers: [String: String] {
         ["X-Sandbox-ID": id]
     }
 
-    /// The development token server ID provided by LiveKit Cloud for authentication.
+    /// The development token server ID provided by the hosted media service for authentication.
     public let id: String
 
-    /// Initialize with a development token server ID from LiveKit Cloud.
+    /// Initialize with a development token server ID from the hosted media service.
     ///
-    /// - Parameter id: The token server ID obtained from your LiveKit Cloud project
+    /// - Parameter id: The token server ID obtained from your the hosted media service project
     public init(id: String) {
         self.id = id.trimmingCharacters(in: .alphanumerics.inverted)
     }
 }
 
-/// A token source that queries LiveKit's sandbox token server for development and testing.
+/// A token source that queries the transport's sandbox token server for development and testing.
 @available(*, deprecated, renamed: "DevelopmentTokenSource")
 public typealias SandboxTokenSource = DevelopmentTokenSource

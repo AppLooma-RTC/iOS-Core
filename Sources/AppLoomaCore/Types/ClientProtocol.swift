@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import Foundation
 /// Client-to-client protocol version advertised to other participants.
 ///
 /// This is distinct from ``ProtocolVersion``, which tracks the *signaling* protocol
-/// negotiated with the LiveKit server. ``ClientProtocol`` governs peer-to-peer feature
+/// negotiated with the media server. ``ClientProtocol`` governs peer-to-peer feature
 /// negotiation between participants.
 public enum ClientProtocol: Int, Sendable {
     /// Legacy client. Only supports RPC v1 (inline `RpcRequest`/`RpcResponse` packets,

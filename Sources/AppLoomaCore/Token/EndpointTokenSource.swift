@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import Foundation
 /// - Validates HTTP status codes (200-299) and throws appropriate errors for failures
 public protocol EndpointTokenSource: TokenSourceConfigurable {
     /// The URL endpoint for token generation.
-    /// This should point to your backend service that generates LiveKit tokens.
+    /// This should point to your backend service that generates the transport tokens.
     var url: URL { get }
     /// The HTTP method to use for the token request (defaults to "POST").
     var method: String { get }
@@ -52,11 +52,11 @@ public extension EndpointTokenSource {
         let (data, response) = try await URLSession.shared.data(for: urlRequest)
 
         guard let httpResponse = response as? HTTPURLResponse else {
-            throw LiveKitError(.network, message: "Error generating token from the token server, no response")
+            throw TransportError(.network, message: "Error generating token from the token server, no response")
         }
 
         guard (200 ..< 300).contains(httpResponse.statusCode) else {
-            throw LiveKitError(.network, message: "Error generating token from the token server, received \(httpResponse)")
+            throw TransportError(.network, message: "Error generating token from the token server, received \(httpResponse)")
         }
 
         return try JSONDecoder().decode(TokenSourceResponse.self, from: data)

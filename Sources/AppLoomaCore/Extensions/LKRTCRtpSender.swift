@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ extension LKRTCRtpSender: Loggable {
 
     // ...
     @RTC
-    func _set(subscribedQualities qualities: [Livekit_SubscribedQuality]) {
+    func _set(subscribedQualities qualities: [Applooma_SubscribedQuality]) {
         let _parameters = parameters
         let encodings = _parameters.encodings
 
