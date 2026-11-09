@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,7 +120,7 @@ public protocol ParticipantDelegate: AnyObject, Sendable {
     ///
     /// This is an error state, the subscription can be retried.
     @objc optional
-    func participant(_ participant: RemoteParticipant, didFailToSubscribeTrackWithSid trackSid: Track.Sid, error: LiveKitError)
+    func participant(_ participant: RemoteParticipant, didFailToSubscribeTrackWithSid trackSid: Track.Sid, error: TransportError)
 
     /// ``TrackPublication/streamState`` has updated for the ``RemoteTrackPublication``.
     @objc optional

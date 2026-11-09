@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ final class Transport: NSObject, Loggable {
 
     // MARK: - Public
 
-    nonisolated let target: Livekit_SignalTarget
+    nonisolated let target: Applooma_SignalTarget
     nonisolated let isPrimary: Bool
     nonisolated let singlePCMode: Bool
 
@@ -86,7 +86,7 @@ final class Transport: NSObject, Loggable {
     }
 
     init(config: LKRTCConfiguration,
-         target: Livekit_SignalTarget,
+         target: Applooma_SignalTarget,
          primary: Bool,
          singlePCMode: Bool = false,
          delegate: TransportDelegate) throws
@@ -94,7 +94,7 @@ final class Transport: NSObject, Loggable {
         // try create peerConnection
         guard let pc = RTC.createPeerConnection(config, constraints: .defaultPCConstraints) else {
             // log("[WebRTC] Failed to create PeerConnection", .error)
-            throw LiveKitError(.webRTC, message: "Failed to create PeerConnection")
+            throw TransportError(.webRTC, message: "Failed to create PeerConnection")
         }
 
         self.target = target
@@ -141,7 +141,7 @@ final class Transport: NSObject, Loggable {
         if offerId == 0 {
             log("Skipping validation for legacy server (missing offerId), latestOfferId: \(_latestOfferId)", .warning)
         } else if offerId != _latestOfferId {
-            throw LiveKitError(.invalidState, message: "OfferId mismatch, expected \(_latestOfferId) but got \(offerId)")
+            throw TransportError(.invalidState, message: "OfferId mismatch, expected \(_latestOfferId) but got \(offerId)")
         }
 
         try await set(remoteDescription: sd)
@@ -170,7 +170,7 @@ final class Transport: NSObject, Loggable {
 
     func set(configuration: LKRTCConfiguration) throws {
         if !_pc.setConfiguration(configuration) {
-            throw LiveKitError(.webRTC, message: "Failed to set configuration")
+            throw TransportError(.webRTC, message: "Failed to set configuration")
         }
     }
 
@@ -455,7 +455,7 @@ extension Transport {
                 } else if let sd {
                     continuation.resume(returning: sd)
                 } else {
-                    continuation.resume(throwing: LiveKitError(.invalidState, message: "No session description and no error were provided."))
+                    continuation.resume(throwing: TransportError(.invalidState, message: "No session description and no error were provided."))
                 }
             }
         }
@@ -472,7 +472,7 @@ extension Transport {
                 } else if let sd {
                     continuation.resume(returning: sd)
                 } else {
-                    continuation.resume(throwing: LiveKitError(.invalidState, message: "No session description and no error were provided."))
+                    continuation.resume(throwing: TransportError(.invalidState, message: "No session description and no error were provided."))
                 }
             }
         }
@@ -494,7 +494,7 @@ extension Transport {
                         transceiverInit: LKRTCRtpTransceiverInit) throws -> LKRTCRtpTransceiver
     {
         guard let transceiver = _pc.addTransceiver(with: track, init: transceiverInit) else {
-            throw LiveKitError(.webRTC, message: "Failed to add transceiver")
+            throw TransportError(.webRTC, message: "Failed to add transceiver")
         }
 
         return transceiver
@@ -504,7 +504,7 @@ extension Transport {
                         transceiverInit: LKRTCRtpTransceiverInit) throws -> LKRTCRtpTransceiver
     {
         guard let transceiver = _pc.addTransceiver(of: mediaType, init: transceiverInit) else {
-            throw LiveKitError(.webRTC, message: "Failed to add transceiver")
+            throw TransportError(.webRTC, message: "Failed to add transceiver")
         }
 
         return transceiver
@@ -513,7 +513,7 @@ extension Transport {
     func remove(track sender: RTCSender) throws {
         let raw = sender.raw
         guard _pc.removeTrack(raw) else {
-            throw LiveKitError(.webRTC, message: "Failed to remove track")
+            throw TransportError(.webRTC, message: "Failed to remove track")
         }
 
         releaseTransceiver(sender: raw)

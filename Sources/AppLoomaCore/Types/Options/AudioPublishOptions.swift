@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ public final class AudioPublishOptions: NSObject, TrackPublishOptions, Sendable 
 
 // Internal
 extension AudioPublishOptions {
-    func toFeatures() -> Set<Livekit_AudioTrackFeature> {
+    func toFeatures() -> Set<Applooma_AudioTrackFeature> {
         Set([
             !dtx ? .tfNoDtx : nil,
             preConnect ? .tfPreconnectBuffer : nil,

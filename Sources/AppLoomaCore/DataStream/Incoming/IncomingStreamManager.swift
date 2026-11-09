@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,9 +53,9 @@ actor IncomingStreamManager: Loggable {
 
     /// Events are processed in a serial (FIFO) order
     enum StreamEvent {
-        case header(Livekit_DataStream.Header, String, EncryptionType)
-        case chunk(Livekit_DataStream.Chunk, EncryptionType)
-        case trailer(Livekit_DataStream.Trailer, EncryptionType)
+        case header(Applooma_DataStream.Header, String, EncryptionType)
+        case chunk(Applooma_DataStream.Chunk, EncryptionType)
+        case trailer(Applooma_DataStream.Trailer, EncryptionType)
     }
 
     private let eventContinuation: AsyncStream<StreamEvent>.Continuation
@@ -140,7 +140,7 @@ actor IncomingStreamManager: Loggable {
     // MARK: - Packet processing
 
     /// Handles a data stream header.
-    private func handle(header: Livekit_DataStream.Header, from identityString: String, encryptionType: EncryptionType) {
+    private func handle(header: Applooma_DataStream.Header, from identityString: String, encryptionType: EncryptionType) {
         let identity = Participant.Identity(from: identityString)
 
         guard let streamInfo = Self.streamInfo(from: header, encryptionType: encryptionType) else {
@@ -254,7 +254,7 @@ actor IncomingStreamManager: Loggable {
     }
 
     /// Handles a data stream chunk.
-    private func handle(chunk: Livekit_DataStream.Chunk, encryptionType: EncryptionType) {
+    private func handle(chunk: Applooma_DataStream.Chunk, encryptionType: EncryptionType) {
         guard !chunk.content.isEmpty, let descriptor = openStreams[chunk.streamID] else { return }
 
         // Error paths remove the descriptor synchronously for the same reason as
@@ -285,7 +285,7 @@ actor IncomingStreamManager: Loggable {
     }
 
     /// Handles a data stream trailer.
-    private func handle(trailer: Livekit_DataStream.Trailer, encryptionType: EncryptionType) {
+    private func handle(trailer: Applooma_DataStream.Trailer, encryptionType: EncryptionType) {
         guard let descriptor = openStreams[trailer.streamID] else {
             return
         }
@@ -363,7 +363,7 @@ public typealias TextStreamHandler = @Sendable (TextStreamReader, Participant.Id
 // MARK: - From protocol types
 
 extension IncomingStreamManager {
-    static func streamInfo(from header: Livekit_DataStream.Header, encryptionType: EncryptionType) -> StreamInfo? {
+    static func streamInfo(from header: Applooma_DataStream.Header, encryptionType: EncryptionType) -> StreamInfo? {
         switch header.contentHeader {
         case let .byteHeader(byteHeader): ByteStreamInfo(header, byteHeader, encryptionType)
         case let .textHeader(textHeader): TextStreamInfo(header, textHeader, encryptionType)
@@ -374,8 +374,8 @@ extension IncomingStreamManager {
 
 extension ByteStreamInfo {
     convenience init(
-        _ header: Livekit_DataStream.Header,
-        _ byteHeader: Livekit_DataStream.ByteHeader,
+        _ header: Applooma_DataStream.Header,
+        _ byteHeader: Applooma_DataStream.ByteHeader,
         _ encryptionType: EncryptionType,
     ) {
         self.init(
@@ -394,8 +394,8 @@ extension ByteStreamInfo {
 
 extension TextStreamInfo {
     convenience init(
-        _ header: Livekit_DataStream.Header,
-        _ textHeader: Livekit_DataStream.TextHeader,
+        _ header: Applooma_DataStream.Header,
+        _ textHeader: Applooma_DataStream.TextHeader,
         _ encryptionType: EncryptionType,
     ) {
         self.init(
@@ -416,7 +416,7 @@ extension TextStreamInfo {
 }
 
 extension TextStreamInfo.OperationType {
-    init(_ operationType: Livekit_DataStream.OperationType) {
+    init(_ operationType: Applooma_DataStream.OperationType) {
         self = Self(rawValue: operationType.rawValue) ?? .create
     }
 }

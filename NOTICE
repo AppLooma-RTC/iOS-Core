@@ -33,3 +33,5 @@ Changes made relative to upstream version 2.x:
 No functional changes were made to the media transport implementation. The
 original copyright notices are retained in every source file, and the Apache
 License 2.0 text is included in LICENSE.
+
+Modified by AppLooma LLC (3.0.3): targets, public types and generated protocol identifiers renamed.

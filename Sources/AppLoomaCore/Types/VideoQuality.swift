@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,24 +29,24 @@ extension VideoQuality {
 
 // Make convertible between protobuf type.
 extension VideoQuality {
-    private static let toPBTypeMap: [VideoQuality: Livekit_VideoQuality] = [
+    private static let toPBTypeMap: [VideoQuality: Applooma_VideoQuality] = [
         .low: .low,
         .medium: .medium,
         .high: .high,
     ]
 
-    func toPBType() -> Livekit_VideoQuality {
+    func toPBType() -> Applooma_VideoQuality {
         Self.toPBTypeMap[self] ?? .low
     }
 }
 
 // Make convertible between RIDs.
-extension Livekit_VideoQuality {
-    static func from(rid: String?) -> Livekit_VideoQuality? {
+extension Applooma_VideoQuality {
+    static func from(rid: String?) -> Applooma_VideoQuality? {
         switch rid {
-        case "q": Livekit_VideoQuality.low
-        case "h": Livekit_VideoQuality.medium
-        case "f": Livekit_VideoQuality.high
+        case "q": Applooma_VideoQuality.low
+        case "h": Applooma_VideoQuality.medium
+        case "f": Applooma_VideoQuality.high
         default: nil
         }
     }
@@ -63,7 +63,7 @@ extension Livekit_VideoQuality {
 
 // Make comparable by the real quality index since the raw protobuf values are not in order.
 // E.g. value of `.off` is `3` which is larger than `.high`.
-extension Livekit_VideoQuality: Comparable {
+extension Applooma_VideoQuality: Comparable {
     private var _weightIndex: Int {
         switch self {
         case .low: 1
@@ -73,7 +73,7 @@ extension Livekit_VideoQuality: Comparable {
         }
     }
 
-    static func < (lhs: Livekit_VideoQuality, rhs: Livekit_VideoQuality) -> Bool {
+    static func < (lhs: Applooma_VideoQuality, rhs: Applooma_VideoQuality) -> Bool {
         lhs._weightIndex < rhs._weightIndex
     }
 }

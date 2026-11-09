@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ public class Room: NSObject, @unchecked Sendable, ObservableObject, Loggable {
     /// Current ``ConnectionState`` of the ``Room``.
     public var connectionState: ConnectionState { _state.connectionState }
 
-    public var disconnectError: LiveKitError? { _state.disconnectError }
+    public var disconnectError: TransportError? { _state.disconnectError }
 
     /// Timing data for the most recent connection attempt.
     public var connectSpan: Span? { _state.connectSpan }
@@ -153,7 +153,7 @@ public class Room: NSObject, @unchecked Sendable, ObservableObject, Loggable {
 
     // MARK: - Queue
 
-    var _blockProcessQueue = DispatchQueue(label: "LiveKitSDK.engine.pendingBlocks",
+    var _blockProcessQueue = DispatchQueue(label: "TransportSDK.engine.pendingBlocks",
                                            qos: .default)
 
     var _queuedBlocks = [ConditionalExecutionEntry]()
@@ -184,7 +184,7 @@ public class Room: NSObject, @unchecked Sendable, ObservableObject, Loggable {
         var numParticipants: Int = 0
         var numPublishers: Int = 0
 
-        var serverInfo: Livekit_ServerInfo?
+        var serverInfo: Applooma_ServerInfo?
 
         // Engine
         var providedUrl: URL?
@@ -197,7 +197,7 @@ public class Room: NSObject, @unchecked Sendable, ObservableObject, Loggable {
         var isReconnectingWithMode: ReconnectMode?
         var connectionState: ConnectionState = .disconnected
         var reconnectTask: AnyTaskCancellable?
-        var disconnectError: LiveKitError?
+        var disconnectError: TransportError?
         var hasPublished: Bool = false
 
         // Dependency plane: which per-connection / per-join subsystems exist. Payloads are staged
@@ -216,7 +216,7 @@ public class Room: NSObject, @unchecked Sendable, ObservableObject, Loggable {
         // initial `JoinResponse.room.sid` is empty). Don't overwrite a known value
         // with an empty one, otherwise `Room.sid()` resolves with an empty SID and
         // never updates.
-        mutating func apply(roomInfo: Livekit_Room) {
+        mutating func apply(roomInfo: Applooma_Room) {
             if !roomInfo.sid.isEmpty {
                 sid = Room.Sid(from: roomInfo.sid)
             }
@@ -242,7 +242,7 @@ public class Room: NSObject, @unchecked Sendable, ObservableObject, Loggable {
         }
 
         @discardableResult
-        mutating func updateRemoteParticipant(info: Livekit_ParticipantInfo, room: Room) -> RemoteParticipant {
+        mutating func updateRemoteParticipant(info: Applooma_ParticipantInfo, room: Room) -> RemoteParticipant {
             let identity = Participant.Identity(from: info.identity)
             // Check if RemoteParticipant with same identity exists...
             if let participant = remoteParticipants[identity] { return participant }
@@ -290,7 +290,7 @@ public class Room: NSObject, @unchecked Sendable, ObservableObject, Loggable {
 
         super.init()
         // log sdk & os versions
-        log("sdk: \(LiveKitSDK.version), ffi: \(LiveKitSDK.ffiVersion), os: \(String(describing: Utils.os()))(\(Utils.osVersionString())), modelId: \(String(describing: Utils.modelIdentifier() ?? "unknown"))")
+        log("sdk: \(TransportSDK.version), ffi: \(TransportSDK.ffiVersion), os: \(String(describing: Utils.os()))(\(Utils.osVersionString())), modelId: \(String(describing: Utils.modelIdentifier() ?? "unknown"))")
 
         signalClient._delegate.set(delegate: self)
 
@@ -383,7 +383,7 @@ public class Room: NSObject, @unchecked Sendable, ObservableObject, Loggable {
     {
         guard let providedUrl = URL(string: urlString), providedUrl.isValidForConnect else {
             log("URL parse failed", .error)
-            throw LiveKitError(.failedToParseUrl)
+            throw TransportError(.failedToParseUrl)
         }
 
         log("Connecting to room...", .info)
@@ -474,7 +474,7 @@ public class Room: NSObject, @unchecked Sendable, ObservableObject, Loggable {
             let finalUrl: URL
             if providedUrl.isCloud {
                 guard let regionManager else {
-                    throw LiveKitError(.onlyForCloud)
+                    throw TransportError(.onlyForCloud)
                 }
 
                 finalUrl = try await connectWithCloudRegionFailover(regionManager: regionManager,
@@ -661,7 +661,7 @@ extension Room {
                 roomOptions: $0.roomOptions,
                 connectionState: .disconnected,
                 reconnectTask: $0.reconnectTask,
-                disconnectError: LiveKitError.from(error: disconnectError),
+                disconnectError: TransportError.from(error: disconnectError),
             )
         }
     }
@@ -722,7 +722,7 @@ extension Room {
         await incomingStreamManager.closeStreams(from: identity)
 
         guard let participant = _state.mutate({ $0.remoteParticipants.removeValue(forKey: identity) }) else {
-            throw LiveKitError(.invalidState, message: "Participant not found for \(identity)")
+            throw TransportError(.invalidState, message: "Participant not found for \(identity)")
         }
 
         await participant.cleanUp(notify: true)
@@ -816,7 +816,7 @@ public extension Room {
 // MARK: - DataChannelDelegate
 
 extension Room: DataChannelDelegate {
-    func dataChannel(_: DataChannelPair, didReceiveDataPacket dataPacket: Livekit_DataPacket, encryptionType: EncryptionType) {
+    func dataChannel(_: DataChannelPair, didReceiveDataPacket dataPacket: Applooma_DataPacket, encryptionType: EncryptionType) {
         switch dataPacket.value {
         case let .speaker(update): engine(self, didUpdateSpeakers: update.speakers)
         case let .user(userPacket): engine(self, didReceiveUserPacket: userPacket, encryptionType: encryptionType)
@@ -834,7 +834,7 @@ extension Room: DataChannelDelegate {
         }
     }
 
-    func dataChannel(_: DataChannelPair, didFailToDecryptDataPacket _: Livekit_DataPacket, error: LiveKitError) {
+    func dataChannel(_: DataChannelPair, didFailToDecryptDataPacket _: Applooma_DataPacket, error: TransportError) {
         delegates.notify {
             $0.room?(self, didFailToDecryptDataWithEror: error)
         }

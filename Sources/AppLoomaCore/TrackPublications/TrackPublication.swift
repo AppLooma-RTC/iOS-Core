@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 #if !COCOAPODS && !LK_XCFRAMEWORK
-import LiveKitNanopb
+import AppLoomaNanopb
 #endif
 import Combine
 import Foundation
@@ -52,7 +52,7 @@ public class TrackPublication: NSObject, @unchecked Sendable, ObservableObject, 
 
     // MARK: - Internal
 
-    let queue = DispatchQueue(label: "LiveKitSDK.publication", qos: .default)
+    let queue = DispatchQueue(label: "TransportSDK.publication", qos: .default)
 
     /// Reference to the ``Participant`` this publication belongs to.
     weak var participant: Participant?
@@ -81,14 +81,14 @@ public class TrackPublication: NSObject, @unchecked Sendable, ObservableObject, 
         var isMetadataMuted: Bool = false
         var encryptionType: EncryptionType = .none
 
-        var latestInfo: Livekit_TrackInfo?
+        var latestInfo: Applooma_TrackInfo?
 
-        var audioTrackFeatures: Set<Livekit_AudioTrackFeature>?
+        var audioTrackFeatures: Set<Applooma_AudioTrackFeature>?
     }
 
     let _state: StateSync<State>
 
-    init(info: Livekit_TrackInfo, participant: Participant) {
+    init(info: Applooma_TrackInfo, participant: Participant) {
         _state = StateSync(State(
             sid: Track.Sid(from: info.sid),
             kind: info.type.toLKType(),
@@ -149,7 +149,7 @@ public class TrackPublication: NSObject, @unchecked Sendable, ObservableObject, 
         }
     }
 
-    func updateFromInfo(info: Livekit_TrackInfo) {
+    func updateFromInfo(info: Applooma_TrackInfo) {
         _state.mutate {
             // only muted and name can conceivably update
             $0.name = info.name
@@ -225,7 +225,7 @@ extension TrackPublication {
     func requireParticipant() async throws -> Participant {
         guard let participant else {
             log("Participant is nil", .error)
-            throw LiveKitError(.invalidState, message: "Participant is nil")
+            throw TransportError(.invalidState, message: "Participant is nil")
         }
 
         return participant

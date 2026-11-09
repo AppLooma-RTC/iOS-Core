@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,7 +120,7 @@ public class CameraCapturer: VideoCapturer, @unchecked Sendable {
         // Cannot toggle if current position is unknown
         guard position != .unspecified else {
             log("Failed to toggle camera position", .error)
-            throw LiveKitError(.invalidState, message: "Failed to toggle camera position")
+            throw TransportError(.invalidState, message: "Failed to toggle camera position")
         }
 
         return try await set(cameraPosition: position == .front ? .back : .front)
@@ -189,7 +189,7 @@ public class CameraCapturer: VideoCapturer, @unchecked Sendable {
 
         guard let device else {
             log("No camera video capture devices available", .error)
-            throw LiveKitError(.deviceNotFound, message: "No camera video capture devices available")
+            throw TransportError(.deviceNotFound, message: "No camera video capture devices available")
         }
 
         // list of all formats in order of dimensions size
@@ -263,7 +263,7 @@ public class CameraCapturer: VideoCapturer, @unchecked Sendable {
         // format should be resolved at this point
         guard let selectedFormat else {
             log("Unable to resolve capture format", .error)
-            throw LiveKitError(.captureFormatNotFound, message: "Unable to resolve capture format")
+            throw TransportError(.captureFormatNotFound, message: "Unable to resolve capture format")
         }
 
         let fpsRange = selectedFormat.format.fpsRange()
@@ -271,7 +271,7 @@ public class CameraCapturer: VideoCapturer, @unchecked Sendable {
         // this should never happen
         guard fpsRange != 0 ... 0 else {
             log("Unable to determine supported fps range for format: \(selectedFormat)", .error)
-            throw LiveKitError(.unableToResolveFPSRange, message: "Unable to determine supported fps range for format: \(selectedFormat)")
+            throw TransportError(.unableToResolveFPSRange, message: "Unable to determine supported fps range for format: \(selectedFormat)")
         }
 
         // default to fps in options

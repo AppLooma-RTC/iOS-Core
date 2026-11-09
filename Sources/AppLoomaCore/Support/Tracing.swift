@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ public typealias Stopwatch = Span
 /// A factory that creates ``Span``s for SDK operations.
 ///
 /// The default ``LoggingTracer`` logs completed spans at debug level.
-/// Inject a custom implementation via ``LiveKitSDK/setTracing(_:)`` to
+/// Inject a custom implementation via ``TransportSDK/setTracing(_:)`` to
 /// capture timing data programmatically (e.g., for benchmarks).
 ///
 /// This follows the same injection pattern as ``Logger``.

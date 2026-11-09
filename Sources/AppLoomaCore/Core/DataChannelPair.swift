@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ protocol DataChannelDelegate: AnyObject, Sendable {
     /// `encryptionType` is how the packet arrived on the wire. It rides alongside the packet
     /// because decryption rewrites the payload oneof, which *clears* `encryptedPacket` — reading
     /// the type off a decrypted packet reports every encrypted message as unencrypted.
-    func dataChannel(_ dataChannelPair: DataChannelPair, didReceiveDataPacket dataPacket: Livekit_DataPacket, encryptionType: EncryptionType)
-    func dataChannel(_ dataChannelPair: DataChannelPair, didFailToDecryptDataPacket dataPacket: Livekit_DataPacket, error: LiveKitError)
+    func dataChannel(_ dataChannelPair: DataChannelPair, didReceiveDataPacket dataPacket: Applooma_DataPacket, encryptionType: EncryptionType)
+    func dataChannel(_ dataChannelPair: DataChannelPair, didFailToDecryptDataPacket dataPacket: Applooma_DataPacket, error: TransportError)
 }
 
 /// The lossy and reliable data channels for one peer connection, plus the packet semantics they
@@ -158,14 +158,14 @@ class DataChannelPair: NSObject, @unchecked Sendable, Loggable {
 
     // MARK: - Send
 
-    func send(userPacket: Livekit_UserPacket, kind: Livekit_DataPacket_Kind) async throws {
+    func send(userPacket: Applooma_UserPacket, kind: Applooma_DataPacket_Kind) async throws {
         try await send(dataPacket: .with {
             $0.kind = kind // TODO: field is deprecated
             $0.user = userPacket
         })
     }
 
-    func send(dataPacket packet: consuming Livekit_DataPacket) async throws {
+    func send(dataPacket packet: consuming Applooma_DataPacket) async throws {
         // Encrypt off the event loop: CPU work that doesn't touch ordering.
         let encryptedPacket = try withEncryption(packet)
         let isLossy = encryptedPacket.kind == .lossy // TODO: field is deprecated
@@ -179,15 +179,15 @@ class DataChannelPair: NSObject, @unchecked Sendable, Loggable {
         }
     }
 
-    private func withEncryption(_ packet: Livekit_DataPacket) throws -> Livekit_DataPacket {
+    private func withEncryption(_ packet: Applooma_DataPacket) throws -> Applooma_DataPacket {
         guard let e2eeManager = _state.e2eeManager, e2eeManager.isDataChannelEncryptionEnabled,
-              let payload = Livekit_EncryptedPacketPayload(dataPacket: packet) else { return packet }
-        let encrypted: Livekit_EncryptedPacket
+              let payload = Applooma_EncryptedPacketPayload(dataPacket: packet) else { return packet }
+        let encrypted: Applooma_EncryptedPacket
         do {
             let payloadData = try payload.serializedData()
-            encrypted = try Livekit_EncryptedPacket(rtcPacket: e2eeManager.encrypt(data: payloadData))
+            encrypted = try Applooma_EncryptedPacket(rtcPacket: e2eeManager.encrypt(data: payloadData))
         } catch {
-            throw LiveKitError(.encryptionFailed, internalError: error)
+            throw TransportError(.encryptionFailed, internalError: error)
         }
         return packet.modifying { $0.encryptedPacket = encrypted }
     }
@@ -199,7 +199,7 @@ class DataChannelPair: NSObject, @unchecked Sendable, Loggable {
     // MARK: - Receive
 
     private func handle(received data: Data, isReliable: Bool) {
-        guard let dataPacket = try? Livekit_DataPacket(serializedBytes: data) else {
+        guard let dataPacket = try? Applooma_DataPacket(serializedBytes: data) else {
             log("Could not decode data message", .error)
             return
         }
@@ -235,7 +235,7 @@ class DataChannelPair: NSObject, @unchecked Sendable, Loggable {
 
         do {
             let decryptedData = try e2eeManager.handle(encryptedData: encryptedPacket.toRTCEncryptedPacket(), participantIdentity: dataPacket.participantIdentity)
-            let decryptedPayload = try Livekit_EncryptedPacketPayload(serializedBytes: decryptedData)
+            let decryptedPayload = try Applooma_EncryptedPacketPayload(serializedBytes: decryptedData)
 
             let decrypted = dataPacket.modifying { decryptedPayload.applyTo(&$0) }
 
@@ -245,21 +245,21 @@ class DataChannelPair: NSObject, @unchecked Sendable, Loggable {
         } catch {
             log("Failed to decrypt data packet: \(error)", .error)
             delegates.notify {
-                $0.dataChannel(self, didFailToDecryptDataPacket: dataPacket, error: LiveKitError(.decryptionFailed, internalError: error))
+                $0.dataChannel(self, didFailToDecryptDataPacket: dataPacket, error: TransportError(.decryptionFailed, internalError: error))
             }
         }
     }
 
     // MARK: - Sync state
 
-    func infos() -> [Livekit_DataChannelInfo] {
+    func infos() -> [Applooma_DataChannelInfo] {
         [lossy.info(), reliable.info()].compactMap(\.self)
     }
 
-    func receiveStates() -> [Livekit_DataChannelReceiveState] {
+    func receiveStates() -> [Applooma_DataChannelReceiveState] {
         _state.read { state in
             state.reliableReceivedState.map { sid, seq in
-                Livekit_DataChannelReceiveState.with {
+                Applooma_DataChannelReceiveState.with {
                     $0.publisherSid = sid
                     $0.lastSeq = seq
                 }
@@ -285,7 +285,7 @@ class DataChannelPair: NSObject, @unchecked Sendable, Loggable {
 
     /// Default max-message-size assumed before SDP negotiation completes, and
     /// the upper bound clamp applied to any value parsed from the SDP answer.
-    /// LiveKit/pion advertises ~64 KiB; libwebrtc's internal default is 256 KiB.
+    /// the transport/pion advertises ~64 KiB; libwebrtc's internal default is 256 KiB.
     static let defaultMaxMessageSize: UInt64 = 64000
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ actor WebSocket: Loggable, AsyncSequence {
                     // rather than CancellationError. Return nil (end-of-sequence)
                     // instead of propagating, so `subscribe` doesn't call onFailure.
                     if task.closeCode != .invalid || Task.isCancelled { return nil }
-                    throw LiveKitError.from(error: error) ?? error
+                    throw TransportError.from(error: error) ?? error
                 }
             } onCancel: {
                 task.cancel(with: .normalClosure, reason: nil)
@@ -124,7 +124,7 @@ actor WebSocket: Loggable, AsyncSequence {
 
         func cancelConnection() {
             _continuation.mutate {
-                $0?.resume(throwing: LiveKitError(.cancelled))
+                $0?.resume(throwing: TransportError(.cancelled))
                 $0 = nil
             }
         }
@@ -141,7 +141,7 @@ actor WebSocket: Loggable, AsyncSequence {
 
             _continuation.mutate {
                 if let error {
-                    let lkError = LiveKitError.from(error: error) ?? LiveKitError(.unknown)
+                    let lkError = TransportError.from(error: error) ?? TransportError(.unknown)
                     $0?.resume(throwing: lkError)
                 } else {
                     $0?.resume()

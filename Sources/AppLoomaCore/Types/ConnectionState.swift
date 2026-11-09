@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ public enum ReconnectMode: Int, Sendable {
     /// in all network conditions.
     case quick
 
-    /// Full reconnection mode performs a complete new connection to the LiveKit server,
+    /// Full reconnection mode performs a complete new connection to the media server,
     /// closing existing connections and re-publishing all tracks. This is slower but
     /// more reliable for recovering from severe connection issues.
     case full

@@ -5,9 +5,9 @@
 #ifndef PB_H_INCLUDED
 #define PB_H_INCLUDED
 
-/* ===== LiveKit modification (marked per zlib license clause 2) =============
- * All LiveKit-specific configuration (ABI defines, symbol renames) lives in
- * lk_pb_config.h, a LiveKit file; this include is the only change to this
+/* ===== the transport modification (marked per zlib license clause 2) =============
+ * All the transport-specific configuration (ABI defines, symbol renames) lives in
+ * lk_pb_config.h, a the transport file; this include is the only change to this
  * upstream file. It must stay in this header, not build settings — see
  * lk_pb_config.h for why. */
 #include "lk_pb_config.h"

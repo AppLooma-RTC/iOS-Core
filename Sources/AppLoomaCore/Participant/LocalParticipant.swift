@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public class LocalParticipant: Participant, @unchecked Sendable {
         let result = try await _publishSerialRunner.run {
             try await self._publish(track: audioTrack, options: options)
         }
-        guard let result else { throw LiveKitError(.invalidState) }
+        guard let result else { throw TransportError(.invalidState) }
         return result
     }
 
@@ -47,7 +47,7 @@ public class LocalParticipant: Participant, @unchecked Sendable {
         let result = try await _publishSerialRunner.run {
             try await self._publish(track: videoTrack, options: options)
         }
-        guard let result else { throw LiveKitError(.invalidState) }
+        guard let result else { throw TransportError(.invalidState) }
         return result
     }
 
@@ -130,10 +130,10 @@ public class LocalParticipant: Participant, @unchecked Sendable {
         let options = options ?? room._state.roomOptions.defaultDataPublishOptions
 
         guard let identityString = _state.identity?.stringValue else {
-            throw LiveKitError(.invalidState, message: "identity is nil")
+            throw TransportError(.invalidState, message: "identity is nil")
         }
 
-        let userPacket = Livekit_UserPacket.with {
+        let userPacket = Applooma_UserPacket.with {
             $0.participantIdentity = identityString
             $0.payload = data
             $0.destinationIdentities = options.destinationIdentities.map(\.stringValue)
@@ -145,7 +145,7 @@ public class LocalParticipant: Participant, @unchecked Sendable {
 
     /// Publish a SIP DTMF message to the room.
     ///
-    /// Use this when a connected LiveKit SIP call needs keypad input, such as
+    /// Use this when a connected the transport SIP call needs keypad input, such as
     /// selecting an IVR menu option or dialing an extension.
     ///
     /// ```swift
@@ -160,9 +160,9 @@ public class LocalParticipant: Participant, @unchecked Sendable {
     public func publishDtmf(code: UInt32, digit: String) async throws {
         let room = try requireRoom()
 
-        let packet = Livekit_DataPacket.with {
+        let packet = Applooma_DataPacket.with {
             $0.kind = .reliable
-            $0.sipDtmf = Livekit_SipDTMF.with {
+            $0.sipDtmf = Applooma_SipDTMF.with {
                 $0.code = code
                 $0.digit = digit
             }
@@ -230,7 +230,7 @@ public class LocalParticipant: Participant, @unchecked Sendable {
     }
 
     @RTC
-    func _set(subscribedQualities qualities: [Livekit_SubscribedQuality], forTrackSid trackSid: Track.Sid) {
+    func _set(subscribedQualities qualities: [Applooma_SubscribedQuality], forTrackSid trackSid: Track.Sid) {
         guard let publication = trackPublications[trackSid],
               let track = publication.track as? LocalVideoTrack,
               let sender = track._state.rtpSender
@@ -239,7 +239,7 @@ public class LocalParticipant: Participant, @unchecked Sendable {
         sender.raw._set(subscribedQualities: qualities)
     }
 
-    override func set(info: Livekit_ParticipantInfo, connectionState: ConnectionState) {
+    override func set(info: Applooma_ParticipantInfo, connectionState: ConnectionState) {
         super.set(info: info, connectionState: connectionState)
 
         // Reconcile track mute status
@@ -329,10 +329,10 @@ public class LocalParticipant: Participant, @unchecked Sendable {
 // MARK: - Session Migration
 
 extension LocalParticipant {
-    func publishedTracksInfo() -> [Livekit_TrackPublishedResponse] {
+    func publishedTracksInfo() -> [Applooma_TrackPublishedResponse] {
         _state.trackPublications.values.filter { $0.track != nil }
             .map { publication in
-                Livekit_TrackPublishedResponse.with {
+                Applooma_TrackPublishedResponse.with {
                     $0.cid = publication.track!.mediaTrack.trackId
                     if let info = publication._state.latestInfo {
                         $0.track = info
@@ -498,7 +498,7 @@ public extension LocalParticipant {
 
 extension LocalParticipant {
     // Publish additional (backup) codec when requested by server
-    func publish(additionalVideoCodec subscribedCodec: Livekit_SubscribedCodec,
+    func publish(additionalVideoCodec subscribedCodec: Applooma_SubscribedCodec,
                  for localTrackPublication: LocalTrackPublication) async throws
     {
         let room = try requireRoom()
@@ -507,8 +507,8 @@ extension LocalParticipant {
 
         log("[Publish/Backup] Additional video codec: \(videoCodec)...")
 
-        guard let track = localTrackPublication.track as? LocalVideoTrack else { throw LiveKitError(.invalidState, message: "Track is nil") }
-        guard videoCodec.isBackup else { throw LiveKitError(.invalidState, message: "Attempted to publish a non-backup video codec as backup") }
+        guard let track = localTrackPublication.track as? LocalVideoTrack else { throw TransportError(.invalidState, message: "Track is nil") }
+        guard videoCodec.isBackup else { throw TransportError(.invalidState, message: "Attempted to publish a non-backup video codec as backup") }
 
         let publisher = try room.requirePublisher()
 
@@ -554,7 +554,7 @@ extension LocalParticipant {
             {
                 $0.sid = localTrackPublication.sid.stringValue
                 $0.simulcastCodecs = [
-                    Livekit_SimulcastCodec.with { sc in
+                    Applooma_SimulcastCodec.with { sc in
                         sc.cid = sender.senderId
                         sc.codec = videoCodec.name
                     },
@@ -581,10 +581,10 @@ extension LocalParticipant {
 
 // MARK: - Helper
 
-extension [Livekit_SubscribedQuality] {
+extension [Applooma_SubscribedQuality] {
     /// Find the highest quality in the array
-    var highest: Livekit_VideoQuality {
-        reduce(Livekit_VideoQuality.off) { maxQuality, subscribedQuality in
+    var highest: Applooma_VideoQuality {
+        reduce(Applooma_VideoQuality.off) { maxQuality, subscribedQuality in
             subscribedQuality.enabled && subscribedQuality.quality > maxQuality ? subscribedQuality.quality : maxQuality
         }
     }
@@ -604,11 +604,11 @@ extension LocalParticipant {
         let publisher = try room.requirePublisher()
 
         guard _state.trackPublications.values.first(where: { $0.track === track }) == nil else {
-            throw LiveKitError(.invalidState, message: "This track has already been published.")
+            throw TransportError(.invalidState, message: "This track has already been published.")
         }
 
         guard track is LocalVideoTrack || track is LocalAudioTrack else {
-            throw LiveKitError(.invalidState, message: "Unknown LocalTrack type")
+            throw TransportError(.invalidState, message: "Unknown LocalTrack type")
         }
 
         // Try to start the Track
@@ -629,7 +629,7 @@ extension LocalParticipant {
 
                 if isFastPublishMode, let preferredCodec = videoPublishOptions.preferredCodec {
                     if !_internalState.enabledPublishVideoCodecs.contains(preferredCodec) {
-                        throw LiveKitError(.codecNotSupported, message: "Preferred video codec is not enabled on server")
+                        throw TransportError(.codecNotSupported, message: "Preferred video codec is not enabled on server")
                     }
                 }
 
@@ -638,7 +638,7 @@ extension LocalParticipant {
                 dimensions = try await track.capturer.dimensionsCompleter.wait()
 
                 guard let dimensions else {
-                    throw LiveKitError(.capturerDimensionsNotResolved, message: "VideoCapturer dimensions are not resolved")
+                    throw TransportError(.capturerDimensionsNotResolved, message: "VideoCapturer dimensions are not resolved")
                 }
 
                 log("[publish] computing encode settings with dimensions: \(dimensions)...")
@@ -656,9 +656,9 @@ extension LocalParticipant {
                 populatorFunc = { populator in
                     self.log("[publish] using layers: \(videoLayers.map { String(describing: $0) }.joined(separator: ", "))")
 
-                    var simulcastCodecs: [Livekit_SimulcastCodec] = [
+                    var simulcastCodecs: [Applooma_SimulcastCodec] = [
                         // Always add first codec...
-                        Livekit_SimulcastCodec.with {
+                        Applooma_SimulcastCodec.with {
                             $0.cid = track.mediaTrack.trackId
                             if let preferredCodec = videoPublishOptions.preferredCodec {
                                 $0.codec = preferredCodec.name
@@ -668,7 +668,7 @@ extension LocalParticipant {
 
                     if let backupCodec = videoPublishOptions.preferredBackupCodec {
                         // Add backup codec to simulcast codecs...
-                        let lkSimulcastCodec = Livekit_SimulcastCodec.with {
+                        let lkSimulcastCodec = Applooma_SimulcastCodec.with {
                             $0.cid = ""
                             $0.codec = backupCodec.name
                         }
@@ -712,7 +712,7 @@ extension LocalParticipant {
                 }
             }
 
-            guard let sendEncodings, let populatorFunc else { throw LiveKitError(.invalidState) }
+            guard let sendEncodings, let populatorFunc else { throw TransportError(.invalidState) }
 
             // Plain value object, no libwebrtc proxy: nothing to wait on.
             let transInit = LKRTCRtpTransceiverInit()
@@ -721,7 +721,7 @@ extension LocalParticipant {
 
             let addTrackName = publishName ?? track.name
             // Request a new track to the server
-            let addTrackFunc: @Sendable () async throws -> Livekit_TrackInfo = {
+            let addTrackFunc: @Sendable () async throws -> Applooma_TrackInfo = {
                 try await room.signalClient.sendAddTrack(cid: track.mediaTrack.trackId,
                                                          name: addTrackName,
                                                          type: track.kind.toPBType(),
@@ -837,12 +837,12 @@ extension LocalParticipant {
 
     private func checkPermissions(toPublish track: LocalTrack) throws {
         guard permissions.canPublish else {
-            throw LiveKitError(.insufficientPermissions, message: "Participant does not have permission to publish")
+            throw TransportError(.insufficientPermissions, message: "Participant does not have permission to publish")
         }
 
         let sources = permissions.canPublishSources
         if !sources.isEmpty, !sources.contains(track.source.rawValue) {
-            throw LiveKitError(.insufficientPermissions, message: "Participant does not have permission to publish tracks from this source")
+            throw TransportError(.insufficientPermissions, message: "Participant does not have permission to publish tracks from this source")
         }
     }
 }

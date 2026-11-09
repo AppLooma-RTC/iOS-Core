@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public final class VideoCodec: NSObject, Codec {
     }
 }
 
-extension Livekit_SubscribedCodec {
+extension Applooma_SubscribedCodec {
     func toVideoCodec() -> VideoCodec? {
         VideoCodec.from(name: codec)
     }

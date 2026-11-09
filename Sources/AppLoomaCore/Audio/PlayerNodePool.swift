@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ class AVAudioPlayerNodePool: @unchecked Sendable, Loggable {
     func play(_ buffer: AVAudioPCMBuffer, loop: Bool = false) throws -> SoundPlayback {
         let acquired = try executionQueue.sync { () throws -> AcquiredNode in
             guard let index = items.firstIndex(where: { $0.state == .idle }) else {
-                throw LiveKitError(.audioEngine, message: "No available player nodes")
+                throw TransportError(.audioEngine, message: "No available player nodes")
             }
 
             items[index].state = .inUse

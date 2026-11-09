@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 import Foundation
 
 // Extending the generic builder needs the runtime module by name; the facades
-// themselves are re-exported through LiveKit.
+// themselves are re-exported through the transport.
 
 /// Manages state of outgoing data streams.
 actor OutgoingStreamManager: Loggable {
-    typealias PacketHandler = @Sendable (Livekit_DataPacket) async throws -> Void
+    typealias PacketHandler = @Sendable (Applooma_DataPacket) async throws -> Void
     typealias EncryptionProvider = @Sendable () -> EncryptionType
 
     private nonisolated let packetHandler: PacketHandler
@@ -167,8 +167,8 @@ actor OutgoingStreamManager: Loggable {
             throw StreamError.alreadyOpened
         }
 
-        let header = Livekit_DataStream.Header(info)
-        let packet = Livekit_DataPacket.with {
+        let header = Applooma_DataStream.Header(info)
+        let packet = Applooma_DataPacket.with {
             $0.value = .streamHeader(header)
             $0.destinationIdentities = recipients.map(\.stringValue)
         }
@@ -189,12 +189,12 @@ actor OutgoingStreamManager: Loggable {
         guard let descriptor = openStreams[id] else {
             throw StreamError.unknownStream
         }
-        let chunk = Livekit_DataStream.Chunk.with {
+        let chunk = Applooma_DataStream.Chunk.with {
             $0.streamID = id
             $0.chunkIndex = descriptor.chunkIndex
             $0.content = data
         }
-        let packet = Livekit_DataPacket.with {
+        let packet = Applooma_DataPacket.with {
             $0.value = .streamChunk(chunk)
         }
         try await packetHandler(packet)
@@ -208,11 +208,11 @@ actor OutgoingStreamManager: Loggable {
             throw StreamError.unknownStream
         }
 
-        let trailer = Livekit_DataStream.Trailer.with {
+        let trailer = Applooma_DataStream.Trailer.with {
             $0.streamID = id
             $0.reason = reason ?? ""
         }
-        let packet = Livekit_DataPacket.with {
+        let packet = Applooma_DataPacket.with {
             $0.value = .streamTrailer(trailer)
         }
 
@@ -263,9 +263,9 @@ actor OutgoingStreamManager: Loggable {
 
 // MARK: - To protocol types
 
-extension Livekit_DataStream.Header {
+extension Applooma_DataStream.Header {
     init(_ streamInfo: StreamInfo) {
-        self = Livekit_DataStream.Header.with {
+        self = Applooma_DataStream.Header.with {
             $0.streamID = streamInfo.id
             $0.mimeType = (streamInfo as? ByteStreamInfo)?.mimeType ?? OutgoingStreamManager.textMimeType
             $0.topic = streamInfo.topic
@@ -275,7 +275,7 @@ extension Livekit_DataStream.Header {
             }
             $0.attributes = streamInfo.attributes
             $0.encryptionType = streamInfo.encryptionType.toPBType()
-            $0.contentHeader = Livekit_DataStream_Header_OneOf_ContentHeader(streamInfo)
+            $0.contentHeader = Applooma_DataStream_Header_OneOf_ContentHeader(streamInfo)
         }
     }
 
@@ -285,19 +285,19 @@ extension Livekit_DataStream.Header {
     }
 }
 
-extension Livekit_DataStream_Header.Builder {
-    // Mirrors `Livekit_DataStream.Header.timestampDate`; setters live on the builder.
+extension Applooma_DataStream_Header.Builder {
+    // Mirrors `Applooma_DataStream.Header.timestampDate`; setters live on the builder.
     var timestampDate: Date {
         get { Date(timeIntervalSince1970: TimeInterval(timestamp) / TimeInterval(1000)) }
         nonmutating set { timestamp = Int64(newValue.timeIntervalSince1970 * TimeInterval(1000)) }
     }
 }
 
-extension Livekit_DataStream_Header_OneOf_ContentHeader {
+extension Applooma_DataStream_Header_OneOf_ContentHeader {
     init?(_ streamInfo: StreamInfo) {
         if let textStreamInfo = streamInfo as? TextStreamInfo {
-            self = .textHeader(Livekit_DataStream.TextHeader.with {
-                $0.operationType = Livekit_DataStream.OperationType(textStreamInfo.operationType)
+            self = .textHeader(Applooma_DataStream.TextHeader.with {
+                $0.operationType = Applooma_DataStream.OperationType(textStreamInfo.operationType)
                 $0.version = Int32(textStreamInfo.version)
                 $0.replyToStreamID = textStreamInfo.replyToStreamID ?? ""
                 $0.attachedStreamIds = textStreamInfo.attachedStreamIDs
@@ -305,7 +305,7 @@ extension Livekit_DataStream_Header_OneOf_ContentHeader {
             })
             return
         } else if let byteStreamInfo = streamInfo as? ByteStreamInfo {
-            self = .byteHeader(Livekit_DataStream.ByteHeader.with {
+            self = .byteHeader(Applooma_DataStream.ByteHeader.with {
                 if let name = byteStreamInfo.name { $0.name = name }
             })
             return
@@ -314,8 +314,8 @@ extension Livekit_DataStream_Header_OneOf_ContentHeader {
     }
 }
 
-extension Livekit_DataStream.OperationType {
+extension Applooma_DataStream.OperationType {
     init(_ operationType: TextStreamInfo.OperationType) {
-        self = Livekit_DataStream.OperationType(rawValue: operationType.rawValue) ?? .create
+        self = Applooma_DataStream.OperationType(rawValue: operationType.rawValue) ?? .create
     }
 }

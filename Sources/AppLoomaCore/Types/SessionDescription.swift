@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 internal import LiveKitWebRTC
 
 extension LKRTCSessionDescription {
-    func toPBType(offerId: UInt32) -> Livekit_SessionDescription {
-        Livekit_SessionDescription.with {
+    func toPBType(offerId: UInt32) -> Applooma_SessionDescription {
+        Applooma_SessionDescription.with {
             $0.sdp = sdp
             $0.id = offerId
 
@@ -32,7 +32,7 @@ extension LKRTCSessionDescription {
     }
 }
 
-extension Livekit_SessionDescription {
+extension Applooma_SessionDescription {
     func toRTCType() -> (LKRTCSessionDescription, UInt32) {
         var sdpType: LKRTCSdpType
         switch type {

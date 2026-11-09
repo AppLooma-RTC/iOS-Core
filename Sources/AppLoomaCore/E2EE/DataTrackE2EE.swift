@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ final class DataTrackCryptor: EncryptionProvider, DecryptionProvider, @unchecked
 
     private func requireManager() throws -> E2EEManager {
         guard let e2eeManager = room?.e2eeManager else {
-            throw LiveKitError(.invalidState, message: "Room has no E2EE manager")
+            throw TransportError(.invalidState, message: "Room has no E2EE manager")
         }
         return e2eeManager
     }

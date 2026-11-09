@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ open class LKSampleHandler: RPBroadcastSampleHandler, @unchecked Sendable {
     private var uploader: BroadcastUploader?
     private var cancellable = Set<AnyCancellable>()
 
-    private lazy var log: OSLog = enableLogging ? OSLog(subsystem: "io.livekit.sdk", category: "LKSampleHandler") : .disabled
+    private lazy var log: OSLog = enableLogging ? OSLog(subsystem: "com.applooma.rtc.sdk", category: "LKSampleHandler") : .disabled
 
     override public init() {
         super.init()

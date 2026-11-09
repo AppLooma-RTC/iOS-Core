@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ struct IceCandidate: Codable {
     func toJsonString() throws -> String {
         let data = try JSONEncoder().encode(self)
         guard let string = String(data: data, encoding: .utf8) else {
-            throw LiveKitError(.failedToConvertData, message: "Failed to convert Data to String")
+            throw TransportError(.failedToConvertData, message: "Failed to convert Data to String")
         }
         return string
     }
@@ -43,7 +43,7 @@ extension LKRTCIceCandidate {
     convenience init(fromJsonString string: String) throws {
         // String to Data
         guard let data = string.data(using: .utf8) else {
-            throw LiveKitError(.failedToConvertData, message: "Failed to convert String to Data")
+            throw TransportError(.failedToConvertData, message: "Failed to convert String to Data")
         }
         // Decode JSON
         let iceCandidate: IceCandidate = try JSONDecoder().decode(IceCandidate.self, from: data)

@@ -4,27 +4,27 @@
 // one generic NanopbMsg<Storage> — this file adds only a storage
 // conformance, a typealias and the field accessors, so the schema
 // contributes no Swift types of its own. Mutation goes through the
-// noncopyable Builder. See Sources/LiveKitNanopb.
+// noncopyable Builder. See Sources/AppLoomaNanopb.
 
 import Foundation
 
 // Single-module builds compile these sources into the product directly:
 // CocoaPods surfaces the C declarations through the umbrella header, while
-// the prebuilt xcframework resolves CLiveKitProto via its modulemap — the
+// the prebuilt xcframework resolves CAppLoomaProto via its modulemap — the
 // internal import keeps it out of the emitted .swiftinterface.
 #if LK_XCFRAMEWORK
-package import CLiveKitProto
+package import CAppLoomaProto
 #elseif !COCOAPODS
-import CLiveKitProto
-import LiveKitNanopb
+import CAppLoomaProto
+import AppLoomaNanopb
 #endif
 
-extension livekit_Room: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_Room_msg }
-    package static let _emptyBox = NanopbBox<livekit_Room>(zero: livekit_Room(), descriptor: livekit_Room_msg)
+extension applooma_Room: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_Room_msg }
+    package static let _emptyBox = NanopbBox<applooma_Room>(zero: applooma_Room(), descriptor: applooma_Room_msg)
 }
-typealias Livekit_Room = NanopbMsg<livekit_Room>
-extension Livekit_Room {
+typealias Applooma_Room = NanopbMsg<applooma_Room>
+extension Applooma_Room {
     var sid: String {
         lkString(_pointer.pointee.sid) ?? ""
     }
@@ -55,7 +55,7 @@ extension Livekit_Room {
     }
     var hasTurnPassword: Bool { _pointer.pointee.turn_password != nil }
 
-    var enabledCodecs: [Livekit_Codec] {
+    var enabledCodecs: [Applooma_Codec] {
         lkViews(_pointer.pointee.enabled_codecs_count, _pointer.pointee.enabled_codecs, owner: _owner)
     }
 
@@ -79,8 +79,8 @@ extension Livekit_Room {
     }
     var hasNumPublishers: Bool { _pointer.pointee.num_publishers != nil }
 
-    var version: Livekit_TimedVersion {
-        _pointer.pointee.version.map { Livekit_TimedVersion(_sharing: $0, owner: _owner) } ?? Livekit_TimedVersion._empty
+    var version: Applooma_TimedVersion {
+        _pointer.pointee.version.map { Applooma_TimedVersion(_sharing: $0, owner: _owner) } ?? Applooma_TimedVersion._empty
     }
     var hasVersion: Bool { _pointer.pointee.version != nil }
 
@@ -96,7 +96,7 @@ extension Livekit_Room {
 
 }
 
-extension Livekit_Room.Builder {
+extension Applooma_Room.Builder {
     var sid: String {
         get { lkString(_pointer.pointee.sid) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.sid, newValue) }
@@ -127,7 +127,7 @@ extension Livekit_Room.Builder {
         nonmutating set { lkSetString(&_pointer.pointee.turn_password, newValue) }
     }
 
-    var enabledCodecs: [Livekit_Codec] {
+    var enabledCodecs: [Applooma_Codec] {
         get { lkViews(_pointer.pointee.enabled_codecs_count, _pointer.pointee.enabled_codecs, owner: _box) }
         nonmutating set {
             var count = _pointer.pointee.enabled_codecs_count, base = _pointer.pointee.enabled_codecs
@@ -156,8 +156,8 @@ extension Livekit_Room.Builder {
         nonmutating set { lkSetValue(&_pointer.pointee.num_publishers, newValue) }
     }
 
-    var version: Livekit_TimedVersion {
-        get { _pointer.pointee.version.map { Livekit_TimedVersion(_sharing: $0, owner: _box) } ?? Livekit_TimedVersion._empty }
+    var version: Applooma_TimedVersion {
+        get { _pointer.pointee.version.map { Applooma_TimedVersion(_sharing: $0, owner: _box) } ?? Applooma_TimedVersion._empty }
         nonmutating set { lkSetMessage(&_pointer.pointee.version, newValue) }
     }
 
@@ -173,12 +173,12 @@ extension Livekit_Room.Builder {
 
 }
 
-extension livekit_Codec: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_Codec_msg }
-    package static let _emptyBox = NanopbBox<livekit_Codec>(zero: livekit_Codec(), descriptor: livekit_Codec_msg)
+extension applooma_Codec: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_Codec_msg }
+    package static let _emptyBox = NanopbBox<applooma_Codec>(zero: applooma_Codec(), descriptor: applooma_Codec_msg)
 }
-typealias Livekit_Codec = NanopbMsg<livekit_Codec>
-extension Livekit_Codec {
+typealias Applooma_Codec = NanopbMsg<applooma_Codec>
+extension Applooma_Codec {
     var mime: String {
         lkString(_pointer.pointee.mime) ?? ""
     }
@@ -191,7 +191,7 @@ extension Livekit_Codec {
 
 }
 
-extension Livekit_Codec.Builder {
+extension Applooma_Codec.Builder {
     var mime: String {
         get { lkString(_pointer.pointee.mime) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.mime, newValue) }
@@ -204,12 +204,12 @@ extension Livekit_Codec.Builder {
 
 }
 
-extension livekit_ParticipantPermission: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_ParticipantPermission_msg }
-    package static let _emptyBox = NanopbBox<livekit_ParticipantPermission>(zero: livekit_ParticipantPermission(), descriptor: livekit_ParticipantPermission_msg)
+extension applooma_ParticipantPermission: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_ParticipantPermission_msg }
+    package static let _emptyBox = NanopbBox<applooma_ParticipantPermission>(zero: applooma_ParticipantPermission(), descriptor: applooma_ParticipantPermission_msg)
 }
-typealias Livekit_ParticipantPermission = NanopbMsg<livekit_ParticipantPermission>
-extension Livekit_ParticipantPermission {
+typealias Applooma_ParticipantPermission = NanopbMsg<applooma_ParticipantPermission>
+extension Applooma_ParticipantPermission {
     var canSubscribe: Bool {
         _pointer.pointee.can_subscribe?.pointee ?? false
     }
@@ -235,7 +235,7 @@ extension Livekit_ParticipantPermission {
     }
     var hasRecorder: Bool { _pointer.pointee.recorder != nil }
 
-    var canPublishSources: [Livekit_TrackSource] {
+    var canPublishSources: [Applooma_TrackSource] {
         lkRepeatedEnum(_pointer.pointee.can_publish_sources_count, _pointer.pointee.can_publish_sources)
     }
 
@@ -261,7 +261,7 @@ extension Livekit_ParticipantPermission {
 
 }
 
-extension Livekit_ParticipantPermission.Builder {
+extension Applooma_ParticipantPermission.Builder {
     var canSubscribe: Bool {
         get { _pointer.pointee.can_subscribe?.pointee ?? false }
         nonmutating set { lkSetValue(&_pointer.pointee.can_subscribe, newValue) }
@@ -287,7 +287,7 @@ extension Livekit_ParticipantPermission.Builder {
         nonmutating set { lkSetValue(&_pointer.pointee.recorder, newValue) }
     }
 
-    var canPublishSources: [Livekit_TrackSource] {
+    var canPublishSources: [Applooma_TrackSource] {
         get { lkRepeatedEnum(_pointer.pointee.can_publish_sources_count, _pointer.pointee.can_publish_sources) }
         nonmutating set {
             var count = _pointer.pointee.can_publish_sources_count, base = _pointer.pointee.can_publish_sources
@@ -318,12 +318,12 @@ extension Livekit_ParticipantPermission.Builder {
 
 }
 
-extension livekit_ParticipantInfo: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_ParticipantInfo_msg }
-    package static let _emptyBox = NanopbBox<livekit_ParticipantInfo>(zero: livekit_ParticipantInfo(), descriptor: livekit_ParticipantInfo_msg)
+extension applooma_ParticipantInfo: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_ParticipantInfo_msg }
+    package static let _emptyBox = NanopbBox<applooma_ParticipantInfo>(zero: applooma_ParticipantInfo(), descriptor: applooma_ParticipantInfo_msg)
 }
-typealias Livekit_ParticipantInfo = NanopbMsg<livekit_ParticipantInfo>
-extension Livekit_ParticipantInfo {
+typealias Applooma_ParticipantInfo = NanopbMsg<applooma_ParticipantInfo>
+extension Applooma_ParticipantInfo {
     var sid: String {
         lkString(_pointer.pointee.sid) ?? ""
     }
@@ -334,12 +334,12 @@ extension Livekit_ParticipantInfo {
     }
     var hasIdentity: Bool { _pointer.pointee.identity != nil }
 
-    var state: Livekit_ParticipantInfo_State {
-        _pointer.pointee.state.map { lkEnum($0.pointee) } ?? Livekit_ParticipantInfo_State()
+    var state: Applooma_ParticipantInfo_State {
+        _pointer.pointee.state.map { lkEnum($0.pointee) } ?? Applooma_ParticipantInfo_State()
     }
     var hasState: Bool { _pointer.pointee.state != nil }
 
-    var tracks: [Livekit_TrackInfo] {
+    var tracks: [Applooma_TrackInfo] {
         lkViews(_pointer.pointee.tracks_count, _pointer.pointee.tracks, owner: _owner)
     }
 
@@ -363,8 +363,8 @@ extension Livekit_ParticipantInfo {
     }
     var hasVersion: Bool { _pointer.pointee.version != nil }
 
-    var permission: Livekit_ParticipantPermission {
-        _pointer.pointee.permission.map { Livekit_ParticipantPermission(_sharing: $0, owner: _owner) } ?? Livekit_ParticipantPermission._empty
+    var permission: Applooma_ParticipantPermission {
+        _pointer.pointee.permission.map { Applooma_ParticipantPermission(_sharing: $0, owner: _owner) } ?? Applooma_ParticipantPermission._empty
     }
     var hasPermission: Bool { _pointer.pointee.permission != nil }
 
@@ -378,21 +378,21 @@ extension Livekit_ParticipantInfo {
     }
     var hasIsPublisher: Bool { _pointer.pointee.is_publisher != nil }
 
-    var kind: Livekit_ParticipantInfo_Kind {
-        _pointer.pointee.kind.map { lkEnum($0.pointee) } ?? Livekit_ParticipantInfo_Kind()
+    var kind: Applooma_ParticipantInfo_Kind {
+        _pointer.pointee.kind.map { lkEnum($0.pointee) } ?? Applooma_ParticipantInfo_Kind()
     }
     var hasKind: Bool { _pointer.pointee.kind != nil }
 
     var attributes: [String: String] {
         var out: [String: String] = [:]
-        for entry in lkViews(_pointer.pointee.attributes_count, _pointer.pointee.attributes, owner: _owner) as [Livekit_ParticipantInfo_AttributesEntry] {
+        for entry in lkViews(_pointer.pointee.attributes_count, _pointer.pointee.attributes, owner: _owner) as [Applooma_ParticipantInfo_AttributesEntry] {
             out[entry.key] = entry.value
         }
         return out
     }
 
-    var disconnectReason: Livekit_DisconnectReason {
-        _pointer.pointee.disconnect_reason.map { lkEnum($0.pointee) } ?? Livekit_DisconnectReason()
+    var disconnectReason: Applooma_DisconnectReason {
+        _pointer.pointee.disconnect_reason.map { lkEnum($0.pointee) } ?? Applooma_DisconnectReason()
     }
     var hasDisconnectReason: Bool { _pointer.pointee.disconnect_reason != nil }
 
@@ -401,11 +401,11 @@ extension Livekit_ParticipantInfo {
     }
     var hasJoinedAtMs: Bool { _pointer.pointee.joined_at_ms != nil }
 
-    var kindDetails: [Livekit_ParticipantInfo_KindDetail] {
+    var kindDetails: [Applooma_ParticipantInfo_KindDetail] {
         lkRepeatedEnum(_pointer.pointee.kind_details_count, _pointer.pointee.kind_details)
     }
 
-    var dataTracks: [Livekit_DataTrackInfo] {
+    var dataTracks: [Applooma_DataTrackInfo] {
         lkViews(_pointer.pointee.data_tracks_count, _pointer.pointee.data_tracks, owner: _owner)
     }
 
@@ -414,18 +414,18 @@ extension Livekit_ParticipantInfo {
     }
     var hasClientProtocol: Bool { _pointer.pointee.client_protocol != nil }
 
-    var capabilities: [Livekit_ClientInfo_Capability] {
+    var capabilities: [Applooma_ClientInfo_Capability] {
         lkRepeatedEnum(_pointer.pointee.capabilities_count, _pointer.pointee.capabilities)
     }
 
 }
 
-extension livekit_ParticipantInfo_AttributesEntry: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_ParticipantInfo_AttributesEntry_msg }
-    package static let _emptyBox = NanopbBox<livekit_ParticipantInfo_AttributesEntry>(zero: livekit_ParticipantInfo_AttributesEntry(), descriptor: livekit_ParticipantInfo_AttributesEntry_msg)
+extension applooma_ParticipantInfo_AttributesEntry: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_ParticipantInfo_AttributesEntry_msg }
+    package static let _emptyBox = NanopbBox<applooma_ParticipantInfo_AttributesEntry>(zero: applooma_ParticipantInfo_AttributesEntry(), descriptor: applooma_ParticipantInfo_AttributesEntry_msg)
 }
-typealias Livekit_ParticipantInfo_AttributesEntry = NanopbMsg<livekit_ParticipantInfo_AttributesEntry>
-extension Livekit_ParticipantInfo_AttributesEntry {
+typealias Applooma_ParticipantInfo_AttributesEntry = NanopbMsg<applooma_ParticipantInfo_AttributesEntry>
+extension Applooma_ParticipantInfo_AttributesEntry {
     var key: String {
         lkString(_pointer.pointee.key) ?? ""
     }
@@ -438,7 +438,7 @@ extension Livekit_ParticipantInfo_AttributesEntry {
 
 }
 
-extension Livekit_ParticipantInfo_AttributesEntry.Builder {
+extension Applooma_ParticipantInfo_AttributesEntry.Builder {
     var key: String {
         get { lkString(_pointer.pointee.key) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.key, newValue) }
@@ -451,7 +451,7 @@ extension Livekit_ParticipantInfo_AttributesEntry.Builder {
 
 }
 
-struct Livekit_ParticipantInfo_State: NanopbEnum {
+struct Applooma_ParticipantInfo_State: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -462,7 +462,7 @@ struct Livekit_ParticipantInfo_State: NanopbEnum {
     static let disconnected = Self(rawValue: 3)
 }
 
-struct Livekit_ParticipantInfo_Kind: NanopbEnum {
+struct Applooma_ParticipantInfo_Kind: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -476,7 +476,7 @@ struct Livekit_ParticipantInfo_Kind: NanopbEnum {
     static let bridge = Self(rawValue: 8)
 }
 
-struct Livekit_ParticipantInfo_KindDetail: NanopbEnum {
+struct Applooma_ParticipantInfo_KindDetail: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -489,7 +489,7 @@ struct Livekit_ParticipantInfo_KindDetail: NanopbEnum {
     static let simulation = Self(rawValue: 5)
 }
 
-extension Livekit_ParticipantInfo.Builder {
+extension Applooma_ParticipantInfo.Builder {
     var sid: String {
         get { lkString(_pointer.pointee.sid) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.sid, newValue) }
@@ -500,12 +500,12 @@ extension Livekit_ParticipantInfo.Builder {
         nonmutating set { lkSetString(&_pointer.pointee.identity, newValue) }
     }
 
-    var state: Livekit_ParticipantInfo_State {
-        get { _pointer.pointee.state.map { lkEnum($0.pointee) } ?? Livekit_ParticipantInfo_State() }
+    var state: Applooma_ParticipantInfo_State {
+        get { _pointer.pointee.state.map { lkEnum($0.pointee) } ?? Applooma_ParticipantInfo_State() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.state, newValue) }
     }
 
-    var tracks: [Livekit_TrackInfo] {
+    var tracks: [Applooma_TrackInfo] {
         get { lkViews(_pointer.pointee.tracks_count, _pointer.pointee.tracks, owner: _box) }
         nonmutating set {
             var count = _pointer.pointee.tracks_count, base = _pointer.pointee.tracks
@@ -534,8 +534,8 @@ extension Livekit_ParticipantInfo.Builder {
         nonmutating set { lkSetValue(&_pointer.pointee.version, newValue) }
     }
 
-    var permission: Livekit_ParticipantPermission {
-        get { _pointer.pointee.permission.map { Livekit_ParticipantPermission(_sharing: $0, owner: _box) } ?? Livekit_ParticipantPermission._empty }
+    var permission: Applooma_ParticipantPermission {
+        get { _pointer.pointee.permission.map { Applooma_ParticipantPermission(_sharing: $0, owner: _box) } ?? Applooma_ParticipantPermission._empty }
         nonmutating set { lkSetMessage(&_pointer.pointee.permission, newValue) }
     }
 
@@ -549,15 +549,15 @@ extension Livekit_ParticipantInfo.Builder {
         nonmutating set { lkSetValue(&_pointer.pointee.is_publisher, newValue) }
     }
 
-    var kind: Livekit_ParticipantInfo_Kind {
-        get { _pointer.pointee.kind.map { lkEnum($0.pointee) } ?? Livekit_ParticipantInfo_Kind() }
+    var kind: Applooma_ParticipantInfo_Kind {
+        get { _pointer.pointee.kind.map { lkEnum($0.pointee) } ?? Applooma_ParticipantInfo_Kind() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.kind, newValue) }
     }
 
     var attributes: [String: String] {
         get {
             var out: [String: String] = [:]
-            for entry in lkViews(_pointer.pointee.attributes_count, _pointer.pointee.attributes, owner: _box) as [Livekit_ParticipantInfo_AttributesEntry] {
+            for entry in lkViews(_pointer.pointee.attributes_count, _pointer.pointee.attributes, owner: _box) as [Applooma_ParticipantInfo_AttributesEntry] {
                 out[entry.key] = entry.value
             }
             return out
@@ -565,7 +565,7 @@ extension Livekit_ParticipantInfo.Builder {
         nonmutating set {
             // sorted for deterministic encoding (bytes-based Equatable)
             let entries = newValue.sorted { $0.key < $1.key }.map { pair in
-                Livekit_ParticipantInfo_AttributesEntry.with { $0.key = pair.key; $0.value = pair.value }
+                Applooma_ParticipantInfo_AttributesEntry.with { $0.key = pair.key; $0.value = pair.value }
             }
             var count = _pointer.pointee.attributes_count, base = _pointer.pointee.attributes
             lkSetRepeatedMessages(&count, &base, entries)
@@ -573,8 +573,8 @@ extension Livekit_ParticipantInfo.Builder {
         }
     }
 
-    var disconnectReason: Livekit_DisconnectReason {
-        get { _pointer.pointee.disconnect_reason.map { lkEnum($0.pointee) } ?? Livekit_DisconnectReason() }
+    var disconnectReason: Applooma_DisconnectReason {
+        get { _pointer.pointee.disconnect_reason.map { lkEnum($0.pointee) } ?? Applooma_DisconnectReason() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.disconnect_reason, newValue) }
     }
 
@@ -583,7 +583,7 @@ extension Livekit_ParticipantInfo.Builder {
         nonmutating set { lkSetValue(&_pointer.pointee.joined_at_ms, newValue) }
     }
 
-    var kindDetails: [Livekit_ParticipantInfo_KindDetail] {
+    var kindDetails: [Applooma_ParticipantInfo_KindDetail] {
         get { lkRepeatedEnum(_pointer.pointee.kind_details_count, _pointer.pointee.kind_details) }
         nonmutating set {
             var count = _pointer.pointee.kind_details_count, base = _pointer.pointee.kind_details
@@ -592,7 +592,7 @@ extension Livekit_ParticipantInfo.Builder {
         }
     }
 
-    var dataTracks: [Livekit_DataTrackInfo] {
+    var dataTracks: [Applooma_DataTrackInfo] {
         get { lkViews(_pointer.pointee.data_tracks_count, _pointer.pointee.data_tracks, owner: _box) }
         nonmutating set {
             var count = _pointer.pointee.data_tracks_count, base = _pointer.pointee.data_tracks
@@ -606,7 +606,7 @@ extension Livekit_ParticipantInfo.Builder {
         nonmutating set { lkSetValue(&_pointer.pointee.client_protocol, newValue) }
     }
 
-    var capabilities: [Livekit_ClientInfo_Capability] {
+    var capabilities: [Applooma_ClientInfo_Capability] {
         get { lkRepeatedEnum(_pointer.pointee.capabilities_count, _pointer.pointee.capabilities) }
         nonmutating set {
             var count = _pointer.pointee.capabilities_count, base = _pointer.pointee.capabilities
@@ -617,11 +617,11 @@ extension Livekit_ParticipantInfo.Builder {
 
 }
 
-enum Livekit_Encryption {
-    typealias TypeEnum = Livekit_Encryption_TypeEnum
+enum Applooma_Encryption {
+    typealias TypeEnum = Applooma_Encryption_TypeEnum
 }
 
-struct Livekit_Encryption_TypeEnum: NanopbEnum {
+struct Applooma_Encryption_TypeEnum: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -631,12 +631,12 @@ struct Livekit_Encryption_TypeEnum: NanopbEnum {
     static let custom = Self(rawValue: 2)
 }
 
-extension livekit_SimulcastCodecInfo: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_SimulcastCodecInfo_msg }
-    package static let _emptyBox = NanopbBox<livekit_SimulcastCodecInfo>(zero: livekit_SimulcastCodecInfo(), descriptor: livekit_SimulcastCodecInfo_msg)
+extension applooma_SimulcastCodecInfo: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_SimulcastCodecInfo_msg }
+    package static let _emptyBox = NanopbBox<applooma_SimulcastCodecInfo>(zero: applooma_SimulcastCodecInfo(), descriptor: applooma_SimulcastCodecInfo_msg)
 }
-typealias Livekit_SimulcastCodecInfo = NanopbMsg<livekit_SimulcastCodecInfo>
-extension Livekit_SimulcastCodecInfo {
+typealias Applooma_SimulcastCodecInfo = NanopbMsg<applooma_SimulcastCodecInfo>
+extension Applooma_SimulcastCodecInfo {
     var mimeType: String {
         lkString(_pointer.pointee.mime_type) ?? ""
     }
@@ -652,12 +652,12 @@ extension Livekit_SimulcastCodecInfo {
     }
     var hasCid: Bool { _pointer.pointee.cid != nil }
 
-    var layers: [Livekit_VideoLayer] {
+    var layers: [Applooma_VideoLayer] {
         lkViews(_pointer.pointee.layers_count, _pointer.pointee.layers, owner: _owner)
     }
 
-    var videoLayerMode: Livekit_VideoLayer_Mode {
-        _pointer.pointee.video_layer_mode.map { lkEnum($0.pointee) } ?? Livekit_VideoLayer_Mode()
+    var videoLayerMode: Applooma_VideoLayer_Mode {
+        _pointer.pointee.video_layer_mode.map { lkEnum($0.pointee) } ?? Applooma_VideoLayer_Mode()
     }
     var hasVideoLayerMode: Bool { _pointer.pointee.video_layer_mode != nil }
 
@@ -668,7 +668,7 @@ extension Livekit_SimulcastCodecInfo {
 
 }
 
-extension Livekit_SimulcastCodecInfo.Builder {
+extension Applooma_SimulcastCodecInfo.Builder {
     var mimeType: String {
         get { lkString(_pointer.pointee.mime_type) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.mime_type, newValue) }
@@ -684,7 +684,7 @@ extension Livekit_SimulcastCodecInfo.Builder {
         nonmutating set { lkSetString(&_pointer.pointee.cid, newValue) }
     }
 
-    var layers: [Livekit_VideoLayer] {
+    var layers: [Applooma_VideoLayer] {
         get { lkViews(_pointer.pointee.layers_count, _pointer.pointee.layers, owner: _box) }
         nonmutating set {
             var count = _pointer.pointee.layers_count, base = _pointer.pointee.layers
@@ -693,8 +693,8 @@ extension Livekit_SimulcastCodecInfo.Builder {
         }
     }
 
-    var videoLayerMode: Livekit_VideoLayer_Mode {
-        get { _pointer.pointee.video_layer_mode.map { lkEnum($0.pointee) } ?? Livekit_VideoLayer_Mode() }
+    var videoLayerMode: Applooma_VideoLayer_Mode {
+        get { _pointer.pointee.video_layer_mode.map { lkEnum($0.pointee) } ?? Applooma_VideoLayer_Mode() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.video_layer_mode, newValue) }
     }
 
@@ -705,19 +705,19 @@ extension Livekit_SimulcastCodecInfo.Builder {
 
 }
 
-extension livekit_TrackInfo: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_TrackInfo_msg }
-    package static let _emptyBox = NanopbBox<livekit_TrackInfo>(zero: livekit_TrackInfo(), descriptor: livekit_TrackInfo_msg)
+extension applooma_TrackInfo: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_TrackInfo_msg }
+    package static let _emptyBox = NanopbBox<applooma_TrackInfo>(zero: applooma_TrackInfo(), descriptor: applooma_TrackInfo_msg)
 }
-typealias Livekit_TrackInfo = NanopbMsg<livekit_TrackInfo>
-extension Livekit_TrackInfo {
+typealias Applooma_TrackInfo = NanopbMsg<applooma_TrackInfo>
+extension Applooma_TrackInfo {
     var sid: String {
         lkString(_pointer.pointee.sid) ?? ""
     }
     var hasSid: Bool { _pointer.pointee.sid != nil }
 
-    var type: Livekit_TrackType {
-        _pointer.pointee.type.map { lkEnum($0.pointee) } ?? Livekit_TrackType()
+    var type: Applooma_TrackType {
+        _pointer.pointee.type.map { lkEnum($0.pointee) } ?? Applooma_TrackType()
     }
     var hasType: Bool { _pointer.pointee.type != nil }
 
@@ -751,12 +751,12 @@ extension Livekit_TrackInfo {
     }
     var hasDisableDtx: Bool { _pointer.pointee.disable_dtx != nil }
 
-    var source: Livekit_TrackSource {
-        _pointer.pointee.source.map { lkEnum($0.pointee) } ?? Livekit_TrackSource()
+    var source: Applooma_TrackSource {
+        _pointer.pointee.source.map { lkEnum($0.pointee) } ?? Applooma_TrackSource()
     }
     var hasSource: Bool { _pointer.pointee.source != nil }
 
-    var layers: [Livekit_VideoLayer] {
+    var layers: [Applooma_VideoLayer] {
         lkViews(_pointer.pointee.layers_count, _pointer.pointee.layers, owner: _owner)
     }
 
@@ -770,7 +770,7 @@ extension Livekit_TrackInfo {
     }
     var hasMid: Bool { _pointer.pointee.mid != nil }
 
-    var codecs: [Livekit_SimulcastCodecInfo] {
+    var codecs: [Applooma_SimulcastCodecInfo] {
         lkViews(_pointer.pointee.codecs_count, _pointer.pointee.codecs, owner: _owner)
     }
 
@@ -784,8 +784,8 @@ extension Livekit_TrackInfo {
     }
     var hasDisableRed: Bool { _pointer.pointee.disable_red != nil }
 
-    var encryption: Livekit_Encryption_TypeEnum {
-        _pointer.pointee.encryption.map { lkEnum($0.pointee) } ?? Livekit_Encryption_TypeEnum()
+    var encryption: Applooma_Encryption_TypeEnum {
+        _pointer.pointee.encryption.map { lkEnum($0.pointee) } ?? Applooma_Encryption_TypeEnum()
     }
     var hasEncryption: Bool { _pointer.pointee.encryption != nil }
 
@@ -794,34 +794,34 @@ extension Livekit_TrackInfo {
     }
     var hasStream: Bool { _pointer.pointee.stream != nil }
 
-    var version: Livekit_TimedVersion {
-        _pointer.pointee.version.map { Livekit_TimedVersion(_sharing: $0, owner: _owner) } ?? Livekit_TimedVersion._empty
+    var version: Applooma_TimedVersion {
+        _pointer.pointee.version.map { Applooma_TimedVersion(_sharing: $0, owner: _owner) } ?? Applooma_TimedVersion._empty
     }
     var hasVersion: Bool { _pointer.pointee.version != nil }
 
-    var audioFeatures: [Livekit_AudioTrackFeature] {
+    var audioFeatures: [Applooma_AudioTrackFeature] {
         lkRepeatedEnum(_pointer.pointee.audio_features_count, _pointer.pointee.audio_features)
     }
 
-    var backupCodecPolicy: Livekit_BackupCodecPolicy {
-        _pointer.pointee.backup_codec_policy.map { lkEnum($0.pointee) } ?? Livekit_BackupCodecPolicy()
+    var backupCodecPolicy: Applooma_BackupCodecPolicy {
+        _pointer.pointee.backup_codec_policy.map { lkEnum($0.pointee) } ?? Applooma_BackupCodecPolicy()
     }
     var hasBackupCodecPolicy: Bool { _pointer.pointee.backup_codec_policy != nil }
 
-    var packetTrailerFeatures: [Livekit_PacketTrailerFeature] {
+    var packetTrailerFeatures: [Applooma_PacketTrailerFeature] {
         lkRepeatedEnum(_pointer.pointee.packet_trailer_features_count, _pointer.pointee.packet_trailer_features)
     }
 
 }
 
-extension Livekit_TrackInfo.Builder {
+extension Applooma_TrackInfo.Builder {
     var sid: String {
         get { lkString(_pointer.pointee.sid) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.sid, newValue) }
     }
 
-    var type: Livekit_TrackType {
-        get { _pointer.pointee.type.map { lkEnum($0.pointee) } ?? Livekit_TrackType() }
+    var type: Applooma_TrackType {
+        get { _pointer.pointee.type.map { lkEnum($0.pointee) } ?? Applooma_TrackType() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.type, newValue) }
     }
 
@@ -855,12 +855,12 @@ extension Livekit_TrackInfo.Builder {
         nonmutating set { lkSetValue(&_pointer.pointee.disable_dtx, newValue) }
     }
 
-    var source: Livekit_TrackSource {
-        get { _pointer.pointee.source.map { lkEnum($0.pointee) } ?? Livekit_TrackSource() }
+    var source: Applooma_TrackSource {
+        get { _pointer.pointee.source.map { lkEnum($0.pointee) } ?? Applooma_TrackSource() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.source, newValue) }
     }
 
-    var layers: [Livekit_VideoLayer] {
+    var layers: [Applooma_VideoLayer] {
         get { lkViews(_pointer.pointee.layers_count, _pointer.pointee.layers, owner: _box) }
         nonmutating set {
             var count = _pointer.pointee.layers_count, base = _pointer.pointee.layers
@@ -879,7 +879,7 @@ extension Livekit_TrackInfo.Builder {
         nonmutating set { lkSetString(&_pointer.pointee.mid, newValue) }
     }
 
-    var codecs: [Livekit_SimulcastCodecInfo] {
+    var codecs: [Applooma_SimulcastCodecInfo] {
         get { lkViews(_pointer.pointee.codecs_count, _pointer.pointee.codecs, owner: _box) }
         nonmutating set {
             var count = _pointer.pointee.codecs_count, base = _pointer.pointee.codecs
@@ -898,8 +898,8 @@ extension Livekit_TrackInfo.Builder {
         nonmutating set { lkSetValue(&_pointer.pointee.disable_red, newValue) }
     }
 
-    var encryption: Livekit_Encryption_TypeEnum {
-        get { _pointer.pointee.encryption.map { lkEnum($0.pointee) } ?? Livekit_Encryption_TypeEnum() }
+    var encryption: Applooma_Encryption_TypeEnum {
+        get { _pointer.pointee.encryption.map { lkEnum($0.pointee) } ?? Applooma_Encryption_TypeEnum() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.encryption, newValue) }
     }
 
@@ -908,12 +908,12 @@ extension Livekit_TrackInfo.Builder {
         nonmutating set { lkSetString(&_pointer.pointee.stream, newValue) }
     }
 
-    var version: Livekit_TimedVersion {
-        get { _pointer.pointee.version.map { Livekit_TimedVersion(_sharing: $0, owner: _box) } ?? Livekit_TimedVersion._empty }
+    var version: Applooma_TimedVersion {
+        get { _pointer.pointee.version.map { Applooma_TimedVersion(_sharing: $0, owner: _box) } ?? Applooma_TimedVersion._empty }
         nonmutating set { lkSetMessage(&_pointer.pointee.version, newValue) }
     }
 
-    var audioFeatures: [Livekit_AudioTrackFeature] {
+    var audioFeatures: [Applooma_AudioTrackFeature] {
         get { lkRepeatedEnum(_pointer.pointee.audio_features_count, _pointer.pointee.audio_features) }
         nonmutating set {
             var count = _pointer.pointee.audio_features_count, base = _pointer.pointee.audio_features
@@ -922,12 +922,12 @@ extension Livekit_TrackInfo.Builder {
         }
     }
 
-    var backupCodecPolicy: Livekit_BackupCodecPolicy {
-        get { _pointer.pointee.backup_codec_policy.map { lkEnum($0.pointee) } ?? Livekit_BackupCodecPolicy() }
+    var backupCodecPolicy: Applooma_BackupCodecPolicy {
+        get { _pointer.pointee.backup_codec_policy.map { lkEnum($0.pointee) } ?? Applooma_BackupCodecPolicy() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.backup_codec_policy, newValue) }
     }
 
-    var packetTrailerFeatures: [Livekit_PacketTrailerFeature] {
+    var packetTrailerFeatures: [Applooma_PacketTrailerFeature] {
         get { lkRepeatedEnum(_pointer.pointee.packet_trailer_features_count, _pointer.pointee.packet_trailer_features) }
         nonmutating set {
             var count = _pointer.pointee.packet_trailer_features_count, base = _pointer.pointee.packet_trailer_features
@@ -938,12 +938,12 @@ extension Livekit_TrackInfo.Builder {
 
 }
 
-extension livekit_DataTrackInfo: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataTrackInfo_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataTrackInfo>(zero: livekit_DataTrackInfo(), descriptor: livekit_DataTrackInfo_msg)
+extension applooma_DataTrackInfo: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataTrackInfo_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataTrackInfo>(zero: applooma_DataTrackInfo(), descriptor: applooma_DataTrackInfo_msg)
 }
-typealias Livekit_DataTrackInfo = NanopbMsg<livekit_DataTrackInfo>
-extension Livekit_DataTrackInfo {
+typealias Applooma_DataTrackInfo = NanopbMsg<applooma_DataTrackInfo>
+extension Applooma_DataTrackInfo {
     var pubHandle: UInt32 {
         _pointer.pointee.pub_handle?.pointee ?? 0
     }
@@ -959,24 +959,24 @@ extension Livekit_DataTrackInfo {
     }
     var hasName: Bool { _pointer.pointee.name != nil }
 
-    var encryption: Livekit_Encryption_TypeEnum {
-        _pointer.pointee.encryption.map { lkEnum($0.pointee) } ?? Livekit_Encryption_TypeEnum()
+    var encryption: Applooma_Encryption_TypeEnum {
+        _pointer.pointee.encryption.map { lkEnum($0.pointee) } ?? Applooma_Encryption_TypeEnum()
     }
     var hasEncryption: Bool { _pointer.pointee.encryption != nil }
 
-    var frameEncoding: Livekit_DataTrackFrameEncoding {
-        _pointer.pointee.frame_encoding.map { Livekit_DataTrackFrameEncoding(_sharing: $0, owner: _owner) } ?? Livekit_DataTrackFrameEncoding._empty
+    var frameEncoding: Applooma_DataTrackFrameEncoding {
+        _pointer.pointee.frame_encoding.map { Applooma_DataTrackFrameEncoding(_sharing: $0, owner: _owner) } ?? Applooma_DataTrackFrameEncoding._empty
     }
     var hasFrameEncoding: Bool { _pointer.pointee.frame_encoding != nil }
 
-    var schema: Livekit_DataTrackSchemaId {
-        _pointer.pointee.schema.map { Livekit_DataTrackSchemaId(_sharing: $0, owner: _owner) } ?? Livekit_DataTrackSchemaId._empty
+    var schema: Applooma_DataTrackSchemaId {
+        _pointer.pointee.schema.map { Applooma_DataTrackSchemaId(_sharing: $0, owner: _owner) } ?? Applooma_DataTrackSchemaId._empty
     }
     var hasSchema: Bool { _pointer.pointee.schema != nil }
 
 }
 
-extension Livekit_DataTrackInfo.Builder {
+extension Applooma_DataTrackInfo.Builder {
     var pubHandle: UInt32 {
         get { _pointer.pointee.pub_handle?.pointee ?? 0 }
         nonmutating set { lkSetValue(&_pointer.pointee.pub_handle, newValue) }
@@ -992,53 +992,53 @@ extension Livekit_DataTrackInfo.Builder {
         nonmutating set { lkSetString(&_pointer.pointee.name, newValue) }
     }
 
-    var encryption: Livekit_Encryption_TypeEnum {
-        get { _pointer.pointee.encryption.map { lkEnum($0.pointee) } ?? Livekit_Encryption_TypeEnum() }
+    var encryption: Applooma_Encryption_TypeEnum {
+        get { _pointer.pointee.encryption.map { lkEnum($0.pointee) } ?? Applooma_Encryption_TypeEnum() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.encryption, newValue) }
     }
 
-    var frameEncoding: Livekit_DataTrackFrameEncoding {
-        get { _pointer.pointee.frame_encoding.map { Livekit_DataTrackFrameEncoding(_sharing: $0, owner: _box) } ?? Livekit_DataTrackFrameEncoding._empty }
+    var frameEncoding: Applooma_DataTrackFrameEncoding {
+        get { _pointer.pointee.frame_encoding.map { Applooma_DataTrackFrameEncoding(_sharing: $0, owner: _box) } ?? Applooma_DataTrackFrameEncoding._empty }
         nonmutating set { lkSetMessage(&_pointer.pointee.frame_encoding, newValue) }
     }
 
-    var schema: Livekit_DataTrackSchemaId {
-        get { _pointer.pointee.schema.map { Livekit_DataTrackSchemaId(_sharing: $0, owner: _box) } ?? Livekit_DataTrackSchemaId._empty }
+    var schema: Applooma_DataTrackSchemaId {
+        get { _pointer.pointee.schema.map { Applooma_DataTrackSchemaId(_sharing: $0, owner: _box) } ?? Applooma_DataTrackSchemaId._empty }
         nonmutating set { lkSetMessage(&_pointer.pointee.schema, newValue) }
     }
 
 }
 
-enum Livekit_DataTrackFrameEncoding_OneOf_Value: Equatable {
-    case wellKnown(Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding)
+enum Applooma_DataTrackFrameEncoding_OneOf_Value: Equatable {
+    case wellKnown(Applooma_DataTrackFrameEncoding_WellKnownFrameEncoding)
     case custom(String)
 }
 
-extension livekit_DataTrackFrameEncoding: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataTrackFrameEncoding_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataTrackFrameEncoding>(zero: livekit_DataTrackFrameEncoding(), descriptor: livekit_DataTrackFrameEncoding_msg)
+extension applooma_DataTrackFrameEncoding: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataTrackFrameEncoding_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataTrackFrameEncoding>(zero: applooma_DataTrackFrameEncoding(), descriptor: applooma_DataTrackFrameEncoding_msg)
 }
-typealias Livekit_DataTrackFrameEncoding = NanopbMsg<livekit_DataTrackFrameEncoding>
-extension Livekit_DataTrackFrameEncoding {
-    var value: Livekit_DataTrackFrameEncoding_OneOf_Value? {
+typealias Applooma_DataTrackFrameEncoding = NanopbMsg<applooma_DataTrackFrameEncoding>
+extension Applooma_DataTrackFrameEncoding {
+    var value: Applooma_DataTrackFrameEncoding_OneOf_Value? {
         switch _pointer.pointee.which_value {
-        case pb_size_t(livekit_DataTrackFrameEncoding_well_known_tag):
-            return .wellKnown(_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding } ?? Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding())
-        case pb_size_t(livekit_DataTrackFrameEncoding_custom_tag):
+        case pb_size_t(applooma_DataTrackFrameEncoding_well_known_tag):
+            return .wellKnown(_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Applooma_DataTrackFrameEncoding_WellKnownFrameEncoding } ?? Applooma_DataTrackFrameEncoding_WellKnownFrameEncoding())
+        case pb_size_t(applooma_DataTrackFrameEncoding_custom_tag):
             return .custom(lkString(_pointer.pointee.value.custom) ?? "")
         default: return nil
         }
     }
-    var wellKnown: Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataTrackFrameEncoding_well_known_tag) ? (_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding } ?? Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding()) : Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding()
+    var wellKnown: Applooma_DataTrackFrameEncoding_WellKnownFrameEncoding {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataTrackFrameEncoding_well_known_tag) ? (_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Applooma_DataTrackFrameEncoding_WellKnownFrameEncoding } ?? Applooma_DataTrackFrameEncoding_WellKnownFrameEncoding()) : Applooma_DataTrackFrameEncoding_WellKnownFrameEncoding()
     }
     var custom: String {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataTrackFrameEncoding_custom_tag) ? (lkString(_pointer.pointee.value.custom) ?? "") : ""
+        _pointer.pointee.which_value == pb_size_t(applooma_DataTrackFrameEncoding_custom_tag) ? (lkString(_pointer.pointee.value.custom) ?? "") : ""
     }
 
 }
 
-struct Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding: NanopbEnum {
+struct Applooma_DataTrackFrameEncoding_WellKnownFrameEncoding: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -1053,13 +1053,13 @@ struct Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding: NanopbEnum {
     static let json = Self(rawValue: 7)
 }
 
-extension Livekit_DataTrackFrameEncoding.Builder {
-    var value: Livekit_DataTrackFrameEncoding_OneOf_Value? {
+extension Applooma_DataTrackFrameEncoding.Builder {
+    var value: Applooma_DataTrackFrameEncoding_OneOf_Value? {
         get {
             switch _pointer.pointee.which_value {
-            case pb_size_t(livekit_DataTrackFrameEncoding_well_known_tag):
-                return .wellKnown(_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding } ?? Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding())
-            case pb_size_t(livekit_DataTrackFrameEncoding_custom_tag):
+            case pb_size_t(applooma_DataTrackFrameEncoding_well_known_tag):
+                return .wellKnown(_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Applooma_DataTrackFrameEncoding_WellKnownFrameEncoding } ?? Applooma_DataTrackFrameEncoding_WellKnownFrameEncoding())
+            case pb_size_t(applooma_DataTrackFrameEncoding_custom_tag):
                 return .custom(lkString(_pointer.pointee.value.custom) ?? "")
             default: return nil
             }
@@ -1068,36 +1068,36 @@ extension Livekit_DataTrackFrameEncoding.Builder {
             _clearValue()
             switch newValue {
             case let .wellKnown(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataTrackFrameEncoding_well_known_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataTrackFrameEncoding_well_known_tag)
                 lkSetEnumPointer(&_pointer.pointee.value.well_known, value)
             case let .custom(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataTrackFrameEncoding_custom_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataTrackFrameEncoding_custom_tag)
                 lkSetString(&_pointer.pointee.value.custom, value)
             case nil: break
             }
         }
     }
-    var wellKnown: Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataTrackFrameEncoding_well_known_tag) ? (_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding } ?? Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding()) : Livekit_DataTrackFrameEncoding_WellKnownFrameEncoding() }
+    var wellKnown: Applooma_DataTrackFrameEncoding_WellKnownFrameEncoding {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataTrackFrameEncoding_well_known_tag) ? (_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Applooma_DataTrackFrameEncoding_WellKnownFrameEncoding } ?? Applooma_DataTrackFrameEncoding_WellKnownFrameEncoding()) : Applooma_DataTrackFrameEncoding_WellKnownFrameEncoding() }
         nonmutating set {
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataTrackFrameEncoding_well_known_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataTrackFrameEncoding_well_known_tag)
             lkSetEnumPointer(&_pointer.pointee.value.well_known, newValue)
         }
     }
     var custom: String {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataTrackFrameEncoding_custom_tag) ? (lkString(_pointer.pointee.value.custom) ?? "") : "" }
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataTrackFrameEncoding_custom_tag) ? (lkString(_pointer.pointee.value.custom) ?? "") : "" }
         nonmutating set {
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataTrackFrameEncoding_custom_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataTrackFrameEncoding_custom_tag)
             lkSetString(&_pointer.pointee.value.custom, newValue)
         }
     }
     private func _clearValue() {
         switch _pointer.pointee.which_value {
-        case pb_size_t(livekit_DataTrackFrameEncoding_well_known_tag):
+        case pb_size_t(applooma_DataTrackFrameEncoding_well_known_tag):
             lkFree(&_pointer.pointee.value.well_known)
-        case pb_size_t(livekit_DataTrackFrameEncoding_custom_tag):
+        case pb_size_t(applooma_DataTrackFrameEncoding_custom_tag):
             lkFree(&_pointer.pointee.value.custom)
         default: break
         }
@@ -1109,36 +1109,36 @@ extension Livekit_DataTrackFrameEncoding.Builder {
 
 }
 
-enum Livekit_DataTrackSchemaEncoding_OneOf_Value: Equatable {
-    case wellKnown(Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding)
+enum Applooma_DataTrackSchemaEncoding_OneOf_Value: Equatable {
+    case wellKnown(Applooma_DataTrackSchemaEncoding_WellKnownSchemaEncoding)
     case custom(String)
 }
 
-extension livekit_DataTrackSchemaEncoding: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataTrackSchemaEncoding_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataTrackSchemaEncoding>(zero: livekit_DataTrackSchemaEncoding(), descriptor: livekit_DataTrackSchemaEncoding_msg)
+extension applooma_DataTrackSchemaEncoding: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataTrackSchemaEncoding_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataTrackSchemaEncoding>(zero: applooma_DataTrackSchemaEncoding(), descriptor: applooma_DataTrackSchemaEncoding_msg)
 }
-typealias Livekit_DataTrackSchemaEncoding = NanopbMsg<livekit_DataTrackSchemaEncoding>
-extension Livekit_DataTrackSchemaEncoding {
-    var value: Livekit_DataTrackSchemaEncoding_OneOf_Value? {
+typealias Applooma_DataTrackSchemaEncoding = NanopbMsg<applooma_DataTrackSchemaEncoding>
+extension Applooma_DataTrackSchemaEncoding {
+    var value: Applooma_DataTrackSchemaEncoding_OneOf_Value? {
         switch _pointer.pointee.which_value {
-        case pb_size_t(livekit_DataTrackSchemaEncoding_well_known_tag):
-            return .wellKnown(_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding } ?? Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding())
-        case pb_size_t(livekit_DataTrackSchemaEncoding_custom_tag):
+        case pb_size_t(applooma_DataTrackSchemaEncoding_well_known_tag):
+            return .wellKnown(_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Applooma_DataTrackSchemaEncoding_WellKnownSchemaEncoding } ?? Applooma_DataTrackSchemaEncoding_WellKnownSchemaEncoding())
+        case pb_size_t(applooma_DataTrackSchemaEncoding_custom_tag):
             return .custom(lkString(_pointer.pointee.value.custom) ?? "")
         default: return nil
         }
     }
-    var wellKnown: Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataTrackSchemaEncoding_well_known_tag) ? (_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding } ?? Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding()) : Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding()
+    var wellKnown: Applooma_DataTrackSchemaEncoding_WellKnownSchemaEncoding {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataTrackSchemaEncoding_well_known_tag) ? (_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Applooma_DataTrackSchemaEncoding_WellKnownSchemaEncoding } ?? Applooma_DataTrackSchemaEncoding_WellKnownSchemaEncoding()) : Applooma_DataTrackSchemaEncoding_WellKnownSchemaEncoding()
     }
     var custom: String {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataTrackSchemaEncoding_custom_tag) ? (lkString(_pointer.pointee.value.custom) ?? "") : ""
+        _pointer.pointee.which_value == pb_size_t(applooma_DataTrackSchemaEncoding_custom_tag) ? (lkString(_pointer.pointee.value.custom) ?? "") : ""
     }
 
 }
 
-struct Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding: NanopbEnum {
+struct Applooma_DataTrackSchemaEncoding_WellKnownSchemaEncoding: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -1153,13 +1153,13 @@ struct Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding: NanopbEnum {
     static let jsonSchema = Self(rawValue: 7)
 }
 
-extension Livekit_DataTrackSchemaEncoding.Builder {
-    var value: Livekit_DataTrackSchemaEncoding_OneOf_Value? {
+extension Applooma_DataTrackSchemaEncoding.Builder {
+    var value: Applooma_DataTrackSchemaEncoding_OneOf_Value? {
         get {
             switch _pointer.pointee.which_value {
-            case pb_size_t(livekit_DataTrackSchemaEncoding_well_known_tag):
-                return .wellKnown(_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding } ?? Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding())
-            case pb_size_t(livekit_DataTrackSchemaEncoding_custom_tag):
+            case pb_size_t(applooma_DataTrackSchemaEncoding_well_known_tag):
+                return .wellKnown(_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Applooma_DataTrackSchemaEncoding_WellKnownSchemaEncoding } ?? Applooma_DataTrackSchemaEncoding_WellKnownSchemaEncoding())
+            case pb_size_t(applooma_DataTrackSchemaEncoding_custom_tag):
                 return .custom(lkString(_pointer.pointee.value.custom) ?? "")
             default: return nil
             }
@@ -1168,36 +1168,36 @@ extension Livekit_DataTrackSchemaEncoding.Builder {
             _clearValue()
             switch newValue {
             case let .wellKnown(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataTrackSchemaEncoding_well_known_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataTrackSchemaEncoding_well_known_tag)
                 lkSetEnumPointer(&_pointer.pointee.value.well_known, value)
             case let .custom(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataTrackSchemaEncoding_custom_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataTrackSchemaEncoding_custom_tag)
                 lkSetString(&_pointer.pointee.value.custom, value)
             case nil: break
             }
         }
     }
-    var wellKnown: Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataTrackSchemaEncoding_well_known_tag) ? (_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding } ?? Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding()) : Livekit_DataTrackSchemaEncoding_WellKnownSchemaEncoding() }
+    var wellKnown: Applooma_DataTrackSchemaEncoding_WellKnownSchemaEncoding {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataTrackSchemaEncoding_well_known_tag) ? (_pointer.pointee.value.well_known.map { lkEnum($0.pointee) as Applooma_DataTrackSchemaEncoding_WellKnownSchemaEncoding } ?? Applooma_DataTrackSchemaEncoding_WellKnownSchemaEncoding()) : Applooma_DataTrackSchemaEncoding_WellKnownSchemaEncoding() }
         nonmutating set {
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataTrackSchemaEncoding_well_known_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataTrackSchemaEncoding_well_known_tag)
             lkSetEnumPointer(&_pointer.pointee.value.well_known, newValue)
         }
     }
     var custom: String {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataTrackSchemaEncoding_custom_tag) ? (lkString(_pointer.pointee.value.custom) ?? "") : "" }
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataTrackSchemaEncoding_custom_tag) ? (lkString(_pointer.pointee.value.custom) ?? "") : "" }
         nonmutating set {
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataTrackSchemaEncoding_custom_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataTrackSchemaEncoding_custom_tag)
             lkSetString(&_pointer.pointee.value.custom, newValue)
         }
     }
     private func _clearValue() {
         switch _pointer.pointee.which_value {
-        case pb_size_t(livekit_DataTrackSchemaEncoding_well_known_tag):
+        case pb_size_t(applooma_DataTrackSchemaEncoding_well_known_tag):
             lkFree(&_pointer.pointee.value.well_known)
-        case pb_size_t(livekit_DataTrackSchemaEncoding_custom_tag):
+        case pb_size_t(applooma_DataTrackSchemaEncoding_custom_tag):
             lkFree(&_pointer.pointee.value.custom)
         default: break
         }
@@ -1209,43 +1209,43 @@ extension Livekit_DataTrackSchemaEncoding.Builder {
 
 }
 
-extension livekit_DataTrackSchemaId: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataTrackSchemaId_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataTrackSchemaId>(zero: livekit_DataTrackSchemaId(), descriptor: livekit_DataTrackSchemaId_msg)
+extension applooma_DataTrackSchemaId: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataTrackSchemaId_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataTrackSchemaId>(zero: applooma_DataTrackSchemaId(), descriptor: applooma_DataTrackSchemaId_msg)
 }
-typealias Livekit_DataTrackSchemaId = NanopbMsg<livekit_DataTrackSchemaId>
-extension Livekit_DataTrackSchemaId {
+typealias Applooma_DataTrackSchemaId = NanopbMsg<applooma_DataTrackSchemaId>
+extension Applooma_DataTrackSchemaId {
     var name: String {
         lkString(_pointer.pointee.name) ?? ""
     }
     var hasName: Bool { _pointer.pointee.name != nil }
 
-    var encoding: Livekit_DataTrackSchemaEncoding {
-        _pointer.pointee.encoding.map { Livekit_DataTrackSchemaEncoding(_sharing: $0, owner: _owner) } ?? Livekit_DataTrackSchemaEncoding._empty
+    var encoding: Applooma_DataTrackSchemaEncoding {
+        _pointer.pointee.encoding.map { Applooma_DataTrackSchemaEncoding(_sharing: $0, owner: _owner) } ?? Applooma_DataTrackSchemaEncoding._empty
     }
     var hasEncoding: Bool { _pointer.pointee.encoding != nil }
 
 }
 
-extension Livekit_DataTrackSchemaId.Builder {
+extension Applooma_DataTrackSchemaId.Builder {
     var name: String {
         get { lkString(_pointer.pointee.name) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.name, newValue) }
     }
 
-    var encoding: Livekit_DataTrackSchemaEncoding {
-        get { _pointer.pointee.encoding.map { Livekit_DataTrackSchemaEncoding(_sharing: $0, owner: _box) } ?? Livekit_DataTrackSchemaEncoding._empty }
+    var encoding: Applooma_DataTrackSchemaEncoding {
+        get { _pointer.pointee.encoding.map { Applooma_DataTrackSchemaEncoding(_sharing: $0, owner: _box) } ?? Applooma_DataTrackSchemaEncoding._empty }
         nonmutating set { lkSetMessage(&_pointer.pointee.encoding, newValue) }
     }
 
 }
 
-extension livekit_DataTrackSubscriptionOptions: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataTrackSubscriptionOptions_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataTrackSubscriptionOptions>(zero: livekit_DataTrackSubscriptionOptions(), descriptor: livekit_DataTrackSubscriptionOptions_msg)
+extension applooma_DataTrackSubscriptionOptions: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataTrackSubscriptionOptions_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataTrackSubscriptionOptions>(zero: applooma_DataTrackSubscriptionOptions(), descriptor: applooma_DataTrackSubscriptionOptions_msg)
 }
-typealias Livekit_DataTrackSubscriptionOptions = NanopbMsg<livekit_DataTrackSubscriptionOptions>
-extension Livekit_DataTrackSubscriptionOptions {
+typealias Applooma_DataTrackSubscriptionOptions = NanopbMsg<applooma_DataTrackSubscriptionOptions>
+extension Applooma_DataTrackSubscriptionOptions {
     var targetFps: UInt32 {
         _pointer.pointee.target_fps?.pointee ?? 0
     }
@@ -1253,7 +1253,7 @@ extension Livekit_DataTrackSubscriptionOptions {
 
 }
 
-extension Livekit_DataTrackSubscriptionOptions.Builder {
+extension Applooma_DataTrackSubscriptionOptions.Builder {
     var targetFps: UInt32 {
         get { _pointer.pointee.target_fps?.pointee ?? 0 }
         nonmutating set { lkSetValue(&_pointer.pointee.target_fps, newValue) }
@@ -1261,86 +1261,86 @@ extension Livekit_DataTrackSubscriptionOptions.Builder {
 
 }
 
-enum Livekit_DataBlobKey_OneOf_Key: Equatable {
+enum Applooma_DataBlobKey_OneOf_Key: Equatable {
     case generic(String)
-    case schemaID(Livekit_DataTrackSchemaId)
+    case schemaID(Applooma_DataTrackSchemaId)
 }
 
-extension livekit_DataBlobKey: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataBlobKey_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataBlobKey>(zero: livekit_DataBlobKey(), descriptor: livekit_DataBlobKey_msg)
+extension applooma_DataBlobKey: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataBlobKey_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataBlobKey>(zero: applooma_DataBlobKey(), descriptor: applooma_DataBlobKey_msg)
 }
-typealias Livekit_DataBlobKey = NanopbMsg<livekit_DataBlobKey>
-extension Livekit_DataBlobKey {
-    var key: Livekit_DataBlobKey_OneOf_Key? {
+typealias Applooma_DataBlobKey = NanopbMsg<applooma_DataBlobKey>
+extension Applooma_DataBlobKey {
+    var key: Applooma_DataBlobKey_OneOf_Key? {
         switch _pointer.pointee.which_key {
-        case pb_size_t(livekit_DataBlobKey_generic_tag):
+        case pb_size_t(applooma_DataBlobKey_generic_tag):
             return .generic(lkString(_pointer.pointee.key.generic) ?? "")
-        case pb_size_t(livekit_DataBlobKey_schema_id_tag):
-            return .schemaID(_pointer.pointee.key.schema_id.map { Livekit_DataTrackSchemaId(_sharing: $0, owner: _owner) } ?? Livekit_DataTrackSchemaId._empty)
+        case pb_size_t(applooma_DataBlobKey_schema_id_tag):
+            return .schemaID(_pointer.pointee.key.schema_id.map { Applooma_DataTrackSchemaId(_sharing: $0, owner: _owner) } ?? Applooma_DataTrackSchemaId._empty)
         default: return nil
         }
     }
     var generic: String {
-        _pointer.pointee.which_key == pb_size_t(livekit_DataBlobKey_generic_tag) ? (lkString(_pointer.pointee.key.generic) ?? "") : ""
+        _pointer.pointee.which_key == pb_size_t(applooma_DataBlobKey_generic_tag) ? (lkString(_pointer.pointee.key.generic) ?? "") : ""
     }
-    var schemaID: Livekit_DataTrackSchemaId {
-        _pointer.pointee.which_key == pb_size_t(livekit_DataBlobKey_schema_id_tag) ? (_pointer.pointee.key.schema_id.map { Livekit_DataTrackSchemaId(_sharing: $0, owner: _owner) } ?? Livekit_DataTrackSchemaId._empty) : Livekit_DataTrackSchemaId()
+    var schemaID: Applooma_DataTrackSchemaId {
+        _pointer.pointee.which_key == pb_size_t(applooma_DataBlobKey_schema_id_tag) ? (_pointer.pointee.key.schema_id.map { Applooma_DataTrackSchemaId(_sharing: $0, owner: _owner) } ?? Applooma_DataTrackSchemaId._empty) : Applooma_DataTrackSchemaId()
     }
 
 }
 
-extension Livekit_DataBlobKey.Builder {
-    var key: Livekit_DataBlobKey_OneOf_Key? {
+extension Applooma_DataBlobKey.Builder {
+    var key: Applooma_DataBlobKey_OneOf_Key? {
         get {
             switch _pointer.pointee.which_key {
-            case pb_size_t(livekit_DataBlobKey_generic_tag):
+            case pb_size_t(applooma_DataBlobKey_generic_tag):
                 return .generic(lkString(_pointer.pointee.key.generic) ?? "")
-            case pb_size_t(livekit_DataBlobKey_schema_id_tag):
-                return .schemaID(_pointer.pointee.key.schema_id.map { Livekit_DataTrackSchemaId(_sharing: $0, owner: _box) } ?? Livekit_DataTrackSchemaId._empty)
+            case pb_size_t(applooma_DataBlobKey_schema_id_tag):
+                return .schemaID(_pointer.pointee.key.schema_id.map { Applooma_DataTrackSchemaId(_sharing: $0, owner: _box) } ?? Applooma_DataTrackSchemaId._empty)
             default: return nil
             }
         }
         nonmutating set {
-            let newValue: Livekit_DataBlobKey_OneOf_Key? = switch newValue {
+            let newValue: Applooma_DataBlobKey_OneOf_Key? = switch newValue {
             case let .schemaID(value): .schemaID(value.owned())
             default: newValue
             }
             _clearKey()
             switch newValue {
             case let .generic(value):
-                _pointer.pointee.which_key = pb_size_t(livekit_DataBlobKey_generic_tag)
+                _pointer.pointee.which_key = pb_size_t(applooma_DataBlobKey_generic_tag)
                 lkSetString(&_pointer.pointee.key.generic, value)
             case let .schemaID(value):
-                _pointer.pointee.which_key = pb_size_t(livekit_DataBlobKey_schema_id_tag)
+                _pointer.pointee.which_key = pb_size_t(applooma_DataBlobKey_schema_id_tag)
                 lkSetMessage(&_pointer.pointee.key.schema_id, value)
             case nil: break
             }
         }
     }
     var generic: String {
-        get { _pointer.pointee.which_key == pb_size_t(livekit_DataBlobKey_generic_tag) ? (lkString(_pointer.pointee.key.generic) ?? "") : "" }
+        get { _pointer.pointee.which_key == pb_size_t(applooma_DataBlobKey_generic_tag) ? (lkString(_pointer.pointee.key.generic) ?? "") : "" }
         nonmutating set {
             _clearKey()
-            _pointer.pointee.which_key = pb_size_t(livekit_DataBlobKey_generic_tag)
+            _pointer.pointee.which_key = pb_size_t(applooma_DataBlobKey_generic_tag)
             lkSetString(&_pointer.pointee.key.generic, newValue)
         }
     }
-    var schemaID: Livekit_DataTrackSchemaId {
-        get { _pointer.pointee.which_key == pb_size_t(livekit_DataBlobKey_schema_id_tag) ? (_pointer.pointee.key.schema_id.map { Livekit_DataTrackSchemaId(_sharing: $0, owner: _box) } ?? Livekit_DataTrackSchemaId._empty) : Livekit_DataTrackSchemaId() }
+    var schemaID: Applooma_DataTrackSchemaId {
+        get { _pointer.pointee.which_key == pb_size_t(applooma_DataBlobKey_schema_id_tag) ? (_pointer.pointee.key.schema_id.map { Applooma_DataTrackSchemaId(_sharing: $0, owner: _box) } ?? Applooma_DataTrackSchemaId._empty) : Applooma_DataTrackSchemaId() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearKey()
-            _pointer.pointee.which_key = pb_size_t(livekit_DataBlobKey_schema_id_tag)
+            _pointer.pointee.which_key = pb_size_t(applooma_DataBlobKey_schema_id_tag)
             lkSetMessage(&_pointer.pointee.key.schema_id, newValue)
         }
     }
     private func _clearKey() {
         switch _pointer.pointee.which_key {
-        case pb_size_t(livekit_DataBlobKey_generic_tag):
+        case pb_size_t(applooma_DataBlobKey_generic_tag):
             lkFree(&_pointer.pointee.key.generic)
-        case pb_size_t(livekit_DataBlobKey_schema_id_tag):
-            lkRelease(message: &_pointer.pointee.key.schema_id, Livekit_DataTrackSchemaId.descriptor)
+        case pb_size_t(applooma_DataBlobKey_schema_id_tag):
+            lkRelease(message: &_pointer.pointee.key.schema_id, Applooma_DataTrackSchemaId.descriptor)
         default: break
         }
         _pointer.pointee.which_key = 0
@@ -1351,14 +1351,14 @@ extension Livekit_DataBlobKey.Builder {
 
 }
 
-extension livekit_DataBlob: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataBlob_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataBlob>(zero: livekit_DataBlob(), descriptor: livekit_DataBlob_msg)
+extension applooma_DataBlob: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataBlob_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataBlob>(zero: applooma_DataBlob(), descriptor: applooma_DataBlob_msg)
 }
-typealias Livekit_DataBlob = NanopbMsg<livekit_DataBlob>
-extension Livekit_DataBlob {
-    var key: Livekit_DataBlobKey {
-        _pointer.pointee.key.map { Livekit_DataBlobKey(_sharing: $0, owner: _owner) } ?? Livekit_DataBlobKey._empty
+typealias Applooma_DataBlob = NanopbMsg<applooma_DataBlob>
+extension Applooma_DataBlob {
+    var key: Applooma_DataBlobKey {
+        _pointer.pointee.key.map { Applooma_DataBlobKey(_sharing: $0, owner: _owner) } ?? Applooma_DataBlobKey._empty
     }
     var hasKey: Bool { _pointer.pointee.key != nil }
 
@@ -1369,9 +1369,9 @@ extension Livekit_DataBlob {
 
 }
 
-extension Livekit_DataBlob.Builder {
-    var key: Livekit_DataBlobKey {
-        get { _pointer.pointee.key.map { Livekit_DataBlobKey(_sharing: $0, owner: _box) } ?? Livekit_DataBlobKey._empty }
+extension Applooma_DataBlob.Builder {
+    var key: Applooma_DataBlobKey {
+        get { _pointer.pointee.key.map { Applooma_DataBlobKey(_sharing: $0, owner: _box) } ?? Applooma_DataBlobKey._empty }
         nonmutating set { lkSetMessage(&_pointer.pointee.key, newValue) }
     }
 
@@ -1382,14 +1382,14 @@ extension Livekit_DataBlob.Builder {
 
 }
 
-extension livekit_VideoLayer: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_VideoLayer_msg }
-    package static let _emptyBox = NanopbBox<livekit_VideoLayer>(zero: livekit_VideoLayer(), descriptor: livekit_VideoLayer_msg)
+extension applooma_VideoLayer: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_VideoLayer_msg }
+    package static let _emptyBox = NanopbBox<applooma_VideoLayer>(zero: applooma_VideoLayer(), descriptor: applooma_VideoLayer_msg)
 }
-typealias Livekit_VideoLayer = NanopbMsg<livekit_VideoLayer>
-extension Livekit_VideoLayer {
-    var quality: Livekit_VideoQuality {
-        _pointer.pointee.quality.map { lkEnum($0.pointee) } ?? Livekit_VideoQuality()
+typealias Applooma_VideoLayer = NanopbMsg<applooma_VideoLayer>
+extension Applooma_VideoLayer {
+    var quality: Applooma_VideoQuality {
+        _pointer.pointee.quality.map { lkEnum($0.pointee) } ?? Applooma_VideoQuality()
     }
     var hasQuality: Bool { _pointer.pointee.quality != nil }
 
@@ -1430,7 +1430,7 @@ extension Livekit_VideoLayer {
 
 }
 
-struct Livekit_VideoLayer_Mode: NanopbEnum {
+struct Applooma_VideoLayer_Mode: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -1441,9 +1441,9 @@ struct Livekit_VideoLayer_Mode: NanopbEnum {
     static let oneSpatialLayerPerStreamIncompleteRtcpSr = Self(rawValue: 3)
 }
 
-extension Livekit_VideoLayer.Builder {
-    var quality: Livekit_VideoQuality {
-        get { _pointer.pointee.quality.map { lkEnum($0.pointee) } ?? Livekit_VideoQuality() }
+extension Applooma_VideoLayer.Builder {
+    var quality: Applooma_VideoQuality {
+        get { _pointer.pointee.quality.map { lkEnum($0.pointee) } ?? Applooma_VideoQuality() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.quality, newValue) }
     }
 
@@ -1484,30 +1484,30 @@ extension Livekit_VideoLayer.Builder {
 
 }
 
-enum Livekit_DataPacket_OneOf_Value: Equatable {
-    case user(Livekit_UserPacket)
-    case speaker(Livekit_ActiveSpeakerUpdate)
-    case sipDtmf(Livekit_SipDTMF)
-    case transcription(Livekit_Transcription)
-    case metrics(Livekit_MetricsBatch)
-    case chatMessage(Livekit_ChatMessage)
-    case rpcRequest(Livekit_RpcRequest)
-    case rpcAck(Livekit_RpcAck)
-    case rpcResponse(Livekit_RpcResponse)
-    case streamHeader(Livekit_DataStream_Header)
-    case streamChunk(Livekit_DataStream_Chunk)
-    case streamTrailer(Livekit_DataStream_Trailer)
-    case encryptedPacket(Livekit_EncryptedPacket)
+enum Applooma_DataPacket_OneOf_Value: Equatable {
+    case user(Applooma_UserPacket)
+    case speaker(Applooma_ActiveSpeakerUpdate)
+    case sipDtmf(Applooma_SipDTMF)
+    case transcription(Applooma_Transcription)
+    case metrics(Applooma_MetricsBatch)
+    case chatMessage(Applooma_ChatMessage)
+    case rpcRequest(Applooma_RpcRequest)
+    case rpcAck(Applooma_RpcAck)
+    case rpcResponse(Applooma_RpcResponse)
+    case streamHeader(Applooma_DataStream_Header)
+    case streamChunk(Applooma_DataStream_Chunk)
+    case streamTrailer(Applooma_DataStream_Trailer)
+    case encryptedPacket(Applooma_EncryptedPacket)
 }
 
-extension livekit_DataPacket: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataPacket_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataPacket>(zero: livekit_DataPacket(), descriptor: livekit_DataPacket_msg)
+extension applooma_DataPacket: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataPacket_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataPacket>(zero: applooma_DataPacket(), descriptor: applooma_DataPacket_msg)
 }
-typealias Livekit_DataPacket = NanopbMsg<livekit_DataPacket>
-extension Livekit_DataPacket {
-    var kind: Livekit_DataPacket_Kind {
-        _pointer.pointee.kind.map { lkEnum($0.pointee) } ?? Livekit_DataPacket_Kind()
+typealias Applooma_DataPacket = NanopbMsg<applooma_DataPacket>
+extension Applooma_DataPacket {
+    var kind: Applooma_DataPacket_Kind {
+        _pointer.pointee.kind.map { lkEnum($0.pointee) } ?? Applooma_DataPacket_Kind()
     }
     var hasKind: Bool { _pointer.pointee.kind != nil }
 
@@ -1530,80 +1530,80 @@ extension Livekit_DataPacket {
     }
     var hasParticipantSid: Bool { _pointer.pointee.participant_sid != nil }
 
-    var value: Livekit_DataPacket_OneOf_Value? {
+    var value: Applooma_DataPacket_OneOf_Value? {
         switch _pointer.pointee.which_value {
-        case pb_size_t(livekit_DataPacket_user_tag):
-            return .user(_pointer.pointee.value.user.map { Livekit_UserPacket(_sharing: $0, owner: _owner) } ?? Livekit_UserPacket._empty)
-        case pb_size_t(livekit_DataPacket_speaker_tag):
-            return .speaker(_pointer.pointee.value.speaker.map { Livekit_ActiveSpeakerUpdate(_sharing: $0, owner: _owner) } ?? Livekit_ActiveSpeakerUpdate._empty)
-        case pb_size_t(livekit_DataPacket_sip_dtmf_tag):
-            return .sipDtmf(_pointer.pointee.value.sip_dtmf.map { Livekit_SipDTMF(_sharing: $0, owner: _owner) } ?? Livekit_SipDTMF._empty)
-        case pb_size_t(livekit_DataPacket_transcription_tag):
-            return .transcription(_pointer.pointee.value.transcription.map { Livekit_Transcription(_sharing: $0, owner: _owner) } ?? Livekit_Transcription._empty)
-        case pb_size_t(livekit_DataPacket_metrics_tag):
-            return .metrics(_pointer.pointee.value.metrics.map { Livekit_MetricsBatch(_sharing: $0, owner: _owner) } ?? Livekit_MetricsBatch._empty)
-        case pb_size_t(livekit_DataPacket_chat_message_tag):
-            return .chatMessage(_pointer.pointee.value.chat_message.map { Livekit_ChatMessage(_sharing: $0, owner: _owner) } ?? Livekit_ChatMessage._empty)
-        case pb_size_t(livekit_DataPacket_rpc_request_tag):
-            return .rpcRequest(_pointer.pointee.value.rpc_request.map { Livekit_RpcRequest(_sharing: $0, owner: _owner) } ?? Livekit_RpcRequest._empty)
-        case pb_size_t(livekit_DataPacket_rpc_ack_tag):
-            return .rpcAck(_pointer.pointee.value.rpc_ack.map { Livekit_RpcAck(_sharing: $0, owner: _owner) } ?? Livekit_RpcAck._empty)
-        case pb_size_t(livekit_DataPacket_rpc_response_tag):
-            return .rpcResponse(_pointer.pointee.value.rpc_response.map { Livekit_RpcResponse(_sharing: $0, owner: _owner) } ?? Livekit_RpcResponse._empty)
-        case pb_size_t(livekit_DataPacket_stream_header_tag):
-            return .streamHeader(_pointer.pointee.value.stream_header.map { Livekit_DataStream_Header(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_Header._empty)
-        case pb_size_t(livekit_DataPacket_stream_chunk_tag):
-            return .streamChunk(_pointer.pointee.value.stream_chunk.map { Livekit_DataStream_Chunk(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_Chunk._empty)
-        case pb_size_t(livekit_DataPacket_stream_trailer_tag):
-            return .streamTrailer(_pointer.pointee.value.stream_trailer.map { Livekit_DataStream_Trailer(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_Trailer._empty)
-        case pb_size_t(livekit_DataPacket_encrypted_packet_tag):
-            return .encryptedPacket(_pointer.pointee.value.encrypted_packet.map { Livekit_EncryptedPacket(_sharing: $0, owner: _owner) } ?? Livekit_EncryptedPacket._empty)
+        case pb_size_t(applooma_DataPacket_user_tag):
+            return .user(_pointer.pointee.value.user.map { Applooma_UserPacket(_sharing: $0, owner: _owner) } ?? Applooma_UserPacket._empty)
+        case pb_size_t(applooma_DataPacket_speaker_tag):
+            return .speaker(_pointer.pointee.value.speaker.map { Applooma_ActiveSpeakerUpdate(_sharing: $0, owner: _owner) } ?? Applooma_ActiveSpeakerUpdate._empty)
+        case pb_size_t(applooma_DataPacket_sip_dtmf_tag):
+            return .sipDtmf(_pointer.pointee.value.sip_dtmf.map { Applooma_SipDTMF(_sharing: $0, owner: _owner) } ?? Applooma_SipDTMF._empty)
+        case pb_size_t(applooma_DataPacket_transcription_tag):
+            return .transcription(_pointer.pointee.value.transcription.map { Applooma_Transcription(_sharing: $0, owner: _owner) } ?? Applooma_Transcription._empty)
+        case pb_size_t(applooma_DataPacket_metrics_tag):
+            return .metrics(_pointer.pointee.value.metrics.map { Applooma_MetricsBatch(_sharing: $0, owner: _owner) } ?? Applooma_MetricsBatch._empty)
+        case pb_size_t(applooma_DataPacket_chat_message_tag):
+            return .chatMessage(_pointer.pointee.value.chat_message.map { Applooma_ChatMessage(_sharing: $0, owner: _owner) } ?? Applooma_ChatMessage._empty)
+        case pb_size_t(applooma_DataPacket_rpc_request_tag):
+            return .rpcRequest(_pointer.pointee.value.rpc_request.map { Applooma_RpcRequest(_sharing: $0, owner: _owner) } ?? Applooma_RpcRequest._empty)
+        case pb_size_t(applooma_DataPacket_rpc_ack_tag):
+            return .rpcAck(_pointer.pointee.value.rpc_ack.map { Applooma_RpcAck(_sharing: $0, owner: _owner) } ?? Applooma_RpcAck._empty)
+        case pb_size_t(applooma_DataPacket_rpc_response_tag):
+            return .rpcResponse(_pointer.pointee.value.rpc_response.map { Applooma_RpcResponse(_sharing: $0, owner: _owner) } ?? Applooma_RpcResponse._empty)
+        case pb_size_t(applooma_DataPacket_stream_header_tag):
+            return .streamHeader(_pointer.pointee.value.stream_header.map { Applooma_DataStream_Header(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_Header._empty)
+        case pb_size_t(applooma_DataPacket_stream_chunk_tag):
+            return .streamChunk(_pointer.pointee.value.stream_chunk.map { Applooma_DataStream_Chunk(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_Chunk._empty)
+        case pb_size_t(applooma_DataPacket_stream_trailer_tag):
+            return .streamTrailer(_pointer.pointee.value.stream_trailer.map { Applooma_DataStream_Trailer(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_Trailer._empty)
+        case pb_size_t(applooma_DataPacket_encrypted_packet_tag):
+            return .encryptedPacket(_pointer.pointee.value.encrypted_packet.map { Applooma_EncryptedPacket(_sharing: $0, owner: _owner) } ?? Applooma_EncryptedPacket._empty)
         default: return nil
         }
     }
-    var user: Livekit_UserPacket {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_user_tag) ? (_pointer.pointee.value.user.map { Livekit_UserPacket(_sharing: $0, owner: _owner) } ?? Livekit_UserPacket._empty) : Livekit_UserPacket()
+    var user: Applooma_UserPacket {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_user_tag) ? (_pointer.pointee.value.user.map { Applooma_UserPacket(_sharing: $0, owner: _owner) } ?? Applooma_UserPacket._empty) : Applooma_UserPacket()
     }
-    var speaker: Livekit_ActiveSpeakerUpdate {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_speaker_tag) ? (_pointer.pointee.value.speaker.map { Livekit_ActiveSpeakerUpdate(_sharing: $0, owner: _owner) } ?? Livekit_ActiveSpeakerUpdate._empty) : Livekit_ActiveSpeakerUpdate()
+    var speaker: Applooma_ActiveSpeakerUpdate {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_speaker_tag) ? (_pointer.pointee.value.speaker.map { Applooma_ActiveSpeakerUpdate(_sharing: $0, owner: _owner) } ?? Applooma_ActiveSpeakerUpdate._empty) : Applooma_ActiveSpeakerUpdate()
     }
-    var sipDtmf: Livekit_SipDTMF {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_sip_dtmf_tag) ? (_pointer.pointee.value.sip_dtmf.map { Livekit_SipDTMF(_sharing: $0, owner: _owner) } ?? Livekit_SipDTMF._empty) : Livekit_SipDTMF()
+    var sipDtmf: Applooma_SipDTMF {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_sip_dtmf_tag) ? (_pointer.pointee.value.sip_dtmf.map { Applooma_SipDTMF(_sharing: $0, owner: _owner) } ?? Applooma_SipDTMF._empty) : Applooma_SipDTMF()
     }
-    var transcription: Livekit_Transcription {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_transcription_tag) ? (_pointer.pointee.value.transcription.map { Livekit_Transcription(_sharing: $0, owner: _owner) } ?? Livekit_Transcription._empty) : Livekit_Transcription()
+    var transcription: Applooma_Transcription {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_transcription_tag) ? (_pointer.pointee.value.transcription.map { Applooma_Transcription(_sharing: $0, owner: _owner) } ?? Applooma_Transcription._empty) : Applooma_Transcription()
     }
-    var metrics: Livekit_MetricsBatch {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_metrics_tag) ? (_pointer.pointee.value.metrics.map { Livekit_MetricsBatch(_sharing: $0, owner: _owner) } ?? Livekit_MetricsBatch._empty) : Livekit_MetricsBatch()
+    var metrics: Applooma_MetricsBatch {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_metrics_tag) ? (_pointer.pointee.value.metrics.map { Applooma_MetricsBatch(_sharing: $0, owner: _owner) } ?? Applooma_MetricsBatch._empty) : Applooma_MetricsBatch()
     }
-    var chatMessage: Livekit_ChatMessage {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_chat_message_tag) ? (_pointer.pointee.value.chat_message.map { Livekit_ChatMessage(_sharing: $0, owner: _owner) } ?? Livekit_ChatMessage._empty) : Livekit_ChatMessage()
+    var chatMessage: Applooma_ChatMessage {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_chat_message_tag) ? (_pointer.pointee.value.chat_message.map { Applooma_ChatMessage(_sharing: $0, owner: _owner) } ?? Applooma_ChatMessage._empty) : Applooma_ChatMessage()
     }
-    var rpcRequest: Livekit_RpcRequest {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_rpc_request_tag) ? (_pointer.pointee.value.rpc_request.map { Livekit_RpcRequest(_sharing: $0, owner: _owner) } ?? Livekit_RpcRequest._empty) : Livekit_RpcRequest()
+    var rpcRequest: Applooma_RpcRequest {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_rpc_request_tag) ? (_pointer.pointee.value.rpc_request.map { Applooma_RpcRequest(_sharing: $0, owner: _owner) } ?? Applooma_RpcRequest._empty) : Applooma_RpcRequest()
     }
-    var rpcAck: Livekit_RpcAck {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_rpc_ack_tag) ? (_pointer.pointee.value.rpc_ack.map { Livekit_RpcAck(_sharing: $0, owner: _owner) } ?? Livekit_RpcAck._empty) : Livekit_RpcAck()
+    var rpcAck: Applooma_RpcAck {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_rpc_ack_tag) ? (_pointer.pointee.value.rpc_ack.map { Applooma_RpcAck(_sharing: $0, owner: _owner) } ?? Applooma_RpcAck._empty) : Applooma_RpcAck()
     }
-    var rpcResponse: Livekit_RpcResponse {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_rpc_response_tag) ? (_pointer.pointee.value.rpc_response.map { Livekit_RpcResponse(_sharing: $0, owner: _owner) } ?? Livekit_RpcResponse._empty) : Livekit_RpcResponse()
+    var rpcResponse: Applooma_RpcResponse {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_rpc_response_tag) ? (_pointer.pointee.value.rpc_response.map { Applooma_RpcResponse(_sharing: $0, owner: _owner) } ?? Applooma_RpcResponse._empty) : Applooma_RpcResponse()
     }
-    var streamHeader: Livekit_DataStream_Header {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_stream_header_tag) ? (_pointer.pointee.value.stream_header.map { Livekit_DataStream_Header(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_Header._empty) : Livekit_DataStream_Header()
+    var streamHeader: Applooma_DataStream_Header {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_stream_header_tag) ? (_pointer.pointee.value.stream_header.map { Applooma_DataStream_Header(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_Header._empty) : Applooma_DataStream_Header()
     }
-    var streamChunk: Livekit_DataStream_Chunk {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_stream_chunk_tag) ? (_pointer.pointee.value.stream_chunk.map { Livekit_DataStream_Chunk(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_Chunk._empty) : Livekit_DataStream_Chunk()
+    var streamChunk: Applooma_DataStream_Chunk {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_stream_chunk_tag) ? (_pointer.pointee.value.stream_chunk.map { Applooma_DataStream_Chunk(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_Chunk._empty) : Applooma_DataStream_Chunk()
     }
-    var streamTrailer: Livekit_DataStream_Trailer {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_stream_trailer_tag) ? (_pointer.pointee.value.stream_trailer.map { Livekit_DataStream_Trailer(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_Trailer._empty) : Livekit_DataStream_Trailer()
+    var streamTrailer: Applooma_DataStream_Trailer {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_stream_trailer_tag) ? (_pointer.pointee.value.stream_trailer.map { Applooma_DataStream_Trailer(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_Trailer._empty) : Applooma_DataStream_Trailer()
     }
-    var encryptedPacket: Livekit_EncryptedPacket {
-        _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_encrypted_packet_tag) ? (_pointer.pointee.value.encrypted_packet.map { Livekit_EncryptedPacket(_sharing: $0, owner: _owner) } ?? Livekit_EncryptedPacket._empty) : Livekit_EncryptedPacket()
+    var encryptedPacket: Applooma_EncryptedPacket {
+        _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_encrypted_packet_tag) ? (_pointer.pointee.value.encrypted_packet.map { Applooma_EncryptedPacket(_sharing: $0, owner: _owner) } ?? Applooma_EncryptedPacket._empty) : Applooma_EncryptedPacket()
     }
 
 }
 
-struct Livekit_DataPacket_Kind: NanopbEnum {
+struct Applooma_DataPacket_Kind: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -1612,9 +1612,9 @@ struct Livekit_DataPacket_Kind: NanopbEnum {
     static let lossy = Self(rawValue: 1)
 }
 
-extension Livekit_DataPacket.Builder {
-    var kind: Livekit_DataPacket_Kind {
-        get { _pointer.pointee.kind.map { lkEnum($0.pointee) } ?? Livekit_DataPacket_Kind() }
+extension Applooma_DataPacket.Builder {
+    var kind: Applooma_DataPacket_Kind {
+        get { _pointer.pointee.kind.map { lkEnum($0.pointee) } ?? Applooma_DataPacket_Kind() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.kind, newValue) }
     }
 
@@ -1642,40 +1642,40 @@ extension Livekit_DataPacket.Builder {
         nonmutating set { lkSetString(&_pointer.pointee.participant_sid, newValue) }
     }
 
-    var value: Livekit_DataPacket_OneOf_Value? {
+    var value: Applooma_DataPacket_OneOf_Value? {
         get {
             switch _pointer.pointee.which_value {
-            case pb_size_t(livekit_DataPacket_user_tag):
-                return .user(_pointer.pointee.value.user.map { Livekit_UserPacket(_sharing: $0, owner: _box) } ?? Livekit_UserPacket._empty)
-            case pb_size_t(livekit_DataPacket_speaker_tag):
-                return .speaker(_pointer.pointee.value.speaker.map { Livekit_ActiveSpeakerUpdate(_sharing: $0, owner: _box) } ?? Livekit_ActiveSpeakerUpdate._empty)
-            case pb_size_t(livekit_DataPacket_sip_dtmf_tag):
-                return .sipDtmf(_pointer.pointee.value.sip_dtmf.map { Livekit_SipDTMF(_sharing: $0, owner: _box) } ?? Livekit_SipDTMF._empty)
-            case pb_size_t(livekit_DataPacket_transcription_tag):
-                return .transcription(_pointer.pointee.value.transcription.map { Livekit_Transcription(_sharing: $0, owner: _box) } ?? Livekit_Transcription._empty)
-            case pb_size_t(livekit_DataPacket_metrics_tag):
-                return .metrics(_pointer.pointee.value.metrics.map { Livekit_MetricsBatch(_sharing: $0, owner: _box) } ?? Livekit_MetricsBatch._empty)
-            case pb_size_t(livekit_DataPacket_chat_message_tag):
-                return .chatMessage(_pointer.pointee.value.chat_message.map { Livekit_ChatMessage(_sharing: $0, owner: _box) } ?? Livekit_ChatMessage._empty)
-            case pb_size_t(livekit_DataPacket_rpc_request_tag):
-                return .rpcRequest(_pointer.pointee.value.rpc_request.map { Livekit_RpcRequest(_sharing: $0, owner: _box) } ?? Livekit_RpcRequest._empty)
-            case pb_size_t(livekit_DataPacket_rpc_ack_tag):
-                return .rpcAck(_pointer.pointee.value.rpc_ack.map { Livekit_RpcAck(_sharing: $0, owner: _box) } ?? Livekit_RpcAck._empty)
-            case pb_size_t(livekit_DataPacket_rpc_response_tag):
-                return .rpcResponse(_pointer.pointee.value.rpc_response.map { Livekit_RpcResponse(_sharing: $0, owner: _box) } ?? Livekit_RpcResponse._empty)
-            case pb_size_t(livekit_DataPacket_stream_header_tag):
-                return .streamHeader(_pointer.pointee.value.stream_header.map { Livekit_DataStream_Header(_sharing: $0, owner: _box) } ?? Livekit_DataStream_Header._empty)
-            case pb_size_t(livekit_DataPacket_stream_chunk_tag):
-                return .streamChunk(_pointer.pointee.value.stream_chunk.map { Livekit_DataStream_Chunk(_sharing: $0, owner: _box) } ?? Livekit_DataStream_Chunk._empty)
-            case pb_size_t(livekit_DataPacket_stream_trailer_tag):
-                return .streamTrailer(_pointer.pointee.value.stream_trailer.map { Livekit_DataStream_Trailer(_sharing: $0, owner: _box) } ?? Livekit_DataStream_Trailer._empty)
-            case pb_size_t(livekit_DataPacket_encrypted_packet_tag):
-                return .encryptedPacket(_pointer.pointee.value.encrypted_packet.map { Livekit_EncryptedPacket(_sharing: $0, owner: _box) } ?? Livekit_EncryptedPacket._empty)
+            case pb_size_t(applooma_DataPacket_user_tag):
+                return .user(_pointer.pointee.value.user.map { Applooma_UserPacket(_sharing: $0, owner: _box) } ?? Applooma_UserPacket._empty)
+            case pb_size_t(applooma_DataPacket_speaker_tag):
+                return .speaker(_pointer.pointee.value.speaker.map { Applooma_ActiveSpeakerUpdate(_sharing: $0, owner: _box) } ?? Applooma_ActiveSpeakerUpdate._empty)
+            case pb_size_t(applooma_DataPacket_sip_dtmf_tag):
+                return .sipDtmf(_pointer.pointee.value.sip_dtmf.map { Applooma_SipDTMF(_sharing: $0, owner: _box) } ?? Applooma_SipDTMF._empty)
+            case pb_size_t(applooma_DataPacket_transcription_tag):
+                return .transcription(_pointer.pointee.value.transcription.map { Applooma_Transcription(_sharing: $0, owner: _box) } ?? Applooma_Transcription._empty)
+            case pb_size_t(applooma_DataPacket_metrics_tag):
+                return .metrics(_pointer.pointee.value.metrics.map { Applooma_MetricsBatch(_sharing: $0, owner: _box) } ?? Applooma_MetricsBatch._empty)
+            case pb_size_t(applooma_DataPacket_chat_message_tag):
+                return .chatMessage(_pointer.pointee.value.chat_message.map { Applooma_ChatMessage(_sharing: $0, owner: _box) } ?? Applooma_ChatMessage._empty)
+            case pb_size_t(applooma_DataPacket_rpc_request_tag):
+                return .rpcRequest(_pointer.pointee.value.rpc_request.map { Applooma_RpcRequest(_sharing: $0, owner: _box) } ?? Applooma_RpcRequest._empty)
+            case pb_size_t(applooma_DataPacket_rpc_ack_tag):
+                return .rpcAck(_pointer.pointee.value.rpc_ack.map { Applooma_RpcAck(_sharing: $0, owner: _box) } ?? Applooma_RpcAck._empty)
+            case pb_size_t(applooma_DataPacket_rpc_response_tag):
+                return .rpcResponse(_pointer.pointee.value.rpc_response.map { Applooma_RpcResponse(_sharing: $0, owner: _box) } ?? Applooma_RpcResponse._empty)
+            case pb_size_t(applooma_DataPacket_stream_header_tag):
+                return .streamHeader(_pointer.pointee.value.stream_header.map { Applooma_DataStream_Header(_sharing: $0, owner: _box) } ?? Applooma_DataStream_Header._empty)
+            case pb_size_t(applooma_DataPacket_stream_chunk_tag):
+                return .streamChunk(_pointer.pointee.value.stream_chunk.map { Applooma_DataStream_Chunk(_sharing: $0, owner: _box) } ?? Applooma_DataStream_Chunk._empty)
+            case pb_size_t(applooma_DataPacket_stream_trailer_tag):
+                return .streamTrailer(_pointer.pointee.value.stream_trailer.map { Applooma_DataStream_Trailer(_sharing: $0, owner: _box) } ?? Applooma_DataStream_Trailer._empty)
+            case pb_size_t(applooma_DataPacket_encrypted_packet_tag):
+                return .encryptedPacket(_pointer.pointee.value.encrypted_packet.map { Applooma_EncryptedPacket(_sharing: $0, owner: _box) } ?? Applooma_EncryptedPacket._empty)
             default: return nil
             }
         }
         nonmutating set {
-            let newValue: Livekit_DataPacket_OneOf_Value? = switch newValue {
+            let newValue: Applooma_DataPacket_OneOf_Value? = switch newValue {
             case let .user(value): .user(value.owned())
             case let .speaker(value): .speaker(value.owned())
             case let .sipDtmf(value): .sipDtmf(value.owned())
@@ -1694,193 +1694,193 @@ extension Livekit_DataPacket.Builder {
             _clearValue()
             switch newValue {
             case let .user(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_user_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_user_tag)
                 lkSetMessage(&_pointer.pointee.value.user, value)
             case let .speaker(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_speaker_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_speaker_tag)
                 lkSetMessage(&_pointer.pointee.value.speaker, value)
             case let .sipDtmf(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_sip_dtmf_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_sip_dtmf_tag)
                 lkSetMessage(&_pointer.pointee.value.sip_dtmf, value)
             case let .transcription(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_transcription_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_transcription_tag)
                 lkSetMessage(&_pointer.pointee.value.transcription, value)
             case let .metrics(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_metrics_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_metrics_tag)
                 lkSetMessage(&_pointer.pointee.value.metrics, value)
             case let .chatMessage(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_chat_message_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_chat_message_tag)
                 lkSetMessage(&_pointer.pointee.value.chat_message, value)
             case let .rpcRequest(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_rpc_request_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_rpc_request_tag)
                 lkSetMessage(&_pointer.pointee.value.rpc_request, value)
             case let .rpcAck(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_rpc_ack_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_rpc_ack_tag)
                 lkSetMessage(&_pointer.pointee.value.rpc_ack, value)
             case let .rpcResponse(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_rpc_response_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_rpc_response_tag)
                 lkSetMessage(&_pointer.pointee.value.rpc_response, value)
             case let .streamHeader(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_stream_header_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_stream_header_tag)
                 lkSetMessage(&_pointer.pointee.value.stream_header, value)
             case let .streamChunk(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_stream_chunk_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_stream_chunk_tag)
                 lkSetMessage(&_pointer.pointee.value.stream_chunk, value)
             case let .streamTrailer(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_stream_trailer_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_stream_trailer_tag)
                 lkSetMessage(&_pointer.pointee.value.stream_trailer, value)
             case let .encryptedPacket(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_encrypted_packet_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_encrypted_packet_tag)
                 lkSetMessage(&_pointer.pointee.value.encrypted_packet, value)
             case nil: break
             }
         }
     }
-    var user: Livekit_UserPacket {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_user_tag) ? (_pointer.pointee.value.user.map { Livekit_UserPacket(_sharing: $0, owner: _box) } ?? Livekit_UserPacket._empty) : Livekit_UserPacket() }
+    var user: Applooma_UserPacket {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_user_tag) ? (_pointer.pointee.value.user.map { Applooma_UserPacket(_sharing: $0, owner: _box) } ?? Applooma_UserPacket._empty) : Applooma_UserPacket() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_user_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_user_tag)
             lkSetMessage(&_pointer.pointee.value.user, newValue)
         }
     }
-    var speaker: Livekit_ActiveSpeakerUpdate {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_speaker_tag) ? (_pointer.pointee.value.speaker.map { Livekit_ActiveSpeakerUpdate(_sharing: $0, owner: _box) } ?? Livekit_ActiveSpeakerUpdate._empty) : Livekit_ActiveSpeakerUpdate() }
+    var speaker: Applooma_ActiveSpeakerUpdate {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_speaker_tag) ? (_pointer.pointee.value.speaker.map { Applooma_ActiveSpeakerUpdate(_sharing: $0, owner: _box) } ?? Applooma_ActiveSpeakerUpdate._empty) : Applooma_ActiveSpeakerUpdate() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_speaker_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_speaker_tag)
             lkSetMessage(&_pointer.pointee.value.speaker, newValue)
         }
     }
-    var sipDtmf: Livekit_SipDTMF {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_sip_dtmf_tag) ? (_pointer.pointee.value.sip_dtmf.map { Livekit_SipDTMF(_sharing: $0, owner: _box) } ?? Livekit_SipDTMF._empty) : Livekit_SipDTMF() }
+    var sipDtmf: Applooma_SipDTMF {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_sip_dtmf_tag) ? (_pointer.pointee.value.sip_dtmf.map { Applooma_SipDTMF(_sharing: $0, owner: _box) } ?? Applooma_SipDTMF._empty) : Applooma_SipDTMF() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_sip_dtmf_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_sip_dtmf_tag)
             lkSetMessage(&_pointer.pointee.value.sip_dtmf, newValue)
         }
     }
-    var transcription: Livekit_Transcription {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_transcription_tag) ? (_pointer.pointee.value.transcription.map { Livekit_Transcription(_sharing: $0, owner: _box) } ?? Livekit_Transcription._empty) : Livekit_Transcription() }
+    var transcription: Applooma_Transcription {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_transcription_tag) ? (_pointer.pointee.value.transcription.map { Applooma_Transcription(_sharing: $0, owner: _box) } ?? Applooma_Transcription._empty) : Applooma_Transcription() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_transcription_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_transcription_tag)
             lkSetMessage(&_pointer.pointee.value.transcription, newValue)
         }
     }
-    var metrics: Livekit_MetricsBatch {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_metrics_tag) ? (_pointer.pointee.value.metrics.map { Livekit_MetricsBatch(_sharing: $0, owner: _box) } ?? Livekit_MetricsBatch._empty) : Livekit_MetricsBatch() }
+    var metrics: Applooma_MetricsBatch {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_metrics_tag) ? (_pointer.pointee.value.metrics.map { Applooma_MetricsBatch(_sharing: $0, owner: _box) } ?? Applooma_MetricsBatch._empty) : Applooma_MetricsBatch() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_metrics_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_metrics_tag)
             lkSetMessage(&_pointer.pointee.value.metrics, newValue)
         }
     }
-    var chatMessage: Livekit_ChatMessage {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_chat_message_tag) ? (_pointer.pointee.value.chat_message.map { Livekit_ChatMessage(_sharing: $0, owner: _box) } ?? Livekit_ChatMessage._empty) : Livekit_ChatMessage() }
+    var chatMessage: Applooma_ChatMessage {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_chat_message_tag) ? (_pointer.pointee.value.chat_message.map { Applooma_ChatMessage(_sharing: $0, owner: _box) } ?? Applooma_ChatMessage._empty) : Applooma_ChatMessage() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_chat_message_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_chat_message_tag)
             lkSetMessage(&_pointer.pointee.value.chat_message, newValue)
         }
     }
-    var rpcRequest: Livekit_RpcRequest {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_rpc_request_tag) ? (_pointer.pointee.value.rpc_request.map { Livekit_RpcRequest(_sharing: $0, owner: _box) } ?? Livekit_RpcRequest._empty) : Livekit_RpcRequest() }
+    var rpcRequest: Applooma_RpcRequest {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_rpc_request_tag) ? (_pointer.pointee.value.rpc_request.map { Applooma_RpcRequest(_sharing: $0, owner: _box) } ?? Applooma_RpcRequest._empty) : Applooma_RpcRequest() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_rpc_request_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_rpc_request_tag)
             lkSetMessage(&_pointer.pointee.value.rpc_request, newValue)
         }
     }
-    var rpcAck: Livekit_RpcAck {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_rpc_ack_tag) ? (_pointer.pointee.value.rpc_ack.map { Livekit_RpcAck(_sharing: $0, owner: _box) } ?? Livekit_RpcAck._empty) : Livekit_RpcAck() }
+    var rpcAck: Applooma_RpcAck {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_rpc_ack_tag) ? (_pointer.pointee.value.rpc_ack.map { Applooma_RpcAck(_sharing: $0, owner: _box) } ?? Applooma_RpcAck._empty) : Applooma_RpcAck() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_rpc_ack_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_rpc_ack_tag)
             lkSetMessage(&_pointer.pointee.value.rpc_ack, newValue)
         }
     }
-    var rpcResponse: Livekit_RpcResponse {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_rpc_response_tag) ? (_pointer.pointee.value.rpc_response.map { Livekit_RpcResponse(_sharing: $0, owner: _box) } ?? Livekit_RpcResponse._empty) : Livekit_RpcResponse() }
+    var rpcResponse: Applooma_RpcResponse {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_rpc_response_tag) ? (_pointer.pointee.value.rpc_response.map { Applooma_RpcResponse(_sharing: $0, owner: _box) } ?? Applooma_RpcResponse._empty) : Applooma_RpcResponse() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_rpc_response_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_rpc_response_tag)
             lkSetMessage(&_pointer.pointee.value.rpc_response, newValue)
         }
     }
-    var streamHeader: Livekit_DataStream_Header {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_stream_header_tag) ? (_pointer.pointee.value.stream_header.map { Livekit_DataStream_Header(_sharing: $0, owner: _box) } ?? Livekit_DataStream_Header._empty) : Livekit_DataStream_Header() }
+    var streamHeader: Applooma_DataStream_Header {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_stream_header_tag) ? (_pointer.pointee.value.stream_header.map { Applooma_DataStream_Header(_sharing: $0, owner: _box) } ?? Applooma_DataStream_Header._empty) : Applooma_DataStream_Header() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_stream_header_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_stream_header_tag)
             lkSetMessage(&_pointer.pointee.value.stream_header, newValue)
         }
     }
-    var streamChunk: Livekit_DataStream_Chunk {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_stream_chunk_tag) ? (_pointer.pointee.value.stream_chunk.map { Livekit_DataStream_Chunk(_sharing: $0, owner: _box) } ?? Livekit_DataStream_Chunk._empty) : Livekit_DataStream_Chunk() }
+    var streamChunk: Applooma_DataStream_Chunk {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_stream_chunk_tag) ? (_pointer.pointee.value.stream_chunk.map { Applooma_DataStream_Chunk(_sharing: $0, owner: _box) } ?? Applooma_DataStream_Chunk._empty) : Applooma_DataStream_Chunk() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_stream_chunk_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_stream_chunk_tag)
             lkSetMessage(&_pointer.pointee.value.stream_chunk, newValue)
         }
     }
-    var streamTrailer: Livekit_DataStream_Trailer {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_stream_trailer_tag) ? (_pointer.pointee.value.stream_trailer.map { Livekit_DataStream_Trailer(_sharing: $0, owner: _box) } ?? Livekit_DataStream_Trailer._empty) : Livekit_DataStream_Trailer() }
+    var streamTrailer: Applooma_DataStream_Trailer {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_stream_trailer_tag) ? (_pointer.pointee.value.stream_trailer.map { Applooma_DataStream_Trailer(_sharing: $0, owner: _box) } ?? Applooma_DataStream_Trailer._empty) : Applooma_DataStream_Trailer() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_stream_trailer_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_stream_trailer_tag)
             lkSetMessage(&_pointer.pointee.value.stream_trailer, newValue)
         }
     }
-    var encryptedPacket: Livekit_EncryptedPacket {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_DataPacket_encrypted_packet_tag) ? (_pointer.pointee.value.encrypted_packet.map { Livekit_EncryptedPacket(_sharing: $0, owner: _box) } ?? Livekit_EncryptedPacket._empty) : Livekit_EncryptedPacket() }
+    var encryptedPacket: Applooma_EncryptedPacket {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_DataPacket_encrypted_packet_tag) ? (_pointer.pointee.value.encrypted_packet.map { Applooma_EncryptedPacket(_sharing: $0, owner: _box) } ?? Applooma_EncryptedPacket._empty) : Applooma_EncryptedPacket() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_DataPacket_encrypted_packet_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_DataPacket_encrypted_packet_tag)
             lkSetMessage(&_pointer.pointee.value.encrypted_packet, newValue)
         }
     }
     private func _clearValue() {
         switch _pointer.pointee.which_value {
-        case pb_size_t(livekit_DataPacket_user_tag):
-            lkRelease(message: &_pointer.pointee.value.user, Livekit_UserPacket.descriptor)
-        case pb_size_t(livekit_DataPacket_speaker_tag):
-            lkRelease(message: &_pointer.pointee.value.speaker, Livekit_ActiveSpeakerUpdate.descriptor)
-        case pb_size_t(livekit_DataPacket_sip_dtmf_tag):
-            lkRelease(message: &_pointer.pointee.value.sip_dtmf, Livekit_SipDTMF.descriptor)
-        case pb_size_t(livekit_DataPacket_transcription_tag):
-            lkRelease(message: &_pointer.pointee.value.transcription, Livekit_Transcription.descriptor)
-        case pb_size_t(livekit_DataPacket_metrics_tag):
-            lkRelease(message: &_pointer.pointee.value.metrics, Livekit_MetricsBatch.descriptor)
-        case pb_size_t(livekit_DataPacket_chat_message_tag):
-            lkRelease(message: &_pointer.pointee.value.chat_message, Livekit_ChatMessage.descriptor)
-        case pb_size_t(livekit_DataPacket_rpc_request_tag):
-            lkRelease(message: &_pointer.pointee.value.rpc_request, Livekit_RpcRequest.descriptor)
-        case pb_size_t(livekit_DataPacket_rpc_ack_tag):
-            lkRelease(message: &_pointer.pointee.value.rpc_ack, Livekit_RpcAck.descriptor)
-        case pb_size_t(livekit_DataPacket_rpc_response_tag):
-            lkRelease(message: &_pointer.pointee.value.rpc_response, Livekit_RpcResponse.descriptor)
-        case pb_size_t(livekit_DataPacket_stream_header_tag):
-            lkRelease(message: &_pointer.pointee.value.stream_header, Livekit_DataStream_Header.descriptor)
-        case pb_size_t(livekit_DataPacket_stream_chunk_tag):
-            lkRelease(message: &_pointer.pointee.value.stream_chunk, Livekit_DataStream_Chunk.descriptor)
-        case pb_size_t(livekit_DataPacket_stream_trailer_tag):
-            lkRelease(message: &_pointer.pointee.value.stream_trailer, Livekit_DataStream_Trailer.descriptor)
-        case pb_size_t(livekit_DataPacket_encrypted_packet_tag):
-            lkRelease(message: &_pointer.pointee.value.encrypted_packet, Livekit_EncryptedPacket.descriptor)
+        case pb_size_t(applooma_DataPacket_user_tag):
+            lkRelease(message: &_pointer.pointee.value.user, Applooma_UserPacket.descriptor)
+        case pb_size_t(applooma_DataPacket_speaker_tag):
+            lkRelease(message: &_pointer.pointee.value.speaker, Applooma_ActiveSpeakerUpdate.descriptor)
+        case pb_size_t(applooma_DataPacket_sip_dtmf_tag):
+            lkRelease(message: &_pointer.pointee.value.sip_dtmf, Applooma_SipDTMF.descriptor)
+        case pb_size_t(applooma_DataPacket_transcription_tag):
+            lkRelease(message: &_pointer.pointee.value.transcription, Applooma_Transcription.descriptor)
+        case pb_size_t(applooma_DataPacket_metrics_tag):
+            lkRelease(message: &_pointer.pointee.value.metrics, Applooma_MetricsBatch.descriptor)
+        case pb_size_t(applooma_DataPacket_chat_message_tag):
+            lkRelease(message: &_pointer.pointee.value.chat_message, Applooma_ChatMessage.descriptor)
+        case pb_size_t(applooma_DataPacket_rpc_request_tag):
+            lkRelease(message: &_pointer.pointee.value.rpc_request, Applooma_RpcRequest.descriptor)
+        case pb_size_t(applooma_DataPacket_rpc_ack_tag):
+            lkRelease(message: &_pointer.pointee.value.rpc_ack, Applooma_RpcAck.descriptor)
+        case pb_size_t(applooma_DataPacket_rpc_response_tag):
+            lkRelease(message: &_pointer.pointee.value.rpc_response, Applooma_RpcResponse.descriptor)
+        case pb_size_t(applooma_DataPacket_stream_header_tag):
+            lkRelease(message: &_pointer.pointee.value.stream_header, Applooma_DataStream_Header.descriptor)
+        case pb_size_t(applooma_DataPacket_stream_chunk_tag):
+            lkRelease(message: &_pointer.pointee.value.stream_chunk, Applooma_DataStream_Chunk.descriptor)
+        case pb_size_t(applooma_DataPacket_stream_trailer_tag):
+            lkRelease(message: &_pointer.pointee.value.stream_trailer, Applooma_DataStream_Trailer.descriptor)
+        case pb_size_t(applooma_DataPacket_encrypted_packet_tag):
+            lkRelease(message: &_pointer.pointee.value.encrypted_packet, Applooma_EncryptedPacket.descriptor)
         default: break
         }
         _pointer.pointee.which_value = 0
@@ -1891,14 +1891,14 @@ extension Livekit_DataPacket.Builder {
 
 }
 
-extension livekit_EncryptedPacket: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_EncryptedPacket_msg }
-    package static let _emptyBox = NanopbBox<livekit_EncryptedPacket>(zero: livekit_EncryptedPacket(), descriptor: livekit_EncryptedPacket_msg)
+extension applooma_EncryptedPacket: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_EncryptedPacket_msg }
+    package static let _emptyBox = NanopbBox<applooma_EncryptedPacket>(zero: applooma_EncryptedPacket(), descriptor: applooma_EncryptedPacket_msg)
 }
-typealias Livekit_EncryptedPacket = NanopbMsg<livekit_EncryptedPacket>
-extension Livekit_EncryptedPacket {
-    var encryptionType: Livekit_Encryption_TypeEnum {
-        _pointer.pointee.encryption_type.map { lkEnum($0.pointee) } ?? Livekit_Encryption_TypeEnum()
+typealias Applooma_EncryptedPacket = NanopbMsg<applooma_EncryptedPacket>
+extension Applooma_EncryptedPacket {
+    var encryptionType: Applooma_Encryption_TypeEnum {
+        _pointer.pointee.encryption_type.map { lkEnum($0.pointee) } ?? Applooma_Encryption_TypeEnum()
     }
     var hasEncryptionType: Bool { _pointer.pointee.encryption_type != nil }
 
@@ -1919,9 +1919,9 @@ extension Livekit_EncryptedPacket {
 
 }
 
-extension Livekit_EncryptedPacket.Builder {
-    var encryptionType: Livekit_Encryption_TypeEnum {
-        get { _pointer.pointee.encryption_type.map { lkEnum($0.pointee) } ?? Livekit_Encryption_TypeEnum() }
+extension Applooma_EncryptedPacket.Builder {
+    var encryptionType: Applooma_Encryption_TypeEnum {
+        get { _pointer.pointee.encryption_type.map { lkEnum($0.pointee) } ?? Applooma_Encryption_TypeEnum() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.encryption_type, newValue) }
     }
 
@@ -1942,96 +1942,96 @@ extension Livekit_EncryptedPacket.Builder {
 
 }
 
-enum Livekit_EncryptedPacketPayload_OneOf_Value: Equatable {
-    case user(Livekit_UserPacket)
-    case chatMessage(Livekit_ChatMessage)
-    case rpcRequest(Livekit_RpcRequest)
-    case rpcAck(Livekit_RpcAck)
-    case rpcResponse(Livekit_RpcResponse)
-    case streamHeader(Livekit_DataStream_Header)
-    case streamChunk(Livekit_DataStream_Chunk)
-    case streamTrailer(Livekit_DataStream_Trailer)
+enum Applooma_EncryptedPacketPayload_OneOf_Value: Equatable {
+    case user(Applooma_UserPacket)
+    case chatMessage(Applooma_ChatMessage)
+    case rpcRequest(Applooma_RpcRequest)
+    case rpcAck(Applooma_RpcAck)
+    case rpcResponse(Applooma_RpcResponse)
+    case streamHeader(Applooma_DataStream_Header)
+    case streamChunk(Applooma_DataStream_Chunk)
+    case streamTrailer(Applooma_DataStream_Trailer)
 }
 
-extension livekit_EncryptedPacketPayload: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_EncryptedPacketPayload_msg }
-    package static let _emptyBox = NanopbBox<livekit_EncryptedPacketPayload>(zero: livekit_EncryptedPacketPayload(), descriptor: livekit_EncryptedPacketPayload_msg)
+extension applooma_EncryptedPacketPayload: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_EncryptedPacketPayload_msg }
+    package static let _emptyBox = NanopbBox<applooma_EncryptedPacketPayload>(zero: applooma_EncryptedPacketPayload(), descriptor: applooma_EncryptedPacketPayload_msg)
 }
-typealias Livekit_EncryptedPacketPayload = NanopbMsg<livekit_EncryptedPacketPayload>
-extension Livekit_EncryptedPacketPayload {
-    var value: Livekit_EncryptedPacketPayload_OneOf_Value? {
+typealias Applooma_EncryptedPacketPayload = NanopbMsg<applooma_EncryptedPacketPayload>
+extension Applooma_EncryptedPacketPayload {
+    var value: Applooma_EncryptedPacketPayload_OneOf_Value? {
         switch _pointer.pointee.which_value {
-        case pb_size_t(livekit_EncryptedPacketPayload_user_tag):
-            return .user(_pointer.pointee.value.user.map { Livekit_UserPacket(_sharing: $0, owner: _owner) } ?? Livekit_UserPacket._empty)
-        case pb_size_t(livekit_EncryptedPacketPayload_chat_message_tag):
-            return .chatMessage(_pointer.pointee.value.chat_message.map { Livekit_ChatMessage(_sharing: $0, owner: _owner) } ?? Livekit_ChatMessage._empty)
-        case pb_size_t(livekit_EncryptedPacketPayload_rpc_request_tag):
-            return .rpcRequest(_pointer.pointee.value.rpc_request.map { Livekit_RpcRequest(_sharing: $0, owner: _owner) } ?? Livekit_RpcRequest._empty)
-        case pb_size_t(livekit_EncryptedPacketPayload_rpc_ack_tag):
-            return .rpcAck(_pointer.pointee.value.rpc_ack.map { Livekit_RpcAck(_sharing: $0, owner: _owner) } ?? Livekit_RpcAck._empty)
-        case pb_size_t(livekit_EncryptedPacketPayload_rpc_response_tag):
-            return .rpcResponse(_pointer.pointee.value.rpc_response.map { Livekit_RpcResponse(_sharing: $0, owner: _owner) } ?? Livekit_RpcResponse._empty)
-        case pb_size_t(livekit_EncryptedPacketPayload_stream_header_tag):
-            return .streamHeader(_pointer.pointee.value.stream_header.map { Livekit_DataStream_Header(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_Header._empty)
-        case pb_size_t(livekit_EncryptedPacketPayload_stream_chunk_tag):
-            return .streamChunk(_pointer.pointee.value.stream_chunk.map { Livekit_DataStream_Chunk(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_Chunk._empty)
-        case pb_size_t(livekit_EncryptedPacketPayload_stream_trailer_tag):
-            return .streamTrailer(_pointer.pointee.value.stream_trailer.map { Livekit_DataStream_Trailer(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_Trailer._empty)
+        case pb_size_t(applooma_EncryptedPacketPayload_user_tag):
+            return .user(_pointer.pointee.value.user.map { Applooma_UserPacket(_sharing: $0, owner: _owner) } ?? Applooma_UserPacket._empty)
+        case pb_size_t(applooma_EncryptedPacketPayload_chat_message_tag):
+            return .chatMessage(_pointer.pointee.value.chat_message.map { Applooma_ChatMessage(_sharing: $0, owner: _owner) } ?? Applooma_ChatMessage._empty)
+        case pb_size_t(applooma_EncryptedPacketPayload_rpc_request_tag):
+            return .rpcRequest(_pointer.pointee.value.rpc_request.map { Applooma_RpcRequest(_sharing: $0, owner: _owner) } ?? Applooma_RpcRequest._empty)
+        case pb_size_t(applooma_EncryptedPacketPayload_rpc_ack_tag):
+            return .rpcAck(_pointer.pointee.value.rpc_ack.map { Applooma_RpcAck(_sharing: $0, owner: _owner) } ?? Applooma_RpcAck._empty)
+        case pb_size_t(applooma_EncryptedPacketPayload_rpc_response_tag):
+            return .rpcResponse(_pointer.pointee.value.rpc_response.map { Applooma_RpcResponse(_sharing: $0, owner: _owner) } ?? Applooma_RpcResponse._empty)
+        case pb_size_t(applooma_EncryptedPacketPayload_stream_header_tag):
+            return .streamHeader(_pointer.pointee.value.stream_header.map { Applooma_DataStream_Header(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_Header._empty)
+        case pb_size_t(applooma_EncryptedPacketPayload_stream_chunk_tag):
+            return .streamChunk(_pointer.pointee.value.stream_chunk.map { Applooma_DataStream_Chunk(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_Chunk._empty)
+        case pb_size_t(applooma_EncryptedPacketPayload_stream_trailer_tag):
+            return .streamTrailer(_pointer.pointee.value.stream_trailer.map { Applooma_DataStream_Trailer(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_Trailer._empty)
         default: return nil
         }
     }
-    var user: Livekit_UserPacket {
-        _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_user_tag) ? (_pointer.pointee.value.user.map { Livekit_UserPacket(_sharing: $0, owner: _owner) } ?? Livekit_UserPacket._empty) : Livekit_UserPacket()
+    var user: Applooma_UserPacket {
+        _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_user_tag) ? (_pointer.pointee.value.user.map { Applooma_UserPacket(_sharing: $0, owner: _owner) } ?? Applooma_UserPacket._empty) : Applooma_UserPacket()
     }
-    var chatMessage: Livekit_ChatMessage {
-        _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_chat_message_tag) ? (_pointer.pointee.value.chat_message.map { Livekit_ChatMessage(_sharing: $0, owner: _owner) } ?? Livekit_ChatMessage._empty) : Livekit_ChatMessage()
+    var chatMessage: Applooma_ChatMessage {
+        _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_chat_message_tag) ? (_pointer.pointee.value.chat_message.map { Applooma_ChatMessage(_sharing: $0, owner: _owner) } ?? Applooma_ChatMessage._empty) : Applooma_ChatMessage()
     }
-    var rpcRequest: Livekit_RpcRequest {
-        _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_rpc_request_tag) ? (_pointer.pointee.value.rpc_request.map { Livekit_RpcRequest(_sharing: $0, owner: _owner) } ?? Livekit_RpcRequest._empty) : Livekit_RpcRequest()
+    var rpcRequest: Applooma_RpcRequest {
+        _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_rpc_request_tag) ? (_pointer.pointee.value.rpc_request.map { Applooma_RpcRequest(_sharing: $0, owner: _owner) } ?? Applooma_RpcRequest._empty) : Applooma_RpcRequest()
     }
-    var rpcAck: Livekit_RpcAck {
-        _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_rpc_ack_tag) ? (_pointer.pointee.value.rpc_ack.map { Livekit_RpcAck(_sharing: $0, owner: _owner) } ?? Livekit_RpcAck._empty) : Livekit_RpcAck()
+    var rpcAck: Applooma_RpcAck {
+        _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_rpc_ack_tag) ? (_pointer.pointee.value.rpc_ack.map { Applooma_RpcAck(_sharing: $0, owner: _owner) } ?? Applooma_RpcAck._empty) : Applooma_RpcAck()
     }
-    var rpcResponse: Livekit_RpcResponse {
-        _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_rpc_response_tag) ? (_pointer.pointee.value.rpc_response.map { Livekit_RpcResponse(_sharing: $0, owner: _owner) } ?? Livekit_RpcResponse._empty) : Livekit_RpcResponse()
+    var rpcResponse: Applooma_RpcResponse {
+        _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_rpc_response_tag) ? (_pointer.pointee.value.rpc_response.map { Applooma_RpcResponse(_sharing: $0, owner: _owner) } ?? Applooma_RpcResponse._empty) : Applooma_RpcResponse()
     }
-    var streamHeader: Livekit_DataStream_Header {
-        _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_stream_header_tag) ? (_pointer.pointee.value.stream_header.map { Livekit_DataStream_Header(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_Header._empty) : Livekit_DataStream_Header()
+    var streamHeader: Applooma_DataStream_Header {
+        _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_stream_header_tag) ? (_pointer.pointee.value.stream_header.map { Applooma_DataStream_Header(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_Header._empty) : Applooma_DataStream_Header()
     }
-    var streamChunk: Livekit_DataStream_Chunk {
-        _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_stream_chunk_tag) ? (_pointer.pointee.value.stream_chunk.map { Livekit_DataStream_Chunk(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_Chunk._empty) : Livekit_DataStream_Chunk()
+    var streamChunk: Applooma_DataStream_Chunk {
+        _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_stream_chunk_tag) ? (_pointer.pointee.value.stream_chunk.map { Applooma_DataStream_Chunk(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_Chunk._empty) : Applooma_DataStream_Chunk()
     }
-    var streamTrailer: Livekit_DataStream_Trailer {
-        _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_stream_trailer_tag) ? (_pointer.pointee.value.stream_trailer.map { Livekit_DataStream_Trailer(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_Trailer._empty) : Livekit_DataStream_Trailer()
+    var streamTrailer: Applooma_DataStream_Trailer {
+        _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_stream_trailer_tag) ? (_pointer.pointee.value.stream_trailer.map { Applooma_DataStream_Trailer(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_Trailer._empty) : Applooma_DataStream_Trailer()
     }
 
 }
 
-extension Livekit_EncryptedPacketPayload.Builder {
-    var value: Livekit_EncryptedPacketPayload_OneOf_Value? {
+extension Applooma_EncryptedPacketPayload.Builder {
+    var value: Applooma_EncryptedPacketPayload_OneOf_Value? {
         get {
             switch _pointer.pointee.which_value {
-            case pb_size_t(livekit_EncryptedPacketPayload_user_tag):
-                return .user(_pointer.pointee.value.user.map { Livekit_UserPacket(_sharing: $0, owner: _box) } ?? Livekit_UserPacket._empty)
-            case pb_size_t(livekit_EncryptedPacketPayload_chat_message_tag):
-                return .chatMessage(_pointer.pointee.value.chat_message.map { Livekit_ChatMessage(_sharing: $0, owner: _box) } ?? Livekit_ChatMessage._empty)
-            case pb_size_t(livekit_EncryptedPacketPayload_rpc_request_tag):
-                return .rpcRequest(_pointer.pointee.value.rpc_request.map { Livekit_RpcRequest(_sharing: $0, owner: _box) } ?? Livekit_RpcRequest._empty)
-            case pb_size_t(livekit_EncryptedPacketPayload_rpc_ack_tag):
-                return .rpcAck(_pointer.pointee.value.rpc_ack.map { Livekit_RpcAck(_sharing: $0, owner: _box) } ?? Livekit_RpcAck._empty)
-            case pb_size_t(livekit_EncryptedPacketPayload_rpc_response_tag):
-                return .rpcResponse(_pointer.pointee.value.rpc_response.map { Livekit_RpcResponse(_sharing: $0, owner: _box) } ?? Livekit_RpcResponse._empty)
-            case pb_size_t(livekit_EncryptedPacketPayload_stream_header_tag):
-                return .streamHeader(_pointer.pointee.value.stream_header.map { Livekit_DataStream_Header(_sharing: $0, owner: _box) } ?? Livekit_DataStream_Header._empty)
-            case pb_size_t(livekit_EncryptedPacketPayload_stream_chunk_tag):
-                return .streamChunk(_pointer.pointee.value.stream_chunk.map { Livekit_DataStream_Chunk(_sharing: $0, owner: _box) } ?? Livekit_DataStream_Chunk._empty)
-            case pb_size_t(livekit_EncryptedPacketPayload_stream_trailer_tag):
-                return .streamTrailer(_pointer.pointee.value.stream_trailer.map { Livekit_DataStream_Trailer(_sharing: $0, owner: _box) } ?? Livekit_DataStream_Trailer._empty)
+            case pb_size_t(applooma_EncryptedPacketPayload_user_tag):
+                return .user(_pointer.pointee.value.user.map { Applooma_UserPacket(_sharing: $0, owner: _box) } ?? Applooma_UserPacket._empty)
+            case pb_size_t(applooma_EncryptedPacketPayload_chat_message_tag):
+                return .chatMessage(_pointer.pointee.value.chat_message.map { Applooma_ChatMessage(_sharing: $0, owner: _box) } ?? Applooma_ChatMessage._empty)
+            case pb_size_t(applooma_EncryptedPacketPayload_rpc_request_tag):
+                return .rpcRequest(_pointer.pointee.value.rpc_request.map { Applooma_RpcRequest(_sharing: $0, owner: _box) } ?? Applooma_RpcRequest._empty)
+            case pb_size_t(applooma_EncryptedPacketPayload_rpc_ack_tag):
+                return .rpcAck(_pointer.pointee.value.rpc_ack.map { Applooma_RpcAck(_sharing: $0, owner: _box) } ?? Applooma_RpcAck._empty)
+            case pb_size_t(applooma_EncryptedPacketPayload_rpc_response_tag):
+                return .rpcResponse(_pointer.pointee.value.rpc_response.map { Applooma_RpcResponse(_sharing: $0, owner: _box) } ?? Applooma_RpcResponse._empty)
+            case pb_size_t(applooma_EncryptedPacketPayload_stream_header_tag):
+                return .streamHeader(_pointer.pointee.value.stream_header.map { Applooma_DataStream_Header(_sharing: $0, owner: _box) } ?? Applooma_DataStream_Header._empty)
+            case pb_size_t(applooma_EncryptedPacketPayload_stream_chunk_tag):
+                return .streamChunk(_pointer.pointee.value.stream_chunk.map { Applooma_DataStream_Chunk(_sharing: $0, owner: _box) } ?? Applooma_DataStream_Chunk._empty)
+            case pb_size_t(applooma_EncryptedPacketPayload_stream_trailer_tag):
+                return .streamTrailer(_pointer.pointee.value.stream_trailer.map { Applooma_DataStream_Trailer(_sharing: $0, owner: _box) } ?? Applooma_DataStream_Trailer._empty)
             default: return nil
             }
         }
         nonmutating set {
-            let newValue: Livekit_EncryptedPacketPayload_OneOf_Value? = switch newValue {
+            let newValue: Applooma_EncryptedPacketPayload_OneOf_Value? = switch newValue {
             case let .user(value): .user(value.owned())
             case let .chatMessage(value): .chatMessage(value.owned())
             case let .rpcRequest(value): .rpcRequest(value.owned())
@@ -2045,123 +2045,123 @@ extension Livekit_EncryptedPacketPayload.Builder {
             _clearValue()
             switch newValue {
             case let .user(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_user_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_user_tag)
                 lkSetMessage(&_pointer.pointee.value.user, value)
             case let .chatMessage(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_chat_message_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_chat_message_tag)
                 lkSetMessage(&_pointer.pointee.value.chat_message, value)
             case let .rpcRequest(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_rpc_request_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_rpc_request_tag)
                 lkSetMessage(&_pointer.pointee.value.rpc_request, value)
             case let .rpcAck(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_rpc_ack_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_rpc_ack_tag)
                 lkSetMessage(&_pointer.pointee.value.rpc_ack, value)
             case let .rpcResponse(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_rpc_response_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_rpc_response_tag)
                 lkSetMessage(&_pointer.pointee.value.rpc_response, value)
             case let .streamHeader(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_stream_header_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_stream_header_tag)
                 lkSetMessage(&_pointer.pointee.value.stream_header, value)
             case let .streamChunk(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_stream_chunk_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_stream_chunk_tag)
                 lkSetMessage(&_pointer.pointee.value.stream_chunk, value)
             case let .streamTrailer(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_stream_trailer_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_stream_trailer_tag)
                 lkSetMessage(&_pointer.pointee.value.stream_trailer, value)
             case nil: break
             }
         }
     }
-    var user: Livekit_UserPacket {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_user_tag) ? (_pointer.pointee.value.user.map { Livekit_UserPacket(_sharing: $0, owner: _box) } ?? Livekit_UserPacket._empty) : Livekit_UserPacket() }
+    var user: Applooma_UserPacket {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_user_tag) ? (_pointer.pointee.value.user.map { Applooma_UserPacket(_sharing: $0, owner: _box) } ?? Applooma_UserPacket._empty) : Applooma_UserPacket() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_user_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_user_tag)
             lkSetMessage(&_pointer.pointee.value.user, newValue)
         }
     }
-    var chatMessage: Livekit_ChatMessage {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_chat_message_tag) ? (_pointer.pointee.value.chat_message.map { Livekit_ChatMessage(_sharing: $0, owner: _box) } ?? Livekit_ChatMessage._empty) : Livekit_ChatMessage() }
+    var chatMessage: Applooma_ChatMessage {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_chat_message_tag) ? (_pointer.pointee.value.chat_message.map { Applooma_ChatMessage(_sharing: $0, owner: _box) } ?? Applooma_ChatMessage._empty) : Applooma_ChatMessage() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_chat_message_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_chat_message_tag)
             lkSetMessage(&_pointer.pointee.value.chat_message, newValue)
         }
     }
-    var rpcRequest: Livekit_RpcRequest {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_rpc_request_tag) ? (_pointer.pointee.value.rpc_request.map { Livekit_RpcRequest(_sharing: $0, owner: _box) } ?? Livekit_RpcRequest._empty) : Livekit_RpcRequest() }
+    var rpcRequest: Applooma_RpcRequest {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_rpc_request_tag) ? (_pointer.pointee.value.rpc_request.map { Applooma_RpcRequest(_sharing: $0, owner: _box) } ?? Applooma_RpcRequest._empty) : Applooma_RpcRequest() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_rpc_request_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_rpc_request_tag)
             lkSetMessage(&_pointer.pointee.value.rpc_request, newValue)
         }
     }
-    var rpcAck: Livekit_RpcAck {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_rpc_ack_tag) ? (_pointer.pointee.value.rpc_ack.map { Livekit_RpcAck(_sharing: $0, owner: _box) } ?? Livekit_RpcAck._empty) : Livekit_RpcAck() }
+    var rpcAck: Applooma_RpcAck {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_rpc_ack_tag) ? (_pointer.pointee.value.rpc_ack.map { Applooma_RpcAck(_sharing: $0, owner: _box) } ?? Applooma_RpcAck._empty) : Applooma_RpcAck() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_rpc_ack_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_rpc_ack_tag)
             lkSetMessage(&_pointer.pointee.value.rpc_ack, newValue)
         }
     }
-    var rpcResponse: Livekit_RpcResponse {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_rpc_response_tag) ? (_pointer.pointee.value.rpc_response.map { Livekit_RpcResponse(_sharing: $0, owner: _box) } ?? Livekit_RpcResponse._empty) : Livekit_RpcResponse() }
+    var rpcResponse: Applooma_RpcResponse {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_rpc_response_tag) ? (_pointer.pointee.value.rpc_response.map { Applooma_RpcResponse(_sharing: $0, owner: _box) } ?? Applooma_RpcResponse._empty) : Applooma_RpcResponse() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_rpc_response_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_rpc_response_tag)
             lkSetMessage(&_pointer.pointee.value.rpc_response, newValue)
         }
     }
-    var streamHeader: Livekit_DataStream_Header {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_stream_header_tag) ? (_pointer.pointee.value.stream_header.map { Livekit_DataStream_Header(_sharing: $0, owner: _box) } ?? Livekit_DataStream_Header._empty) : Livekit_DataStream_Header() }
+    var streamHeader: Applooma_DataStream_Header {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_stream_header_tag) ? (_pointer.pointee.value.stream_header.map { Applooma_DataStream_Header(_sharing: $0, owner: _box) } ?? Applooma_DataStream_Header._empty) : Applooma_DataStream_Header() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_stream_header_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_stream_header_tag)
             lkSetMessage(&_pointer.pointee.value.stream_header, newValue)
         }
     }
-    var streamChunk: Livekit_DataStream_Chunk {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_stream_chunk_tag) ? (_pointer.pointee.value.stream_chunk.map { Livekit_DataStream_Chunk(_sharing: $0, owner: _box) } ?? Livekit_DataStream_Chunk._empty) : Livekit_DataStream_Chunk() }
+    var streamChunk: Applooma_DataStream_Chunk {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_stream_chunk_tag) ? (_pointer.pointee.value.stream_chunk.map { Applooma_DataStream_Chunk(_sharing: $0, owner: _box) } ?? Applooma_DataStream_Chunk._empty) : Applooma_DataStream_Chunk() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_stream_chunk_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_stream_chunk_tag)
             lkSetMessage(&_pointer.pointee.value.stream_chunk, newValue)
         }
     }
-    var streamTrailer: Livekit_DataStream_Trailer {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_EncryptedPacketPayload_stream_trailer_tag) ? (_pointer.pointee.value.stream_trailer.map { Livekit_DataStream_Trailer(_sharing: $0, owner: _box) } ?? Livekit_DataStream_Trailer._empty) : Livekit_DataStream_Trailer() }
+    var streamTrailer: Applooma_DataStream_Trailer {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_EncryptedPacketPayload_stream_trailer_tag) ? (_pointer.pointee.value.stream_trailer.map { Applooma_DataStream_Trailer(_sharing: $0, owner: _box) } ?? Applooma_DataStream_Trailer._empty) : Applooma_DataStream_Trailer() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_EncryptedPacketPayload_stream_trailer_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_EncryptedPacketPayload_stream_trailer_tag)
             lkSetMessage(&_pointer.pointee.value.stream_trailer, newValue)
         }
     }
     private func _clearValue() {
         switch _pointer.pointee.which_value {
-        case pb_size_t(livekit_EncryptedPacketPayload_user_tag):
-            lkRelease(message: &_pointer.pointee.value.user, Livekit_UserPacket.descriptor)
-        case pb_size_t(livekit_EncryptedPacketPayload_chat_message_tag):
-            lkRelease(message: &_pointer.pointee.value.chat_message, Livekit_ChatMessage.descriptor)
-        case pb_size_t(livekit_EncryptedPacketPayload_rpc_request_tag):
-            lkRelease(message: &_pointer.pointee.value.rpc_request, Livekit_RpcRequest.descriptor)
-        case pb_size_t(livekit_EncryptedPacketPayload_rpc_ack_tag):
-            lkRelease(message: &_pointer.pointee.value.rpc_ack, Livekit_RpcAck.descriptor)
-        case pb_size_t(livekit_EncryptedPacketPayload_rpc_response_tag):
-            lkRelease(message: &_pointer.pointee.value.rpc_response, Livekit_RpcResponse.descriptor)
-        case pb_size_t(livekit_EncryptedPacketPayload_stream_header_tag):
-            lkRelease(message: &_pointer.pointee.value.stream_header, Livekit_DataStream_Header.descriptor)
-        case pb_size_t(livekit_EncryptedPacketPayload_stream_chunk_tag):
-            lkRelease(message: &_pointer.pointee.value.stream_chunk, Livekit_DataStream_Chunk.descriptor)
-        case pb_size_t(livekit_EncryptedPacketPayload_stream_trailer_tag):
-            lkRelease(message: &_pointer.pointee.value.stream_trailer, Livekit_DataStream_Trailer.descriptor)
+        case pb_size_t(applooma_EncryptedPacketPayload_user_tag):
+            lkRelease(message: &_pointer.pointee.value.user, Applooma_UserPacket.descriptor)
+        case pb_size_t(applooma_EncryptedPacketPayload_chat_message_tag):
+            lkRelease(message: &_pointer.pointee.value.chat_message, Applooma_ChatMessage.descriptor)
+        case pb_size_t(applooma_EncryptedPacketPayload_rpc_request_tag):
+            lkRelease(message: &_pointer.pointee.value.rpc_request, Applooma_RpcRequest.descriptor)
+        case pb_size_t(applooma_EncryptedPacketPayload_rpc_ack_tag):
+            lkRelease(message: &_pointer.pointee.value.rpc_ack, Applooma_RpcAck.descriptor)
+        case pb_size_t(applooma_EncryptedPacketPayload_rpc_response_tag):
+            lkRelease(message: &_pointer.pointee.value.rpc_response, Applooma_RpcResponse.descriptor)
+        case pb_size_t(applooma_EncryptedPacketPayload_stream_header_tag):
+            lkRelease(message: &_pointer.pointee.value.stream_header, Applooma_DataStream_Header.descriptor)
+        case pb_size_t(applooma_EncryptedPacketPayload_stream_chunk_tag):
+            lkRelease(message: &_pointer.pointee.value.stream_chunk, Applooma_DataStream_Chunk.descriptor)
+        case pb_size_t(applooma_EncryptedPacketPayload_stream_trailer_tag):
+            lkRelease(message: &_pointer.pointee.value.stream_trailer, Applooma_DataStream_Trailer.descriptor)
         default: break
         }
         _pointer.pointee.which_value = 0
@@ -2172,20 +2172,20 @@ extension Livekit_EncryptedPacketPayload.Builder {
 
 }
 
-extension livekit_ActiveSpeakerUpdate: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_ActiveSpeakerUpdate_msg }
-    package static let _emptyBox = NanopbBox<livekit_ActiveSpeakerUpdate>(zero: livekit_ActiveSpeakerUpdate(), descriptor: livekit_ActiveSpeakerUpdate_msg)
+extension applooma_ActiveSpeakerUpdate: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_ActiveSpeakerUpdate_msg }
+    package static let _emptyBox = NanopbBox<applooma_ActiveSpeakerUpdate>(zero: applooma_ActiveSpeakerUpdate(), descriptor: applooma_ActiveSpeakerUpdate_msg)
 }
-typealias Livekit_ActiveSpeakerUpdate = NanopbMsg<livekit_ActiveSpeakerUpdate>
-extension Livekit_ActiveSpeakerUpdate {
-    var speakers: [Livekit_SpeakerInfo] {
+typealias Applooma_ActiveSpeakerUpdate = NanopbMsg<applooma_ActiveSpeakerUpdate>
+extension Applooma_ActiveSpeakerUpdate {
+    var speakers: [Applooma_SpeakerInfo] {
         lkViews(_pointer.pointee.speakers_count, _pointer.pointee.speakers, owner: _owner)
     }
 
 }
 
-extension Livekit_ActiveSpeakerUpdate.Builder {
-    var speakers: [Livekit_SpeakerInfo] {
+extension Applooma_ActiveSpeakerUpdate.Builder {
+    var speakers: [Applooma_SpeakerInfo] {
         get { lkViews(_pointer.pointee.speakers_count, _pointer.pointee.speakers, owner: _box) }
         nonmutating set {
             var count = _pointer.pointee.speakers_count, base = _pointer.pointee.speakers
@@ -2196,12 +2196,12 @@ extension Livekit_ActiveSpeakerUpdate.Builder {
 
 }
 
-extension livekit_SpeakerInfo: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_SpeakerInfo_msg }
-    package static let _emptyBox = NanopbBox<livekit_SpeakerInfo>(zero: livekit_SpeakerInfo(), descriptor: livekit_SpeakerInfo_msg)
+extension applooma_SpeakerInfo: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_SpeakerInfo_msg }
+    package static let _emptyBox = NanopbBox<applooma_SpeakerInfo>(zero: applooma_SpeakerInfo(), descriptor: applooma_SpeakerInfo_msg)
 }
-typealias Livekit_SpeakerInfo = NanopbMsg<livekit_SpeakerInfo>
-extension Livekit_SpeakerInfo {
+typealias Applooma_SpeakerInfo = NanopbMsg<applooma_SpeakerInfo>
+extension Applooma_SpeakerInfo {
     var sid: String {
         lkString(_pointer.pointee.sid) ?? ""
     }
@@ -2219,7 +2219,7 @@ extension Livekit_SpeakerInfo {
 
 }
 
-extension Livekit_SpeakerInfo.Builder {
+extension Applooma_SpeakerInfo.Builder {
     var sid: String {
         get { lkString(_pointer.pointee.sid) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.sid, newValue) }
@@ -2237,12 +2237,12 @@ extension Livekit_SpeakerInfo.Builder {
 
 }
 
-extension livekit_UserPacket: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_UserPacket_msg }
-    package static let _emptyBox = NanopbBox<livekit_UserPacket>(zero: livekit_UserPacket(), descriptor: livekit_UserPacket_msg)
+extension applooma_UserPacket: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_UserPacket_msg }
+    package static let _emptyBox = NanopbBox<applooma_UserPacket>(zero: applooma_UserPacket(), descriptor: applooma_UserPacket_msg)
 }
-typealias Livekit_UserPacket = NanopbMsg<livekit_UserPacket>
-extension Livekit_UserPacket {
+typealias Applooma_UserPacket = NanopbMsg<applooma_UserPacket>
+extension Applooma_UserPacket {
     var participantSid: String {
         lkString(_pointer.pointee.participant_sid) ?? ""
     }
@@ -2293,7 +2293,7 @@ extension Livekit_UserPacket {
 
 }
 
-extension Livekit_UserPacket.Builder {
+extension Applooma_UserPacket.Builder {
     var participantSid: String {
         get { lkString(_pointer.pointee.participant_sid) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.participant_sid, newValue) }
@@ -2354,12 +2354,12 @@ extension Livekit_UserPacket.Builder {
 
 }
 
-extension livekit_SipDTMF: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_SipDTMF_msg }
-    package static let _emptyBox = NanopbBox<livekit_SipDTMF>(zero: livekit_SipDTMF(), descriptor: livekit_SipDTMF_msg)
+extension applooma_SipDTMF: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_SipDTMF_msg }
+    package static let _emptyBox = NanopbBox<applooma_SipDTMF>(zero: applooma_SipDTMF(), descriptor: applooma_SipDTMF_msg)
 }
-typealias Livekit_SipDTMF = NanopbMsg<livekit_SipDTMF>
-extension Livekit_SipDTMF {
+typealias Applooma_SipDTMF = NanopbMsg<applooma_SipDTMF>
+extension Applooma_SipDTMF {
     var code: UInt32 {
         _pointer.pointee.code?.pointee ?? 0
     }
@@ -2372,7 +2372,7 @@ extension Livekit_SipDTMF {
 
 }
 
-extension Livekit_SipDTMF.Builder {
+extension Applooma_SipDTMF.Builder {
     var code: UInt32 {
         get { _pointer.pointee.code?.pointee ?? 0 }
         nonmutating set { lkSetValue(&_pointer.pointee.code, newValue) }
@@ -2385,12 +2385,12 @@ extension Livekit_SipDTMF.Builder {
 
 }
 
-extension livekit_Transcription: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_Transcription_msg }
-    package static let _emptyBox = NanopbBox<livekit_Transcription>(zero: livekit_Transcription(), descriptor: livekit_Transcription_msg)
+extension applooma_Transcription: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_Transcription_msg }
+    package static let _emptyBox = NanopbBox<applooma_Transcription>(zero: applooma_Transcription(), descriptor: applooma_Transcription_msg)
 }
-typealias Livekit_Transcription = NanopbMsg<livekit_Transcription>
-extension Livekit_Transcription {
+typealias Applooma_Transcription = NanopbMsg<applooma_Transcription>
+extension Applooma_Transcription {
     var transcribedParticipantIdentity: String {
         lkString(_pointer.pointee.transcribed_participant_identity) ?? ""
     }
@@ -2401,13 +2401,13 @@ extension Livekit_Transcription {
     }
     var hasTrackID: Bool { _pointer.pointee.track_id != nil }
 
-    var segments: [Livekit_TranscriptionSegment] {
+    var segments: [Applooma_TranscriptionSegment] {
         lkViews(_pointer.pointee.segments_count, _pointer.pointee.segments, owner: _owner)
     }
 
 }
 
-extension Livekit_Transcription.Builder {
+extension Applooma_Transcription.Builder {
     var transcribedParticipantIdentity: String {
         get { lkString(_pointer.pointee.transcribed_participant_identity) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.transcribed_participant_identity, newValue) }
@@ -2418,7 +2418,7 @@ extension Livekit_Transcription.Builder {
         nonmutating set { lkSetString(&_pointer.pointee.track_id, newValue) }
     }
 
-    var segments: [Livekit_TranscriptionSegment] {
+    var segments: [Applooma_TranscriptionSegment] {
         get { lkViews(_pointer.pointee.segments_count, _pointer.pointee.segments, owner: _box) }
         nonmutating set {
             var count = _pointer.pointee.segments_count, base = _pointer.pointee.segments
@@ -2429,12 +2429,12 @@ extension Livekit_Transcription.Builder {
 
 }
 
-extension livekit_TranscriptionSegment: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_TranscriptionSegment_msg }
-    package static let _emptyBox = NanopbBox<livekit_TranscriptionSegment>(zero: livekit_TranscriptionSegment(), descriptor: livekit_TranscriptionSegment_msg)
+extension applooma_TranscriptionSegment: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_TranscriptionSegment_msg }
+    package static let _emptyBox = NanopbBox<applooma_TranscriptionSegment>(zero: applooma_TranscriptionSegment(), descriptor: applooma_TranscriptionSegment_msg)
 }
-typealias Livekit_TranscriptionSegment = NanopbMsg<livekit_TranscriptionSegment>
-extension Livekit_TranscriptionSegment {
+typealias Applooma_TranscriptionSegment = NanopbMsg<applooma_TranscriptionSegment>
+extension Applooma_TranscriptionSegment {
     var id: String {
         lkString(_pointer.pointee.id) ?? ""
     }
@@ -2467,7 +2467,7 @@ extension Livekit_TranscriptionSegment {
 
 }
 
-extension Livekit_TranscriptionSegment.Builder {
+extension Applooma_TranscriptionSegment.Builder {
     var id: String {
         get { lkString(_pointer.pointee.id) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.id, newValue) }
@@ -2500,12 +2500,12 @@ extension Livekit_TranscriptionSegment.Builder {
 
 }
 
-extension livekit_ChatMessage: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_ChatMessage_msg }
-    package static let _emptyBox = NanopbBox<livekit_ChatMessage>(zero: livekit_ChatMessage(), descriptor: livekit_ChatMessage_msg)
+extension applooma_ChatMessage: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_ChatMessage_msg }
+    package static let _emptyBox = NanopbBox<applooma_ChatMessage>(zero: applooma_ChatMessage(), descriptor: applooma_ChatMessage_msg)
 }
-typealias Livekit_ChatMessage = NanopbMsg<livekit_ChatMessage>
-extension Livekit_ChatMessage {
+typealias Applooma_ChatMessage = NanopbMsg<applooma_ChatMessage>
+extension Applooma_ChatMessage {
     var id: String {
         lkString(_pointer.pointee.id) ?? ""
     }
@@ -2538,7 +2538,7 @@ extension Livekit_ChatMessage {
 
 }
 
-extension Livekit_ChatMessage.Builder {
+extension Applooma_ChatMessage.Builder {
     var id: String {
         get { lkString(_pointer.pointee.id) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.id, newValue) }
@@ -2571,12 +2571,12 @@ extension Livekit_ChatMessage.Builder {
 
 }
 
-extension livekit_RpcRequest: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_RpcRequest_msg }
-    package static let _emptyBox = NanopbBox<livekit_RpcRequest>(zero: livekit_RpcRequest(), descriptor: livekit_RpcRequest_msg)
+extension applooma_RpcRequest: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_RpcRequest_msg }
+    package static let _emptyBox = NanopbBox<applooma_RpcRequest>(zero: applooma_RpcRequest(), descriptor: applooma_RpcRequest_msg)
 }
-typealias Livekit_RpcRequest = NanopbMsg<livekit_RpcRequest>
-extension Livekit_RpcRequest {
+typealias Applooma_RpcRequest = NanopbMsg<applooma_RpcRequest>
+extension Applooma_RpcRequest {
     var id: String {
         lkString(_pointer.pointee.id) ?? ""
     }
@@ -2609,7 +2609,7 @@ extension Livekit_RpcRequest {
 
 }
 
-extension Livekit_RpcRequest.Builder {
+extension Applooma_RpcRequest.Builder {
     var id: String {
         get { lkString(_pointer.pointee.id) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.id, newValue) }
@@ -2642,12 +2642,12 @@ extension Livekit_RpcRequest.Builder {
 
 }
 
-extension livekit_RpcAck: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_RpcAck_msg }
-    package static let _emptyBox = NanopbBox<livekit_RpcAck>(zero: livekit_RpcAck(), descriptor: livekit_RpcAck_msg)
+extension applooma_RpcAck: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_RpcAck_msg }
+    package static let _emptyBox = NanopbBox<applooma_RpcAck>(zero: applooma_RpcAck(), descriptor: applooma_RpcAck_msg)
 }
-typealias Livekit_RpcAck = NanopbMsg<livekit_RpcAck>
-extension Livekit_RpcAck {
+typealias Applooma_RpcAck = NanopbMsg<applooma_RpcAck>
+extension Applooma_RpcAck {
     var requestID: String {
         lkString(_pointer.pointee.request_id) ?? ""
     }
@@ -2655,7 +2655,7 @@ extension Livekit_RpcAck {
 
 }
 
-extension Livekit_RpcAck.Builder {
+extension Applooma_RpcAck.Builder {
     var requestID: String {
         get { lkString(_pointer.pointee.request_id) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.request_id, newValue) }
@@ -2663,116 +2663,116 @@ extension Livekit_RpcAck.Builder {
 
 }
 
-enum Livekit_RpcResponse_OneOf_Value: Equatable {
+enum Applooma_RpcResponse_OneOf_Value: Equatable {
     case payload(String)
-    case error(Livekit_RpcError)
+    case error(Applooma_RpcError)
     case compressedPayload(Data)
 }
 
-extension livekit_RpcResponse: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_RpcResponse_msg }
-    package static let _emptyBox = NanopbBox<livekit_RpcResponse>(zero: livekit_RpcResponse(), descriptor: livekit_RpcResponse_msg)
+extension applooma_RpcResponse: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_RpcResponse_msg }
+    package static let _emptyBox = NanopbBox<applooma_RpcResponse>(zero: applooma_RpcResponse(), descriptor: applooma_RpcResponse_msg)
 }
-typealias Livekit_RpcResponse = NanopbMsg<livekit_RpcResponse>
-extension Livekit_RpcResponse {
+typealias Applooma_RpcResponse = NanopbMsg<applooma_RpcResponse>
+extension Applooma_RpcResponse {
     var requestID: String {
         lkString(_pointer.pointee.request_id) ?? ""
     }
     var hasRequestID: Bool { _pointer.pointee.request_id != nil }
 
-    var value: Livekit_RpcResponse_OneOf_Value? {
+    var value: Applooma_RpcResponse_OneOf_Value? {
         switch _pointer.pointee.which_value {
-        case pb_size_t(livekit_RpcResponse_payload_tag):
+        case pb_size_t(applooma_RpcResponse_payload_tag):
             return .payload(lkString(_pointer.pointee.value.payload) ?? "")
-        case pb_size_t(livekit_RpcResponse_error_tag):
-            return .error(_pointer.pointee.value.error.map { Livekit_RpcError(_sharing: $0, owner: _owner) } ?? Livekit_RpcError._empty)
-        case pb_size_t(livekit_RpcResponse_compressed_payload_tag):
+        case pb_size_t(applooma_RpcResponse_error_tag):
+            return .error(_pointer.pointee.value.error.map { Applooma_RpcError(_sharing: $0, owner: _owner) } ?? Applooma_RpcError._empty)
+        case pb_size_t(applooma_RpcResponse_compressed_payload_tag):
             return .compressedPayload(lkData(_pointer.pointee.value.compressed_payload))
         default: return nil
         }
     }
     var payload: String {
-        _pointer.pointee.which_value == pb_size_t(livekit_RpcResponse_payload_tag) ? (lkString(_pointer.pointee.value.payload) ?? "") : ""
+        _pointer.pointee.which_value == pb_size_t(applooma_RpcResponse_payload_tag) ? (lkString(_pointer.pointee.value.payload) ?? "") : ""
     }
-    var error: Livekit_RpcError {
-        _pointer.pointee.which_value == pb_size_t(livekit_RpcResponse_error_tag) ? (_pointer.pointee.value.error.map { Livekit_RpcError(_sharing: $0, owner: _owner) } ?? Livekit_RpcError._empty) : Livekit_RpcError()
+    var error: Applooma_RpcError {
+        _pointer.pointee.which_value == pb_size_t(applooma_RpcResponse_error_tag) ? (_pointer.pointee.value.error.map { Applooma_RpcError(_sharing: $0, owner: _owner) } ?? Applooma_RpcError._empty) : Applooma_RpcError()
     }
     var compressedPayload: Data {
-        _pointer.pointee.which_value == pb_size_t(livekit_RpcResponse_compressed_payload_tag) ? (lkData(_pointer.pointee.value.compressed_payload)) : Data()
+        _pointer.pointee.which_value == pb_size_t(applooma_RpcResponse_compressed_payload_tag) ? (lkData(_pointer.pointee.value.compressed_payload)) : Data()
     }
 
 }
 
-extension Livekit_RpcResponse.Builder {
+extension Applooma_RpcResponse.Builder {
     var requestID: String {
         get { lkString(_pointer.pointee.request_id) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.request_id, newValue) }
     }
 
-    var value: Livekit_RpcResponse_OneOf_Value? {
+    var value: Applooma_RpcResponse_OneOf_Value? {
         get {
             switch _pointer.pointee.which_value {
-            case pb_size_t(livekit_RpcResponse_payload_tag):
+            case pb_size_t(applooma_RpcResponse_payload_tag):
                 return .payload(lkString(_pointer.pointee.value.payload) ?? "")
-            case pb_size_t(livekit_RpcResponse_error_tag):
-                return .error(_pointer.pointee.value.error.map { Livekit_RpcError(_sharing: $0, owner: _box) } ?? Livekit_RpcError._empty)
-            case pb_size_t(livekit_RpcResponse_compressed_payload_tag):
+            case pb_size_t(applooma_RpcResponse_error_tag):
+                return .error(_pointer.pointee.value.error.map { Applooma_RpcError(_sharing: $0, owner: _box) } ?? Applooma_RpcError._empty)
+            case pb_size_t(applooma_RpcResponse_compressed_payload_tag):
                 return .compressedPayload(lkData(_pointer.pointee.value.compressed_payload))
             default: return nil
             }
         }
         nonmutating set {
-            let newValue: Livekit_RpcResponse_OneOf_Value? = switch newValue {
+            let newValue: Applooma_RpcResponse_OneOf_Value? = switch newValue {
             case let .error(value): .error(value.owned())
             default: newValue
             }
             _clearValue()
             switch newValue {
             case let .payload(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_RpcResponse_payload_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_RpcResponse_payload_tag)
                 lkSetString(&_pointer.pointee.value.payload, value)
             case let .error(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_RpcResponse_error_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_RpcResponse_error_tag)
                 lkSetMessage(&_pointer.pointee.value.error, value)
             case let .compressedPayload(value):
-                _pointer.pointee.which_value = pb_size_t(livekit_RpcResponse_compressed_payload_tag)
+                _pointer.pointee.which_value = pb_size_t(applooma_RpcResponse_compressed_payload_tag)
                 lkSetData(&_pointer.pointee.value.compressed_payload, value)
             case nil: break
             }
         }
     }
     var payload: String {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_RpcResponse_payload_tag) ? (lkString(_pointer.pointee.value.payload) ?? "") : "" }
+        get { _pointer.pointee.which_value == pb_size_t(applooma_RpcResponse_payload_tag) ? (lkString(_pointer.pointee.value.payload) ?? "") : "" }
         nonmutating set {
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_RpcResponse_payload_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_RpcResponse_payload_tag)
             lkSetString(&_pointer.pointee.value.payload, newValue)
         }
     }
-    var error: Livekit_RpcError {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_RpcResponse_error_tag) ? (_pointer.pointee.value.error.map { Livekit_RpcError(_sharing: $0, owner: _box) } ?? Livekit_RpcError._empty) : Livekit_RpcError() }
+    var error: Applooma_RpcError {
+        get { _pointer.pointee.which_value == pb_size_t(applooma_RpcResponse_error_tag) ? (_pointer.pointee.value.error.map { Applooma_RpcError(_sharing: $0, owner: _box) } ?? Applooma_RpcError._empty) : Applooma_RpcError() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_RpcResponse_error_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_RpcResponse_error_tag)
             lkSetMessage(&_pointer.pointee.value.error, newValue)
         }
     }
     var compressedPayload: Data {
-        get { _pointer.pointee.which_value == pb_size_t(livekit_RpcResponse_compressed_payload_tag) ? (lkData(_pointer.pointee.value.compressed_payload)) : Data() }
+        get { _pointer.pointee.which_value == pb_size_t(applooma_RpcResponse_compressed_payload_tag) ? (lkData(_pointer.pointee.value.compressed_payload)) : Data() }
         nonmutating set {
             _clearValue()
-            _pointer.pointee.which_value = pb_size_t(livekit_RpcResponse_compressed_payload_tag)
+            _pointer.pointee.which_value = pb_size_t(applooma_RpcResponse_compressed_payload_tag)
             lkSetData(&_pointer.pointee.value.compressed_payload, newValue)
         }
     }
     private func _clearValue() {
         switch _pointer.pointee.which_value {
-        case pb_size_t(livekit_RpcResponse_payload_tag):
+        case pb_size_t(applooma_RpcResponse_payload_tag):
             lkFree(&_pointer.pointee.value.payload)
-        case pb_size_t(livekit_RpcResponse_error_tag):
-            lkRelease(message: &_pointer.pointee.value.error, Livekit_RpcError.descriptor)
-        case pb_size_t(livekit_RpcResponse_compressed_payload_tag):
+        case pb_size_t(applooma_RpcResponse_error_tag):
+            lkRelease(message: &_pointer.pointee.value.error, Applooma_RpcError.descriptor)
+        case pb_size_t(applooma_RpcResponse_compressed_payload_tag):
             lkFree(&_pointer.pointee.value.compressed_payload)
         default: break
         }
@@ -2784,12 +2784,12 @@ extension Livekit_RpcResponse.Builder {
 
 }
 
-extension livekit_RpcError: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_RpcError_msg }
-    package static let _emptyBox = NanopbBox<livekit_RpcError>(zero: livekit_RpcError(), descriptor: livekit_RpcError_msg)
+extension applooma_RpcError: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_RpcError_msg }
+    package static let _emptyBox = NanopbBox<applooma_RpcError>(zero: applooma_RpcError(), descriptor: applooma_RpcError_msg)
 }
-typealias Livekit_RpcError = NanopbMsg<livekit_RpcError>
-extension Livekit_RpcError {
+typealias Applooma_RpcError = NanopbMsg<applooma_RpcError>
+extension Applooma_RpcError {
     var code: UInt32 {
         _pointer.pointee.code?.pointee ?? 0
     }
@@ -2807,7 +2807,7 @@ extension Livekit_RpcError {
 
 }
 
-extension Livekit_RpcError.Builder {
+extension Applooma_RpcError.Builder {
     var code: UInt32 {
         get { _pointer.pointee.code?.pointee ?? 0 }
         nonmutating set { lkSetValue(&_pointer.pointee.code, newValue) }
@@ -2825,12 +2825,12 @@ extension Livekit_RpcError.Builder {
 
 }
 
-extension livekit_ParticipantTracks: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_ParticipantTracks_msg }
-    package static let _emptyBox = NanopbBox<livekit_ParticipantTracks>(zero: livekit_ParticipantTracks(), descriptor: livekit_ParticipantTracks_msg)
+extension applooma_ParticipantTracks: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_ParticipantTracks_msg }
+    package static let _emptyBox = NanopbBox<applooma_ParticipantTracks>(zero: applooma_ParticipantTracks(), descriptor: applooma_ParticipantTracks_msg)
 }
-typealias Livekit_ParticipantTracks = NanopbMsg<livekit_ParticipantTracks>
-extension Livekit_ParticipantTracks {
+typealias Applooma_ParticipantTracks = NanopbMsg<applooma_ParticipantTracks>
+extension Applooma_ParticipantTracks {
     var participantSid: String {
         lkString(_pointer.pointee.participant_sid) ?? ""
     }
@@ -2842,7 +2842,7 @@ extension Livekit_ParticipantTracks {
 
 }
 
-extension Livekit_ParticipantTracks.Builder {
+extension Applooma_ParticipantTracks.Builder {
     var participantSid: String {
         get { lkString(_pointer.pointee.participant_sid) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.participant_sid, newValue) }
@@ -2859,14 +2859,14 @@ extension Livekit_ParticipantTracks.Builder {
 
 }
 
-extension livekit_ServerInfo: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_ServerInfo_msg }
-    package static let _emptyBox = NanopbBox<livekit_ServerInfo>(zero: livekit_ServerInfo(), descriptor: livekit_ServerInfo_msg)
+extension applooma_ServerInfo: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_ServerInfo_msg }
+    package static let _emptyBox = NanopbBox<applooma_ServerInfo>(zero: applooma_ServerInfo(), descriptor: applooma_ServerInfo_msg)
 }
-typealias Livekit_ServerInfo = NanopbMsg<livekit_ServerInfo>
-extension Livekit_ServerInfo {
-    var edition: Livekit_ServerInfo_Edition {
-        _pointer.pointee.edition.map { lkEnum($0.pointee) } ?? Livekit_ServerInfo_Edition()
+typealias Applooma_ServerInfo = NanopbMsg<applooma_ServerInfo>
+extension Applooma_ServerInfo {
+    var edition: Applooma_ServerInfo_Edition {
+        _pointer.pointee.edition.map { lkEnum($0.pointee) } ?? Applooma_ServerInfo_Edition()
     }
     var hasEdition: Bool { _pointer.pointee.edition != nil }
 
@@ -2902,7 +2902,7 @@ extension Livekit_ServerInfo {
 
 }
 
-struct Livekit_ServerInfo_Edition: NanopbEnum {
+struct Applooma_ServerInfo_Edition: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -2911,9 +2911,9 @@ struct Livekit_ServerInfo_Edition: NanopbEnum {
     static let cloud = Self(rawValue: 1)
 }
 
-extension Livekit_ServerInfo.Builder {
-    var edition: Livekit_ServerInfo_Edition {
-        get { _pointer.pointee.edition.map { lkEnum($0.pointee) } ?? Livekit_ServerInfo_Edition() }
+extension Applooma_ServerInfo.Builder {
+    var edition: Applooma_ServerInfo_Edition {
+        get { _pointer.pointee.edition.map { lkEnum($0.pointee) } ?? Applooma_ServerInfo_Edition() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.edition, newValue) }
     }
 
@@ -2949,14 +2949,14 @@ extension Livekit_ServerInfo.Builder {
 
 }
 
-extension livekit_ClientInfo: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_ClientInfo_msg }
-    package static let _emptyBox = NanopbBox<livekit_ClientInfo>(zero: livekit_ClientInfo(), descriptor: livekit_ClientInfo_msg)
+extension applooma_ClientInfo: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_ClientInfo_msg }
+    package static let _emptyBox = NanopbBox<applooma_ClientInfo>(zero: applooma_ClientInfo(), descriptor: applooma_ClientInfo_msg)
 }
-typealias Livekit_ClientInfo = NanopbMsg<livekit_ClientInfo>
-extension Livekit_ClientInfo {
-    var sdk: Livekit_ClientInfo_SDK {
-        _pointer.pointee.sdk.map { lkEnum($0.pointee) } ?? Livekit_ClientInfo_SDK()
+typealias Applooma_ClientInfo = NanopbMsg<applooma_ClientInfo>
+extension Applooma_ClientInfo {
+    var sdk: Applooma_ClientInfo_SDK {
+        _pointer.pointee.sdk.map { lkEnum($0.pointee) } ?? Applooma_ClientInfo_SDK()
     }
     var hasSdk: Bool { _pointer.pointee.sdk != nil }
 
@@ -3015,13 +3015,13 @@ extension Livekit_ClientInfo {
     }
     var hasClientProtocol: Bool { _pointer.pointee.client_protocol != nil }
 
-    var capabilities: [Livekit_ClientInfo_Capability] {
+    var capabilities: [Applooma_ClientInfo_Capability] {
         lkRepeatedEnum(_pointer.pointee.capabilities_count, _pointer.pointee.capabilities)
     }
 
 }
 
-struct Livekit_ClientInfo_SDK: NanopbEnum {
+struct Applooma_ClientInfo_SDK: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -3043,7 +3043,7 @@ struct Livekit_ClientInfo_SDK: NanopbEnum {
     static let esp32 = Self(rawValue: 14)
 }
 
-struct Livekit_ClientInfo_Capability: NanopbEnum {
+struct Applooma_ClientInfo_Capability: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -3053,9 +3053,9 @@ struct Livekit_ClientInfo_Capability: NanopbEnum {
     static let capCompressionDeflateRaw = Self(rawValue: 2)
 }
 
-extension Livekit_ClientInfo.Builder {
-    var sdk: Livekit_ClientInfo_SDK {
-        get { _pointer.pointee.sdk.map { lkEnum($0.pointee) } ?? Livekit_ClientInfo_SDK() }
+extension Applooma_ClientInfo.Builder {
+    var sdk: Applooma_ClientInfo_SDK {
+        get { _pointer.pointee.sdk.map { lkEnum($0.pointee) } ?? Applooma_ClientInfo_SDK() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.sdk, newValue) }
     }
 
@@ -3114,7 +3114,7 @@ extension Livekit_ClientInfo.Builder {
         nonmutating set { lkSetValue(&_pointer.pointee.client_protocol, newValue) }
     }
 
-    var capabilities: [Livekit_ClientInfo_Capability] {
+    var capabilities: [Applooma_ClientInfo_Capability] {
         get { lkRepeatedEnum(_pointer.pointee.capabilities_count, _pointer.pointee.capabilities) }
         nonmutating set {
             var count = _pointer.pointee.capabilities_count, base = _pointer.pointee.capabilities
@@ -3125,106 +3125,106 @@ extension Livekit_ClientInfo.Builder {
 
 }
 
-extension livekit_ClientConfiguration: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_ClientConfiguration_msg }
-    package static let _emptyBox = NanopbBox<livekit_ClientConfiguration>(zero: livekit_ClientConfiguration(), descriptor: livekit_ClientConfiguration_msg)
+extension applooma_ClientConfiguration: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_ClientConfiguration_msg }
+    package static let _emptyBox = NanopbBox<applooma_ClientConfiguration>(zero: applooma_ClientConfiguration(), descriptor: applooma_ClientConfiguration_msg)
 }
-typealias Livekit_ClientConfiguration = NanopbMsg<livekit_ClientConfiguration>
-extension Livekit_ClientConfiguration {
-    var video: Livekit_VideoConfiguration {
-        _pointer.pointee.video.map { Livekit_VideoConfiguration(_sharing: $0, owner: _owner) } ?? Livekit_VideoConfiguration._empty
+typealias Applooma_ClientConfiguration = NanopbMsg<applooma_ClientConfiguration>
+extension Applooma_ClientConfiguration {
+    var video: Applooma_VideoConfiguration {
+        _pointer.pointee.video.map { Applooma_VideoConfiguration(_sharing: $0, owner: _owner) } ?? Applooma_VideoConfiguration._empty
     }
     var hasVideo: Bool { _pointer.pointee.video != nil }
 
-    var screen: Livekit_VideoConfiguration {
-        _pointer.pointee.screen.map { Livekit_VideoConfiguration(_sharing: $0, owner: _owner) } ?? Livekit_VideoConfiguration._empty
+    var screen: Applooma_VideoConfiguration {
+        _pointer.pointee.screen.map { Applooma_VideoConfiguration(_sharing: $0, owner: _owner) } ?? Applooma_VideoConfiguration._empty
     }
     var hasScreen: Bool { _pointer.pointee.screen != nil }
 
-    var resumeConnection: Livekit_ClientConfigSetting {
-        _pointer.pointee.resume_connection.map { lkEnum($0.pointee) } ?? Livekit_ClientConfigSetting()
+    var resumeConnection: Applooma_ClientConfigSetting {
+        _pointer.pointee.resume_connection.map { lkEnum($0.pointee) } ?? Applooma_ClientConfigSetting()
     }
     var hasResumeConnection: Bool { _pointer.pointee.resume_connection != nil }
 
-    var disabledCodecs: Livekit_DisabledCodecs {
-        _pointer.pointee.disabled_codecs.map { Livekit_DisabledCodecs(_sharing: $0, owner: _owner) } ?? Livekit_DisabledCodecs._empty
+    var disabledCodecs: Applooma_DisabledCodecs {
+        _pointer.pointee.disabled_codecs.map { Applooma_DisabledCodecs(_sharing: $0, owner: _owner) } ?? Applooma_DisabledCodecs._empty
     }
     var hasDisabledCodecs: Bool { _pointer.pointee.disabled_codecs != nil }
 
-    var forceRelay: Livekit_ClientConfigSetting {
-        _pointer.pointee.force_relay.map { lkEnum($0.pointee) } ?? Livekit_ClientConfigSetting()
+    var forceRelay: Applooma_ClientConfigSetting {
+        _pointer.pointee.force_relay.map { lkEnum($0.pointee) } ?? Applooma_ClientConfigSetting()
     }
     var hasForceRelay: Bool { _pointer.pointee.force_relay != nil }
 
 }
 
-extension Livekit_ClientConfiguration.Builder {
-    var video: Livekit_VideoConfiguration {
-        get { _pointer.pointee.video.map { Livekit_VideoConfiguration(_sharing: $0, owner: _box) } ?? Livekit_VideoConfiguration._empty }
+extension Applooma_ClientConfiguration.Builder {
+    var video: Applooma_VideoConfiguration {
+        get { _pointer.pointee.video.map { Applooma_VideoConfiguration(_sharing: $0, owner: _box) } ?? Applooma_VideoConfiguration._empty }
         nonmutating set { lkSetMessage(&_pointer.pointee.video, newValue) }
     }
 
-    var screen: Livekit_VideoConfiguration {
-        get { _pointer.pointee.screen.map { Livekit_VideoConfiguration(_sharing: $0, owner: _box) } ?? Livekit_VideoConfiguration._empty }
+    var screen: Applooma_VideoConfiguration {
+        get { _pointer.pointee.screen.map { Applooma_VideoConfiguration(_sharing: $0, owner: _box) } ?? Applooma_VideoConfiguration._empty }
         nonmutating set { lkSetMessage(&_pointer.pointee.screen, newValue) }
     }
 
-    var resumeConnection: Livekit_ClientConfigSetting {
-        get { _pointer.pointee.resume_connection.map { lkEnum($0.pointee) } ?? Livekit_ClientConfigSetting() }
+    var resumeConnection: Applooma_ClientConfigSetting {
+        get { _pointer.pointee.resume_connection.map { lkEnum($0.pointee) } ?? Applooma_ClientConfigSetting() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.resume_connection, newValue) }
     }
 
-    var disabledCodecs: Livekit_DisabledCodecs {
-        get { _pointer.pointee.disabled_codecs.map { Livekit_DisabledCodecs(_sharing: $0, owner: _box) } ?? Livekit_DisabledCodecs._empty }
+    var disabledCodecs: Applooma_DisabledCodecs {
+        get { _pointer.pointee.disabled_codecs.map { Applooma_DisabledCodecs(_sharing: $0, owner: _box) } ?? Applooma_DisabledCodecs._empty }
         nonmutating set { lkSetMessage(&_pointer.pointee.disabled_codecs, newValue) }
     }
 
-    var forceRelay: Livekit_ClientConfigSetting {
-        get { _pointer.pointee.force_relay.map { lkEnum($0.pointee) } ?? Livekit_ClientConfigSetting() }
+    var forceRelay: Applooma_ClientConfigSetting {
+        get { _pointer.pointee.force_relay.map { lkEnum($0.pointee) } ?? Applooma_ClientConfigSetting() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.force_relay, newValue) }
     }
 
 }
 
-extension livekit_VideoConfiguration: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_VideoConfiguration_msg }
-    package static let _emptyBox = NanopbBox<livekit_VideoConfiguration>(zero: livekit_VideoConfiguration(), descriptor: livekit_VideoConfiguration_msg)
+extension applooma_VideoConfiguration: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_VideoConfiguration_msg }
+    package static let _emptyBox = NanopbBox<applooma_VideoConfiguration>(zero: applooma_VideoConfiguration(), descriptor: applooma_VideoConfiguration_msg)
 }
-typealias Livekit_VideoConfiguration = NanopbMsg<livekit_VideoConfiguration>
-extension Livekit_VideoConfiguration {
-    var hardwareEncoder: Livekit_ClientConfigSetting {
-        _pointer.pointee.hardware_encoder.map { lkEnum($0.pointee) } ?? Livekit_ClientConfigSetting()
+typealias Applooma_VideoConfiguration = NanopbMsg<applooma_VideoConfiguration>
+extension Applooma_VideoConfiguration {
+    var hardwareEncoder: Applooma_ClientConfigSetting {
+        _pointer.pointee.hardware_encoder.map { lkEnum($0.pointee) } ?? Applooma_ClientConfigSetting()
     }
     var hasHardwareEncoder: Bool { _pointer.pointee.hardware_encoder != nil }
 
 }
 
-extension Livekit_VideoConfiguration.Builder {
-    var hardwareEncoder: Livekit_ClientConfigSetting {
-        get { _pointer.pointee.hardware_encoder.map { lkEnum($0.pointee) } ?? Livekit_ClientConfigSetting() }
+extension Applooma_VideoConfiguration.Builder {
+    var hardwareEncoder: Applooma_ClientConfigSetting {
+        get { _pointer.pointee.hardware_encoder.map { lkEnum($0.pointee) } ?? Applooma_ClientConfigSetting() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.hardware_encoder, newValue) }
     }
 
 }
 
-extension livekit_DisabledCodecs: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DisabledCodecs_msg }
-    package static let _emptyBox = NanopbBox<livekit_DisabledCodecs>(zero: livekit_DisabledCodecs(), descriptor: livekit_DisabledCodecs_msg)
+extension applooma_DisabledCodecs: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DisabledCodecs_msg }
+    package static let _emptyBox = NanopbBox<applooma_DisabledCodecs>(zero: applooma_DisabledCodecs(), descriptor: applooma_DisabledCodecs_msg)
 }
-typealias Livekit_DisabledCodecs = NanopbMsg<livekit_DisabledCodecs>
-extension Livekit_DisabledCodecs {
-    var codecs: [Livekit_Codec] {
+typealias Applooma_DisabledCodecs = NanopbMsg<applooma_DisabledCodecs>
+extension Applooma_DisabledCodecs {
+    var codecs: [Applooma_Codec] {
         lkViews(_pointer.pointee.codecs_count, _pointer.pointee.codecs, owner: _owner)
     }
 
-    var publish: [Livekit_Codec] {
+    var publish: [Applooma_Codec] {
         lkViews(_pointer.pointee.publish_count, _pointer.pointee.publish, owner: _owner)
     }
 
 }
 
-extension Livekit_DisabledCodecs.Builder {
-    var codecs: [Livekit_Codec] {
+extension Applooma_DisabledCodecs.Builder {
+    var codecs: [Applooma_Codec] {
         get { lkViews(_pointer.pointee.codecs_count, _pointer.pointee.codecs, owner: _box) }
         nonmutating set {
             var count = _pointer.pointee.codecs_count, base = _pointer.pointee.codecs
@@ -3233,7 +3233,7 @@ extension Livekit_DisabledCodecs.Builder {
         }
     }
 
-    var publish: [Livekit_Codec] {
+    var publish: [Applooma_Codec] {
         get { lkViews(_pointer.pointee.publish_count, _pointer.pointee.publish, owner: _box) }
         nonmutating set {
             var count = _pointer.pointee.publish_count, base = _pointer.pointee.publish
@@ -3244,12 +3244,12 @@ extension Livekit_DisabledCodecs.Builder {
 
 }
 
-extension livekit_TimedVersion: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_TimedVersion_msg }
-    package static let _emptyBox = NanopbBox<livekit_TimedVersion>(zero: livekit_TimedVersion(), descriptor: livekit_TimedVersion_msg)
+extension applooma_TimedVersion: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_TimedVersion_msg }
+    package static let _emptyBox = NanopbBox<applooma_TimedVersion>(zero: applooma_TimedVersion(), descriptor: applooma_TimedVersion_msg)
 }
-typealias Livekit_TimedVersion = NanopbMsg<livekit_TimedVersion>
-extension Livekit_TimedVersion {
+typealias Applooma_TimedVersion = NanopbMsg<applooma_TimedVersion>
+extension Applooma_TimedVersion {
     var unixMicro: Int64 {
         _pointer.pointee.unix_micro?.pointee ?? 0
     }
@@ -3262,7 +3262,7 @@ extension Livekit_TimedVersion {
 
 }
 
-extension Livekit_TimedVersion.Builder {
+extension Applooma_TimedVersion.Builder {
     var unixMicro: Int64 {
         get { _pointer.pointee.unix_micro?.pointee ?? 0 }
         nonmutating set { lkSetValue(&_pointer.pointee.unix_micro, newValue) }
@@ -3275,24 +3275,24 @@ extension Livekit_TimedVersion.Builder {
 
 }
 
-enum Livekit_DataStream {
-    typealias TextHeader = Livekit_DataStream_TextHeader
-    typealias ByteHeader = Livekit_DataStream_ByteHeader
-    typealias Header = Livekit_DataStream_Header
-    typealias Chunk = Livekit_DataStream_Chunk
-    typealias Trailer = Livekit_DataStream_Trailer
-    typealias OperationType = Livekit_DataStream_OperationType
-    typealias CompressionType = Livekit_DataStream_CompressionType
+enum Applooma_DataStream {
+    typealias TextHeader = Applooma_DataStream_TextHeader
+    typealias ByteHeader = Applooma_DataStream_ByteHeader
+    typealias Header = Applooma_DataStream_Header
+    typealias Chunk = Applooma_DataStream_Chunk
+    typealias Trailer = Applooma_DataStream_Trailer
+    typealias OperationType = Applooma_DataStream_OperationType
+    typealias CompressionType = Applooma_DataStream_CompressionType
 }
 
-extension livekit_DataStream_TextHeader: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataStream_TextHeader_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataStream_TextHeader>(zero: livekit_DataStream_TextHeader(), descriptor: livekit_DataStream_TextHeader_msg)
+extension applooma_DataStream_TextHeader: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataStream_TextHeader_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataStream_TextHeader>(zero: applooma_DataStream_TextHeader(), descriptor: applooma_DataStream_TextHeader_msg)
 }
-typealias Livekit_DataStream_TextHeader = NanopbMsg<livekit_DataStream_TextHeader>
-extension Livekit_DataStream_TextHeader {
-    var operationType: Livekit_DataStream_OperationType {
-        _pointer.pointee.operation_type.map { lkEnum($0.pointee) } ?? Livekit_DataStream_OperationType()
+typealias Applooma_DataStream_TextHeader = NanopbMsg<applooma_DataStream_TextHeader>
+extension Applooma_DataStream_TextHeader {
+    var operationType: Applooma_DataStream_OperationType {
+        _pointer.pointee.operation_type.map { lkEnum($0.pointee) } ?? Applooma_DataStream_OperationType()
     }
     var hasOperationType: Bool { _pointer.pointee.operation_type != nil }
 
@@ -3317,9 +3317,9 @@ extension Livekit_DataStream_TextHeader {
 
 }
 
-extension Livekit_DataStream_TextHeader.Builder {
-    var operationType: Livekit_DataStream_OperationType {
-        get { _pointer.pointee.operation_type.map { lkEnum($0.pointee) } ?? Livekit_DataStream_OperationType() }
+extension Applooma_DataStream_TextHeader.Builder {
+    var operationType: Applooma_DataStream_OperationType {
+        get { _pointer.pointee.operation_type.map { lkEnum($0.pointee) } ?? Applooma_DataStream_OperationType() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.operation_type, newValue) }
     }
 
@@ -3349,12 +3349,12 @@ extension Livekit_DataStream_TextHeader.Builder {
 
 }
 
-extension livekit_DataStream_ByteHeader: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataStream_ByteHeader_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataStream_ByteHeader>(zero: livekit_DataStream_ByteHeader(), descriptor: livekit_DataStream_ByteHeader_msg)
+extension applooma_DataStream_ByteHeader: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataStream_ByteHeader_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataStream_ByteHeader>(zero: applooma_DataStream_ByteHeader(), descriptor: applooma_DataStream_ByteHeader_msg)
 }
-typealias Livekit_DataStream_ByteHeader = NanopbMsg<livekit_DataStream_ByteHeader>
-extension Livekit_DataStream_ByteHeader {
+typealias Applooma_DataStream_ByteHeader = NanopbMsg<applooma_DataStream_ByteHeader>
+extension Applooma_DataStream_ByteHeader {
     var name: String {
         lkString(_pointer.pointee.name) ?? ""
     }
@@ -3362,7 +3362,7 @@ extension Livekit_DataStream_ByteHeader {
 
 }
 
-extension Livekit_DataStream_ByteHeader.Builder {
+extension Applooma_DataStream_ByteHeader.Builder {
     var name: String {
         get { lkString(_pointer.pointee.name) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.name, newValue) }
@@ -3370,17 +3370,17 @@ extension Livekit_DataStream_ByteHeader.Builder {
 
 }
 
-enum Livekit_DataStream_Header_OneOf_ContentHeader: Equatable {
-    case textHeader(Livekit_DataStream_TextHeader)
-    case byteHeader(Livekit_DataStream_ByteHeader)
+enum Applooma_DataStream_Header_OneOf_ContentHeader: Equatable {
+    case textHeader(Applooma_DataStream_TextHeader)
+    case byteHeader(Applooma_DataStream_ByteHeader)
 }
 
-extension livekit_DataStream_Header: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataStream_Header_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataStream_Header>(zero: livekit_DataStream_Header(), descriptor: livekit_DataStream_Header_msg)
+extension applooma_DataStream_Header: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataStream_Header_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataStream_Header>(zero: applooma_DataStream_Header(), descriptor: applooma_DataStream_Header_msg)
 }
-typealias Livekit_DataStream_Header = NanopbMsg<livekit_DataStream_Header>
-extension Livekit_DataStream_Header {
+typealias Applooma_DataStream_Header = NanopbMsg<applooma_DataStream_Header>
+extension Applooma_DataStream_Header {
     var streamID: String {
         lkString(_pointer.pointee.stream_id) ?? ""
     }
@@ -3406,14 +3406,14 @@ extension Livekit_DataStream_Header {
     }
     var hasTotalLength: Bool { _pointer.pointee.total_length != nil }
 
-    var encryptionType: Livekit_Encryption_TypeEnum {
-        _pointer.pointee.encryption_type.map { lkEnum($0.pointee) } ?? Livekit_Encryption_TypeEnum()
+    var encryptionType: Applooma_Encryption_TypeEnum {
+        _pointer.pointee.encryption_type.map { lkEnum($0.pointee) } ?? Applooma_Encryption_TypeEnum()
     }
     var hasEncryptionType: Bool { _pointer.pointee.encryption_type != nil }
 
     var attributes: [String: String] {
         var out: [String: String] = [:]
-        for entry in lkViews(_pointer.pointee.attributes_count, _pointer.pointee.attributes, owner: _owner) as [Livekit_DataStream_Header_AttributesEntry] {
+        for entry in lkViews(_pointer.pointee.attributes_count, _pointer.pointee.attributes, owner: _owner) as [Applooma_DataStream_Header_AttributesEntry] {
             out[entry.key] = entry.value
         }
         return out
@@ -3424,35 +3424,35 @@ extension Livekit_DataStream_Header {
     }
     var hasInlineContent: Bool { _pointer.pointee.inline_content != nil }
 
-    var compression: Livekit_DataStream_CompressionType {
-        _pointer.pointee.compression.map { lkEnum($0.pointee) } ?? Livekit_DataStream_CompressionType()
+    var compression: Applooma_DataStream_CompressionType {
+        _pointer.pointee.compression.map { lkEnum($0.pointee) } ?? Applooma_DataStream_CompressionType()
     }
     var hasCompression: Bool { _pointer.pointee.compression != nil }
 
-    var contentHeader: Livekit_DataStream_Header_OneOf_ContentHeader? {
+    var contentHeader: Applooma_DataStream_Header_OneOf_ContentHeader? {
         switch _pointer.pointee.which_content_header {
-        case pb_size_t(livekit_DataStream_Header_text_header_tag):
-            return .textHeader(_pointer.pointee.content_header.text_header.map { Livekit_DataStream_TextHeader(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_TextHeader._empty)
-        case pb_size_t(livekit_DataStream_Header_byte_header_tag):
-            return .byteHeader(_pointer.pointee.content_header.byte_header.map { Livekit_DataStream_ByteHeader(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_ByteHeader._empty)
+        case pb_size_t(applooma_DataStream_Header_text_header_tag):
+            return .textHeader(_pointer.pointee.content_header.text_header.map { Applooma_DataStream_TextHeader(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_TextHeader._empty)
+        case pb_size_t(applooma_DataStream_Header_byte_header_tag):
+            return .byteHeader(_pointer.pointee.content_header.byte_header.map { Applooma_DataStream_ByteHeader(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_ByteHeader._empty)
         default: return nil
         }
     }
-    var textHeader: Livekit_DataStream_TextHeader {
-        _pointer.pointee.which_content_header == pb_size_t(livekit_DataStream_Header_text_header_tag) ? (_pointer.pointee.content_header.text_header.map { Livekit_DataStream_TextHeader(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_TextHeader._empty) : Livekit_DataStream_TextHeader()
+    var textHeader: Applooma_DataStream_TextHeader {
+        _pointer.pointee.which_content_header == pb_size_t(applooma_DataStream_Header_text_header_tag) ? (_pointer.pointee.content_header.text_header.map { Applooma_DataStream_TextHeader(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_TextHeader._empty) : Applooma_DataStream_TextHeader()
     }
-    var byteHeader: Livekit_DataStream_ByteHeader {
-        _pointer.pointee.which_content_header == pb_size_t(livekit_DataStream_Header_byte_header_tag) ? (_pointer.pointee.content_header.byte_header.map { Livekit_DataStream_ByteHeader(_sharing: $0, owner: _owner) } ?? Livekit_DataStream_ByteHeader._empty) : Livekit_DataStream_ByteHeader()
+    var byteHeader: Applooma_DataStream_ByteHeader {
+        _pointer.pointee.which_content_header == pb_size_t(applooma_DataStream_Header_byte_header_tag) ? (_pointer.pointee.content_header.byte_header.map { Applooma_DataStream_ByteHeader(_sharing: $0, owner: _owner) } ?? Applooma_DataStream_ByteHeader._empty) : Applooma_DataStream_ByteHeader()
     }
 
 }
 
-extension livekit_DataStream_Header_AttributesEntry: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataStream_Header_AttributesEntry_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataStream_Header_AttributesEntry>(zero: livekit_DataStream_Header_AttributesEntry(), descriptor: livekit_DataStream_Header_AttributesEntry_msg)
+extension applooma_DataStream_Header_AttributesEntry: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataStream_Header_AttributesEntry_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataStream_Header_AttributesEntry>(zero: applooma_DataStream_Header_AttributesEntry(), descriptor: applooma_DataStream_Header_AttributesEntry_msg)
 }
-typealias Livekit_DataStream_Header_AttributesEntry = NanopbMsg<livekit_DataStream_Header_AttributesEntry>
-extension Livekit_DataStream_Header_AttributesEntry {
+typealias Applooma_DataStream_Header_AttributesEntry = NanopbMsg<applooma_DataStream_Header_AttributesEntry>
+extension Applooma_DataStream_Header_AttributesEntry {
     var key: String {
         lkString(_pointer.pointee.key) ?? ""
     }
@@ -3465,7 +3465,7 @@ extension Livekit_DataStream_Header_AttributesEntry {
 
 }
 
-extension Livekit_DataStream_Header_AttributesEntry.Builder {
+extension Applooma_DataStream_Header_AttributesEntry.Builder {
     var key: String {
         get { lkString(_pointer.pointee.key) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.key, newValue) }
@@ -3478,7 +3478,7 @@ extension Livekit_DataStream_Header_AttributesEntry.Builder {
 
 }
 
-extension Livekit_DataStream_Header.Builder {
+extension Applooma_DataStream_Header.Builder {
     var streamID: String {
         get { lkString(_pointer.pointee.stream_id) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.stream_id, newValue) }
@@ -3504,15 +3504,15 @@ extension Livekit_DataStream_Header.Builder {
         nonmutating set { lkSetValue(&_pointer.pointee.total_length, newValue) }
     }
 
-    var encryptionType: Livekit_Encryption_TypeEnum {
-        get { _pointer.pointee.encryption_type.map { lkEnum($0.pointee) } ?? Livekit_Encryption_TypeEnum() }
+    var encryptionType: Applooma_Encryption_TypeEnum {
+        get { _pointer.pointee.encryption_type.map { lkEnum($0.pointee) } ?? Applooma_Encryption_TypeEnum() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.encryption_type, newValue) }
     }
 
     var attributes: [String: String] {
         get {
             var out: [String: String] = [:]
-            for entry in lkViews(_pointer.pointee.attributes_count, _pointer.pointee.attributes, owner: _box) as [Livekit_DataStream_Header_AttributesEntry] {
+            for entry in lkViews(_pointer.pointee.attributes_count, _pointer.pointee.attributes, owner: _box) as [Applooma_DataStream_Header_AttributesEntry] {
                 out[entry.key] = entry.value
             }
             return out
@@ -3520,7 +3520,7 @@ extension Livekit_DataStream_Header.Builder {
         nonmutating set {
             // sorted for deterministic encoding (bytes-based Equatable)
             let entries = newValue.sorted { $0.key < $1.key }.map { pair in
-                Livekit_DataStream_Header_AttributesEntry.with { $0.key = pair.key; $0.value = pair.value }
+                Applooma_DataStream_Header_AttributesEntry.with { $0.key = pair.key; $0.value = pair.value }
             }
             var count = _pointer.pointee.attributes_count, base = _pointer.pointee.attributes
             lkSetRepeatedMessages(&count, &base, entries)
@@ -3533,23 +3533,23 @@ extension Livekit_DataStream_Header.Builder {
         nonmutating set { lkSetData(&_pointer.pointee.inline_content, newValue) }
     }
 
-    var compression: Livekit_DataStream_CompressionType {
-        get { _pointer.pointee.compression.map { lkEnum($0.pointee) } ?? Livekit_DataStream_CompressionType() }
+    var compression: Applooma_DataStream_CompressionType {
+        get { _pointer.pointee.compression.map { lkEnum($0.pointee) } ?? Applooma_DataStream_CompressionType() }
         nonmutating set { lkSetEnumPointer(&_pointer.pointee.compression, newValue) }
     }
 
-    var contentHeader: Livekit_DataStream_Header_OneOf_ContentHeader? {
+    var contentHeader: Applooma_DataStream_Header_OneOf_ContentHeader? {
         get {
             switch _pointer.pointee.which_content_header {
-            case pb_size_t(livekit_DataStream_Header_text_header_tag):
-                return .textHeader(_pointer.pointee.content_header.text_header.map { Livekit_DataStream_TextHeader(_sharing: $0, owner: _box) } ?? Livekit_DataStream_TextHeader._empty)
-            case pb_size_t(livekit_DataStream_Header_byte_header_tag):
-                return .byteHeader(_pointer.pointee.content_header.byte_header.map { Livekit_DataStream_ByteHeader(_sharing: $0, owner: _box) } ?? Livekit_DataStream_ByteHeader._empty)
+            case pb_size_t(applooma_DataStream_Header_text_header_tag):
+                return .textHeader(_pointer.pointee.content_header.text_header.map { Applooma_DataStream_TextHeader(_sharing: $0, owner: _box) } ?? Applooma_DataStream_TextHeader._empty)
+            case pb_size_t(applooma_DataStream_Header_byte_header_tag):
+                return .byteHeader(_pointer.pointee.content_header.byte_header.map { Applooma_DataStream_ByteHeader(_sharing: $0, owner: _box) } ?? Applooma_DataStream_ByteHeader._empty)
             default: return nil
             }
         }
         nonmutating set {
-            let newValue: Livekit_DataStream_Header_OneOf_ContentHeader? = switch newValue {
+            let newValue: Applooma_DataStream_Header_OneOf_ContentHeader? = switch newValue {
             case let .textHeader(value): .textHeader(value.owned())
             case let .byteHeader(value): .byteHeader(value.owned())
             default: newValue
@@ -3557,39 +3557,39 @@ extension Livekit_DataStream_Header.Builder {
             _clearContentHeader()
             switch newValue {
             case let .textHeader(value):
-                _pointer.pointee.which_content_header = pb_size_t(livekit_DataStream_Header_text_header_tag)
+                _pointer.pointee.which_content_header = pb_size_t(applooma_DataStream_Header_text_header_tag)
                 lkSetMessage(&_pointer.pointee.content_header.text_header, value)
             case let .byteHeader(value):
-                _pointer.pointee.which_content_header = pb_size_t(livekit_DataStream_Header_byte_header_tag)
+                _pointer.pointee.which_content_header = pb_size_t(applooma_DataStream_Header_byte_header_tag)
                 lkSetMessage(&_pointer.pointee.content_header.byte_header, value)
             case nil: break
             }
         }
     }
-    var textHeader: Livekit_DataStream_TextHeader {
-        get { _pointer.pointee.which_content_header == pb_size_t(livekit_DataStream_Header_text_header_tag) ? (_pointer.pointee.content_header.text_header.map { Livekit_DataStream_TextHeader(_sharing: $0, owner: _box) } ?? Livekit_DataStream_TextHeader._empty) : Livekit_DataStream_TextHeader() }
+    var textHeader: Applooma_DataStream_TextHeader {
+        get { _pointer.pointee.which_content_header == pb_size_t(applooma_DataStream_Header_text_header_tag) ? (_pointer.pointee.content_header.text_header.map { Applooma_DataStream_TextHeader(_sharing: $0, owner: _box) } ?? Applooma_DataStream_TextHeader._empty) : Applooma_DataStream_TextHeader() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearContentHeader()
-            _pointer.pointee.which_content_header = pb_size_t(livekit_DataStream_Header_text_header_tag)
+            _pointer.pointee.which_content_header = pb_size_t(applooma_DataStream_Header_text_header_tag)
             lkSetMessage(&_pointer.pointee.content_header.text_header, newValue)
         }
     }
-    var byteHeader: Livekit_DataStream_ByteHeader {
-        get { _pointer.pointee.which_content_header == pb_size_t(livekit_DataStream_Header_byte_header_tag) ? (_pointer.pointee.content_header.byte_header.map { Livekit_DataStream_ByteHeader(_sharing: $0, owner: _box) } ?? Livekit_DataStream_ByteHeader._empty) : Livekit_DataStream_ByteHeader() }
+    var byteHeader: Applooma_DataStream_ByteHeader {
+        get { _pointer.pointee.which_content_header == pb_size_t(applooma_DataStream_Header_byte_header_tag) ? (_pointer.pointee.content_header.byte_header.map { Applooma_DataStream_ByteHeader(_sharing: $0, owner: _box) } ?? Applooma_DataStream_ByteHeader._empty) : Applooma_DataStream_ByteHeader() }
         nonmutating set {
             let newValue = newValue.owned()
             _clearContentHeader()
-            _pointer.pointee.which_content_header = pb_size_t(livekit_DataStream_Header_byte_header_tag)
+            _pointer.pointee.which_content_header = pb_size_t(applooma_DataStream_Header_byte_header_tag)
             lkSetMessage(&_pointer.pointee.content_header.byte_header, newValue)
         }
     }
     private func _clearContentHeader() {
         switch _pointer.pointee.which_content_header {
-        case pb_size_t(livekit_DataStream_Header_text_header_tag):
-            lkRelease(message: &_pointer.pointee.content_header.text_header, Livekit_DataStream_TextHeader.descriptor)
-        case pb_size_t(livekit_DataStream_Header_byte_header_tag):
-            lkRelease(message: &_pointer.pointee.content_header.byte_header, Livekit_DataStream_ByteHeader.descriptor)
+        case pb_size_t(applooma_DataStream_Header_text_header_tag):
+            lkRelease(message: &_pointer.pointee.content_header.text_header, Applooma_DataStream_TextHeader.descriptor)
+        case pb_size_t(applooma_DataStream_Header_byte_header_tag):
+            lkRelease(message: &_pointer.pointee.content_header.byte_header, Applooma_DataStream_ByteHeader.descriptor)
         default: break
         }
         _pointer.pointee.which_content_header = 0
@@ -3600,12 +3600,12 @@ extension Livekit_DataStream_Header.Builder {
 
 }
 
-extension livekit_DataStream_Chunk: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataStream_Chunk_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataStream_Chunk>(zero: livekit_DataStream_Chunk(), descriptor: livekit_DataStream_Chunk_msg)
+extension applooma_DataStream_Chunk: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataStream_Chunk_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataStream_Chunk>(zero: applooma_DataStream_Chunk(), descriptor: applooma_DataStream_Chunk_msg)
 }
-typealias Livekit_DataStream_Chunk = NanopbMsg<livekit_DataStream_Chunk>
-extension Livekit_DataStream_Chunk {
+typealias Applooma_DataStream_Chunk = NanopbMsg<applooma_DataStream_Chunk>
+extension Applooma_DataStream_Chunk {
     var streamID: String {
         lkString(_pointer.pointee.stream_id) ?? ""
     }
@@ -3633,7 +3633,7 @@ extension Livekit_DataStream_Chunk {
 
 }
 
-extension Livekit_DataStream_Chunk.Builder {
+extension Applooma_DataStream_Chunk.Builder {
     var streamID: String {
         get { lkString(_pointer.pointee.stream_id) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.stream_id, newValue) }
@@ -3661,12 +3661,12 @@ extension Livekit_DataStream_Chunk.Builder {
 
 }
 
-extension livekit_DataStream_Trailer: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataStream_Trailer_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataStream_Trailer>(zero: livekit_DataStream_Trailer(), descriptor: livekit_DataStream_Trailer_msg)
+extension applooma_DataStream_Trailer: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataStream_Trailer_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataStream_Trailer>(zero: applooma_DataStream_Trailer(), descriptor: applooma_DataStream_Trailer_msg)
 }
-typealias Livekit_DataStream_Trailer = NanopbMsg<livekit_DataStream_Trailer>
-extension Livekit_DataStream_Trailer {
+typealias Applooma_DataStream_Trailer = NanopbMsg<applooma_DataStream_Trailer>
+extension Applooma_DataStream_Trailer {
     var streamID: String {
         lkString(_pointer.pointee.stream_id) ?? ""
     }
@@ -3679,7 +3679,7 @@ extension Livekit_DataStream_Trailer {
 
     var attributes: [String: String] {
         var out: [String: String] = [:]
-        for entry in lkViews(_pointer.pointee.attributes_count, _pointer.pointee.attributes, owner: _owner) as [Livekit_DataStream_Trailer_AttributesEntry] {
+        for entry in lkViews(_pointer.pointee.attributes_count, _pointer.pointee.attributes, owner: _owner) as [Applooma_DataStream_Trailer_AttributesEntry] {
             out[entry.key] = entry.value
         }
         return out
@@ -3687,12 +3687,12 @@ extension Livekit_DataStream_Trailer {
 
 }
 
-extension livekit_DataStream_Trailer_AttributesEntry: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_DataStream_Trailer_AttributesEntry_msg }
-    package static let _emptyBox = NanopbBox<livekit_DataStream_Trailer_AttributesEntry>(zero: livekit_DataStream_Trailer_AttributesEntry(), descriptor: livekit_DataStream_Trailer_AttributesEntry_msg)
+extension applooma_DataStream_Trailer_AttributesEntry: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_DataStream_Trailer_AttributesEntry_msg }
+    package static let _emptyBox = NanopbBox<applooma_DataStream_Trailer_AttributesEntry>(zero: applooma_DataStream_Trailer_AttributesEntry(), descriptor: applooma_DataStream_Trailer_AttributesEntry_msg)
 }
-typealias Livekit_DataStream_Trailer_AttributesEntry = NanopbMsg<livekit_DataStream_Trailer_AttributesEntry>
-extension Livekit_DataStream_Trailer_AttributesEntry {
+typealias Applooma_DataStream_Trailer_AttributesEntry = NanopbMsg<applooma_DataStream_Trailer_AttributesEntry>
+extension Applooma_DataStream_Trailer_AttributesEntry {
     var key: String {
         lkString(_pointer.pointee.key) ?? ""
     }
@@ -3705,7 +3705,7 @@ extension Livekit_DataStream_Trailer_AttributesEntry {
 
 }
 
-extension Livekit_DataStream_Trailer_AttributesEntry.Builder {
+extension Applooma_DataStream_Trailer_AttributesEntry.Builder {
     var key: String {
         get { lkString(_pointer.pointee.key) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.key, newValue) }
@@ -3718,7 +3718,7 @@ extension Livekit_DataStream_Trailer_AttributesEntry.Builder {
 
 }
 
-extension Livekit_DataStream_Trailer.Builder {
+extension Applooma_DataStream_Trailer.Builder {
     var streamID: String {
         get { lkString(_pointer.pointee.stream_id) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.stream_id, newValue) }
@@ -3732,7 +3732,7 @@ extension Livekit_DataStream_Trailer.Builder {
     var attributes: [String: String] {
         get {
             var out: [String: String] = [:]
-            for entry in lkViews(_pointer.pointee.attributes_count, _pointer.pointee.attributes, owner: _box) as [Livekit_DataStream_Trailer_AttributesEntry] {
+            for entry in lkViews(_pointer.pointee.attributes_count, _pointer.pointee.attributes, owner: _box) as [Applooma_DataStream_Trailer_AttributesEntry] {
                 out[entry.key] = entry.value
             }
             return out
@@ -3740,7 +3740,7 @@ extension Livekit_DataStream_Trailer.Builder {
         nonmutating set {
             // sorted for deterministic encoding (bytes-based Equatable)
             let entries = newValue.sorted { $0.key < $1.key }.map { pair in
-                Livekit_DataStream_Trailer_AttributesEntry.with { $0.key = pair.key; $0.value = pair.value }
+                Applooma_DataStream_Trailer_AttributesEntry.with { $0.key = pair.key; $0.value = pair.value }
             }
             var count = _pointer.pointee.attributes_count, base = _pointer.pointee.attributes
             lkSetRepeatedMessages(&count, &base, entries)
@@ -3750,7 +3750,7 @@ extension Livekit_DataStream_Trailer.Builder {
 
 }
 
-struct Livekit_DataStream_OperationType: NanopbEnum {
+struct Applooma_DataStream_OperationType: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -3761,7 +3761,7 @@ struct Livekit_DataStream_OperationType: NanopbEnum {
     static let reaction = Self(rawValue: 3)
 }
 
-struct Livekit_DataStream_CompressionType: NanopbEnum {
+struct Applooma_DataStream_CompressionType: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -3770,12 +3770,12 @@ struct Livekit_DataStream_CompressionType: NanopbEnum {
     static let deflateRaw = Self(rawValue: 1)
 }
 
-extension livekit_SubscribedAudioCodec: NanopbStorage {
-    package static var descriptor: pb_msgdesc_t { livekit_SubscribedAudioCodec_msg }
-    package static let _emptyBox = NanopbBox<livekit_SubscribedAudioCodec>(zero: livekit_SubscribedAudioCodec(), descriptor: livekit_SubscribedAudioCodec_msg)
+extension applooma_SubscribedAudioCodec: NanopbStorage {
+    package static var descriptor: pb_msgdesc_t { applooma_SubscribedAudioCodec_msg }
+    package static let _emptyBox = NanopbBox<applooma_SubscribedAudioCodec>(zero: applooma_SubscribedAudioCodec(), descriptor: applooma_SubscribedAudioCodec_msg)
 }
-typealias Livekit_SubscribedAudioCodec = NanopbMsg<livekit_SubscribedAudioCodec>
-extension Livekit_SubscribedAudioCodec {
+typealias Applooma_SubscribedAudioCodec = NanopbMsg<applooma_SubscribedAudioCodec>
+extension Applooma_SubscribedAudioCodec {
     var codec: String {
         lkString(_pointer.pointee.codec) ?? ""
     }
@@ -3788,7 +3788,7 @@ extension Livekit_SubscribedAudioCodec {
 
 }
 
-extension Livekit_SubscribedAudioCodec.Builder {
+extension Applooma_SubscribedAudioCodec.Builder {
     var codec: String {
         get { lkString(_pointer.pointee.codec) ?? "" }
         nonmutating set { lkSetString(&_pointer.pointee.codec, newValue) }
@@ -3801,7 +3801,7 @@ extension Livekit_SubscribedAudioCodec.Builder {
 
 }
 
-struct Livekit_BackupCodecPolicy: NanopbEnum {
+struct Applooma_BackupCodecPolicy: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -3811,7 +3811,7 @@ struct Livekit_BackupCodecPolicy: NanopbEnum {
     static let regression = Self(rawValue: 2)
 }
 
-struct Livekit_TrackType: NanopbEnum {
+struct Applooma_TrackType: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -3821,7 +3821,7 @@ struct Livekit_TrackType: NanopbEnum {
     static let data = Self(rawValue: 2)
 }
 
-struct Livekit_TrackSource: NanopbEnum {
+struct Applooma_TrackSource: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -3833,7 +3833,7 @@ struct Livekit_TrackSource: NanopbEnum {
     static let screenShareAudio = Self(rawValue: 4)
 }
 
-struct Livekit_VideoQuality: NanopbEnum {
+struct Applooma_VideoQuality: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -3844,7 +3844,7 @@ struct Livekit_VideoQuality: NanopbEnum {
     static let off = Self(rawValue: 3)
 }
 
-struct Livekit_ConnectionQuality: NanopbEnum {
+struct Applooma_ConnectionQuality: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -3855,7 +3855,7 @@ struct Livekit_ConnectionQuality: NanopbEnum {
     static let lost = Self(rawValue: 3)
 }
 
-struct Livekit_ClientConfigSetting: NanopbEnum {
+struct Applooma_ClientConfigSetting: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -3865,7 +3865,7 @@ struct Livekit_ClientConfigSetting: NanopbEnum {
     static let enabled = Self(rawValue: 2)
 }
 
-struct Livekit_DisconnectReason: NanopbEnum {
+struct Applooma_DisconnectReason: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -3889,7 +3889,7 @@ struct Livekit_DisconnectReason: NanopbEnum {
     static let agentError = Self(rawValue: 16)
 }
 
-struct Livekit_ReconnectReason: NanopbEnum {
+struct Applooma_ReconnectReason: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -3901,7 +3901,7 @@ struct Livekit_ReconnectReason: NanopbEnum {
     static let rrSwitchCandidate = Self(rawValue: 4)
 }
 
-struct Livekit_SubscriptionError: NanopbEnum {
+struct Applooma_SubscriptionError: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -3911,7 +3911,7 @@ struct Livekit_SubscriptionError: NanopbEnum {
     static let seTrackNotfound = Self(rawValue: 2)
 }
 
-struct Livekit_AudioTrackFeature: NanopbEnum {
+struct Applooma_AudioTrackFeature: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }
@@ -3925,7 +3925,7 @@ struct Livekit_AudioTrackFeature: NanopbEnum {
     static let tfPreconnectBuffer = Self(rawValue: 6)
 }
 
-struct Livekit_PacketTrailerFeature: NanopbEnum {
+struct Applooma_PacketTrailerFeature: NanopbEnum {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
     init() { self.init(rawValue: 0) }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -322,16 +322,16 @@ extension E2EEManager {
         guard let room = _room,
               let identity = room.localParticipant.identity?.stringValue
         else {
-            throw LiveKitError(.invalidState, message: "Room or participant identity is nil")
+            throw TransportError(.invalidState, message: "Room or participant identity is nil")
         }
 
         guard let cryptor = _state.dataCryptor else {
-            throw LiveKitError(.invalidState, message: "Cryptor is nil")
+            throw TransportError(.invalidState, message: "Cryptor is nil")
         }
 
         let keyIndex = UInt32(keyProvider.getCurrentKeyIndex())
         guard let encryptedData = cryptor.encrypt(identity, keyIndex: keyIndex, data: data) else {
-            throw LiveKitError(.encryptionFailed, message: "Failed to encrypt data packet")
+            throw TransportError(.encryptionFailed, message: "Failed to encrypt data packet")
         }
 
         return encryptedData
@@ -339,11 +339,11 @@ extension E2EEManager {
 
     func handle(encryptedData: LKRTCEncryptedPacket, participantIdentity: String) throws -> Data {
         guard let cryptor = _state.dataCryptor else {
-            throw LiveKitError(.invalidState, message: "Cryptor is nil")
+            throw TransportError(.invalidState, message: "Cryptor is nil")
         }
 
         guard let decryptedData = cryptor.decrypt(participantIdentity, encryptedPacket: encryptedData) else {
-            throw LiveKitError(.decryptionFailed, message: "Failed to decrypt data packet")
+            throw TransportError(.decryptionFailed, message: "Failed to decrypt data packet")
         }
 
         return decryptedData

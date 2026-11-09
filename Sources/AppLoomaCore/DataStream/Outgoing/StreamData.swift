@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ extension Data: StreamData {
 extension String: StreamData {
     /// Chunk along valid UTF-8 bounderies.
     ///
-    /// Uses the same algorithm as in the LiveKit JS SDK.
+    /// Uses the same algorithm as in the the transport JS SDK.
     ///
     func chunks(of size: Int) -> [Data] {
         guard size > 0, !isEmpty else { return [] }

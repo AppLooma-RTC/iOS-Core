@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,7 +96,7 @@ public class ParticipantPermissions: NSObject, @unchecked Sendable {
     }
 }
 
-extension Livekit_ParticipantPermission {
+extension Applooma_ParticipantPermission {
     func toLKType() -> ParticipantPermissions {
         ParticipantPermissions(canSubscribe: canSubscribe,
                                canPublish: canPublish,

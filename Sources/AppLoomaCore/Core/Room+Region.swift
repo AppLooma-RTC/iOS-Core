@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,16 +52,16 @@ extension Room {
     // prepareConnection should be called as soon as the page is loaded, in order
     // to speed up the connection attempt.
     //
-    // With LiveKit Cloud, it will also determine the best edge data center for
+    // With the hosted media service, it will also determine the best edge data center for
     // the current client to connect to if a token is provided.
     public func prepareConnection(url providedUrlString: String, token: String? = nil) async throws {
         // Must be in disconnected state.
         guard _state.connectionState == .disconnected else {
-            throw LiveKitError(.stateMismatch, message: "Cannot prepare connection when in state \(_state.connectionState)")
+            throw TransportError(.stateMismatch, message: "Cannot prepare connection when in state \(_state.connectionState)")
         }
 
         guard let providedUrl = URL(string: providedUrlString), providedUrl.isValidForConnect else {
-            throw LiveKitError(.failedToParseUrl, message: "Invalid URL: \(providedUrlString)")
+            throw TransportError(.failedToParseUrl, message: "Invalid URL: \(providedUrlString)")
         }
 
         log("Preparing connection to \(providedUrlString)")
@@ -117,7 +117,7 @@ extension Room {
         }
     }
 
-    /// Connects using LiveKit Cloud region settings and fails over across regions on retryable errors.
+    /// Connects using the hosted media service region settings and fails over across regions on retryable errors.
     func connectWithCloudRegionFailover(
         regionManager: RegionManager,
         initialUrl: URL,
@@ -137,9 +137,9 @@ extension Room {
                     throw error
                 }
 
-                if let liveKitError = error as? LiveKitError, liveKitError.type == .validation {
+                if let transportError = error as? TransportError, transportError.type == .validation {
                     // Don't retry other regions for validation errors.
-                    throw liveKitError
+                    throw transportError
                 }
 
                 guard error.isRetryableForRegionFailover else {

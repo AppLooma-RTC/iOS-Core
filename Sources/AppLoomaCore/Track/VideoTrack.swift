@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ protocol VideoTrackInternal where Self: Track {
 extension VideoTrackProtocol where Self: Track {
     // Update a single SubscribedCodec
     @RTC
-    func _set(subscribedCodec: Livekit_SubscribedCodec) throws -> Bool {
+    func _set(subscribedCodec: Applooma_SubscribedCodec) throws -> Bool {
         guard let videoCodec = VideoCodec.from(name: subscribedCodec.codec) else { return false }
 
         // Check if main sender is sending the codec...
@@ -59,8 +59,8 @@ extension VideoTrackProtocol where Self: Track {
 
     // Update an array of SubscribedCodecs
     @RTC
-    func _set(subscribedCodecs: [Livekit_SubscribedCodec]) throws -> [Livekit_SubscribedCodec] {
-        var missingCodecs: [Livekit_SubscribedCodec] = []
+    func _set(subscribedCodecs: [Applooma_SubscribedCodec]) throws -> [Applooma_SubscribedCodec] {
+        var missingCodecs: [Applooma_SubscribedCodec] = []
 
         for subscribedCodec in subscribedCodecs {
             let didUpdate = try _set(subscribedCodec: subscribedCodec)

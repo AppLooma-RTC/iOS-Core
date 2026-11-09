@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public extension AudioManager {
     static func set(audioDeviceModuleType: AudioDeviceModuleType) throws {
         // Throw if pc factory is already initialized.
         guard !RTC.pcFactoryState.isInitialized else {
-            throw LiveKitError(.invalidState, message: "Cannot set this property after the peer connection has been initialized")
+            throw TransportError(.invalidState, message: "Cannot set this property after the peer connection has been initialized")
         }
         RTC.pcFactoryState.mutate { $0.admType = audioDeviceModuleType }
     }

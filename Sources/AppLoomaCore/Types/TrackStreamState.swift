@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ public enum StreamState: Int, Sendable {
     case active
 }
 
-extension Livekit_StreamState {
+extension Applooma_StreamState {
     func toLKType() -> StreamState {
         switch self {
         case .active: .active

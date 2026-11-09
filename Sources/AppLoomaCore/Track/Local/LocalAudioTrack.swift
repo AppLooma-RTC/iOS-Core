@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -151,7 +151,7 @@ public class LocalAudioTrack: Track, LocalTrackProtocol, AudioTrackProtocol, @un
             !AudioManager.shared.isManualRenderingMode && AudioManager.shared.engineAvailability.isInputAvailable
         }
         if needsMicrophonePermission {
-            try await LiveKitSDK.ensureMicrophoneAccessForRecording()
+            try await TransportSDK.ensureMicrophoneAccessForRecording()
         }
         // AudioDeviceModule's InitRecording() and StartRecording() automatically get called by WebRTC, but
         // explicitly init & start it early to detect audio engine failures (mic not accessible for some reason, etc.).

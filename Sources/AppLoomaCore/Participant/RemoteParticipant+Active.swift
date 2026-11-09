@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ public extension RemoteParticipant {
     ///
     /// - Parameters:
     ///   - timeout: The timeout for the operation.
-    /// - Throws: `LiveKitError` if the participant is not active within the timeout.
+    /// - Throws: `TransportError` if the participant is not active within the timeout.
     @discardableResult
     func waitUntilActive(timeout: TimeInterval = .defaultParticipantActiveTimeout) async throws -> Self {
         let room = try requireRoom()
@@ -36,7 +36,7 @@ public extension Collection<RemoteParticipant> {
     ///
     /// - Parameters:
     ///   - timeout: The timeout for the operation.
-    /// - Throws: `LiveKitError` if the participants are not active within the timeout.
+    /// - Throws: `TransportError` if the participants are not active within the timeout.
     @discardableResult
     func waitUntilAllActive(timeout: TimeInterval = .defaultParticipantActiveTimeout) async throws -> Self {
         try await withThrowingTaskGroup { group in
@@ -54,7 +54,7 @@ public extension Collection<RemoteParticipant> {
     ///
     /// - Parameters:
     ///   - timeout: The timeout for the operation.
-    /// - Throws: `LiveKitError` if no participant is active within the timeout.
+    /// - Throws: `TransportError` if no participant is active within the timeout.
     @discardableResult
     func waitUntilAnyActive(timeout: TimeInterval = .defaultParticipantActiveTimeout) async throws -> Self {
         try await withThrowingTaskGroup { group in

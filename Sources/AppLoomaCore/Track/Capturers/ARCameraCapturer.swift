@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class ARCameraCapturer: VideoCapturer, @unchecked Sendable {
         guard let format = CameraVideoFormat.supportedVideoFormats(for: .main, cameraPositions: [.left]).first,
               let frameUpdates = cameraFrameProvider.cameraFrameUpdates(for: format)
         else {
-            throw LiveKitError(.invalidState)
+            throw TransportError(.invalidState)
         }
 
         captureTask = Task.detached { [weak self] in
@@ -66,14 +66,14 @@ public class ARCameraCapturer: VideoCapturer, @unchecked Sendable {
     private func ensureCameraAccessAuthorized() async throws {
         let queryResult = await arKitSession.queryAuthorization(for: [.cameraAccess])
         switch queryResult[.cameraAccess] {
-        case .denied: throw LiveKitError(.deviceAccessDenied)
+        case .denied: throw TransportError(.deviceAccessDenied)
         case .notDetermined:
             let requestResult = await arKitSession.requestAuthorization(for: [.cameraAccess])
             if requestResult[.cameraAccess] != .allowed {
-                throw LiveKitError(.deviceAccessDenied)
+                throw TransportError(.deviceAccessDenied)
             }
         case .allowed: return
-        default: throw LiveKitError(.deviceAccessDenied)
+        default: throw TransportError(.deviceAccessDenied)
         }
     }
 

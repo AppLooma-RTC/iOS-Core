@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public class MacOSScreenCapturer: VideoCapturer, @unchecked Sendable {
 
         guard let captureSource else {
             log("captureSource is nil", .error)
-            throw LiveKitError(.invalidState, message: "captureSource is nil")
+            throw TransportError(.invalidState, message: "captureSource is nil")
         }
 
         let filter: SCContentFilter
@@ -86,7 +86,7 @@ public class MacOSScreenCapturer: VideoCapturer, @unchecked Sendable {
             filter = SCContentFilter(display: nativeDisplay, including: includedApps, exceptingWindows: excludedWindows)
         } else {
             log("Unable to resolve SCContentFilter", .error)
-            throw LiveKitError(.invalidState, message: "Unable to resolve SCContentFilter")
+            throw TransportError(.invalidState, message: "Unable to resolve SCContentFilter")
         }
 
         let configuration = SCStreamConfiguration()
@@ -132,7 +132,7 @@ public class MacOSScreenCapturer: VideoCapturer, @unchecked Sendable {
         guard didStop else { return false }
 
         guard let stream = _screenCapturerState.read({ $0.scStream }) else {
-            throw LiveKitError(.invalidState, message: "SCStream is nil")
+            throw TransportError(.invalidState, message: "SCStream is nil")
         }
 
         // Stop resending paused frames
@@ -453,7 +453,7 @@ public extension MacOSWindow {
 
 @available(macOS 12.3, *)
 public extension MacOSScreenCapturer {
-    internal static let queue = DispatchQueue(label: "LiveKitSDK.MacOSScreenCapturer.sources", qos: .default)
+    internal static let queue = DispatchQueue(label: "TransportSDK.MacOSScreenCapturer.sources", qos: .default)
 
     /// Convenience method to get a ``MacOSDisplay`` of the main display.
     @objc
@@ -461,7 +461,7 @@ public extension MacOSScreenCapturer {
         let displaySources = try await sources(for: .display)
 
         guard let source = displaySources.compactMap({ $0 as? MacOSDisplay }).first(where: { $0.displayID == CGMainDisplayID() }) else {
-            throw LiveKitError(.invalidState, message: "Main display source not found")
+            throw TransportError(.invalidState, message: "Main display source not found")
         }
 
         return source

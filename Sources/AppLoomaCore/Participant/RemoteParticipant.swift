@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public class RemoteParticipant: Participant, @unchecked Sendable {
         _state.dataTracks.reduce(into: [:]) { $0[$1.name] = $1 }
     }
 
-    init(info: Livekit_ParticipantInfo, room: Room, connectionState: ConnectionState) {
+    init(info: Applooma_ParticipantInfo, room: Room, connectionState: ConnectionState) {
         super.init(room: room, sid: Participant.Sid(from: info.sid), identity: Participant.Identity(from: info.identity))
         set(info: info, connectionState: connectionState)
     }
@@ -61,7 +61,7 @@ public class RemoteParticipant: Participant, @unchecked Sendable {
         _state.mutate { $0.dataTracks = [] }
     }
 
-    override func set(info: Livekit_ParticipantInfo, connectionState: ConnectionState) {
+    override func set(info: Applooma_ParticipantInfo, connectionState: ConnectionState) {
         super.set(info: info, connectionState: connectionState)
 
         var validTrackPublications = [Track.Sid: RemoteTrackPublication]()
@@ -111,8 +111,8 @@ public class RemoteParticipant: Participant, @unchecked Sendable {
         }
     }
 
-    private func notifyDidFailToSubscribe(trackSid: Track.Sid, room: Room, message: String) -> LiveKitError {
-        let error = LiveKitError(.invalidState, message: message)
+    private func notifyDidFailToSubscribe(trackSid: Track.Sid, room: Room, message: String) -> TransportError {
+        let error = TransportError(.invalidState, message: message)
         delegates.notify(label: { "participant.didFailToSubscribe trackSid: \(trackSid)" }) {
             $0.participant?(self, didFailToSubscribeTrackWithSid: trackSid, error: error)
         }

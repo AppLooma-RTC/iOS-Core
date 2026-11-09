@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import Network
 /// A communication channel between two processes on the same machine.
 final class IPCChannel: Sendable {
     fileprivate static let restartDelay: TimeInterval = 0.1
-    fileprivate static let queue = DispatchQueue(label: "io.livekit.ipc.queue", qos: .userInitiated)
+    fileprivate static let queue = DispatchQueue(label: "com.applooma.rtc.ipc.queue", qos: .userInitiated)
 
     private static let defaultParameters = {
         let parameters = NWParameters.tcp

@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,11 +54,11 @@ class HTTP: NSObject {
             // 404 is reported separately so the v1 → v0 RTC path fallback can
             // distinguish "endpoint doesn't exist" from other client errors.
             if (400 ..< 500).contains(statusCode), statusCode != 429 {
-                throw LiveKitError(statusCode == 404 ? .serviceNotFound : .validation, message: details)
+                throw TransportError(statusCode == 404 ? .serviceNotFound : .validation, message: details)
             }
 
             // Treat server/rate-limit issues as network errors.
-            throw LiveKitError(.network, message: "Validation endpoint error: \(details)")
+            throw TransportError(.network, message: "Validation endpoint error: \(details)")
         }
     }
 

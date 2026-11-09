@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import Foundation
 
-extension Livekit_TrackSource {
+extension Applooma_TrackSource {
     func toLKType() -> Track.Source {
         switch self {
         case .camera: .camera
@@ -29,7 +29,7 @@ extension Livekit_TrackSource {
 }
 
 extension Track.Source {
-    func toPBType() -> Livekit_TrackSource {
+    func toPBType() -> Applooma_TrackSource {
         switch self {
         case .camera: .camera
         case .microphone: .microphone

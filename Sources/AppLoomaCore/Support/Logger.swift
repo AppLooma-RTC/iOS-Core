@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -114,9 +114,9 @@ public struct PrintLogger: Logger {
 /// - Parameter rtc: Whether to log WebRTC output
 /// - Parameter ffi: Whether to log Rust FFI output
 open class OSLogger: Logger, @unchecked Sendable {
-    private static let subsystem = "io.livekit.sdk"
+    private static let subsystem = "com.applooma.rtc.sdk"
 
-    private let queue = DispatchQueue(label: "io.livekit.oslogger", qos: .utility)
+    private let queue = DispatchQueue(label: "com.applooma.rtc.oslogger", qos: .utility)
     private var logs: [String: OSLog] = [:]
 
     private lazy var rtcLogger = LKRTCCallbackLogger()

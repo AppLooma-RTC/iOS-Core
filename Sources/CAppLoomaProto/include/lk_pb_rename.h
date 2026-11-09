@@ -1,6 +1,6 @@
 /*
  * Renames every external symbol of the vendored nanopb runtime to an lk_
- * prefix. Included from lk_pb_config.h (reached via pb.h's marked LiveKit
+ * prefix. Included from lk_pb_config.h (reached via pb.h's marked the transport
  * block), so every translation unit (runtime .c, generated .c, and the Swift
  * importer) sees the same renamed declarations.
  *

@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ actor RpcClientManager: Loggable {
     /// Hook fired once after the RPC request has been published but before the caller
     /// starts waiting on the completer. Receives the freshly-generated `requestId` so
     /// a caller can simulate a fast remote ack/response that races the wait. Used by
-    /// tests (reachable via `@testable import LiveKit`).
+    /// tests (reachable via `@testable import the transport`).
     var afterPublish: (@Sendable (String) async -> Void)?
 
     func attach(to room: Room) {
@@ -120,12 +120,12 @@ actor RpcClientManager: Loggable {
         do {
             return try await completer.wait()
         } catch {
-            // AsyncCompleter signals its own `defaultTimeout` expiry with `LiveKitError(.timedOut)`.
+            // AsyncCompleter signals its own `defaultTimeout` expiry with `TransportError(.timedOut)`.
             // That path means "we got the ack (or the ack-watchdog hasn't fired yet) but the
             // user-supplied `responseTimeout` elapsed without a response" → `responseTimeout`
             // (1502). The ack-watchdog path resolves the completer directly with
             // `connectionTimeout` (1501) and falls through the `throw error` branch.
-            if let error = error as? LiveKitError, error.type == .timedOut {
+            if let error = error as? TransportError, error.type == .timedOut {
                 throw RpcError.builtIn(.responseTimeout)
             }
             throw error
@@ -275,10 +275,10 @@ actor RpcClientManager: Loggable {
             throw RpcError.builtIn(.requestPayloadTooLarge)
         }
 
-        let dataPacket = Livekit_DataPacket.with {
+        let dataPacket = Applooma_DataPacket.with {
             $0.destinationIdentities = [destinationIdentity.stringValue]
             $0.kind = .reliable
-            $0.rpcRequest = Livekit_RpcRequest.with {
+            $0.rpcRequest = Applooma_RpcRequest.with {
                 $0.id = requestId
                 $0.method = method
                 $0.payload = payload
@@ -316,7 +316,7 @@ actor RpcClientManager: Loggable {
     // MARK: - Helpers
 
     private func requireRoom() throws -> Room {
-        guard let room else { throw LiveKitError(.invalidState, message: "Room is nil") }
+        guard let room else { throw TransportError(.invalidState, message: "Room is nil") }
         return room
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,16 @@ import Foundation
 
 /// The open source platform for real-time communication.
 ///
-/// See [LiveKit's Online Docs](https://docs.livekit.io/) for more information.
+/// See [the transport's Online Docs](https://docs.applooma.dev/) for more information.
 ///
 /// Comments are written in [DocC](https://developer.apple.com/documentation/docc) compatible format.
 /// With Xcode 13 and above you can build documentation right into your Xcode documentation viewer by chosing
 /// **Product** >  **Build Documentation** from Xcode's menu.
 ///
-/// Download the [Multiplatform SwiftUI Example](https://github.com/livekit/multiplatform-swiftui-example)
+/// Download the [Multiplatform SwiftUI Example](https://docs.applooma.dev/)
 /// to try out the features.
 @objcMembers
-public class LiveKitSDK: NSObject, Loggable {
+public class TransportSDK: NSObject, Loggable {
     override private init() {}
 
     @objc(sdkVersion)
@@ -89,7 +89,7 @@ public class LiveKitSDK: NSObject, Loggable {
 }
 
 // Lazily initialized to the first logger
-let sharedLogger = LiveKitSDK.state.logger
+let sharedLogger = TransportSDK.state.logger
 
 // Lazily initialized to the first tracing
-let sharedTracing = LiveKitSDK.state.tracing
+let sharedTracing = TransportSDK.state.tracing

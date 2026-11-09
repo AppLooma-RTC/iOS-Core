@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ final class SendToken: @unchecked Sendable {
     }
 
     deinit {
-        continuation?.resume(throwing: LiveKitError(.cancelled, message: "Write dropped without settlement"))
+        continuation?.resume(throwing: TransportError(.cancelled, message: "Write dropped without settlement"))
     }
 }
 
@@ -149,7 +149,7 @@ func makeWrites(
 
     for (index, bytes) in prepared.enumerated() {
         if maxMessageSize != 0, UInt64(bytes.bytes.count) > maxMessageSize {
-            throw LiveKitError(
+            throw TransportError(
                 .invalidParameter,
                 message: "data packet size (\(bytes.bytes.count) bytes) exceeds the negotiated max-message-size (\(maxMessageSize) bytes)",
             )

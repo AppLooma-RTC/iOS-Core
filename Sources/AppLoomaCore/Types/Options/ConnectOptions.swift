@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public final class ConnectOptions: NSObject, Sendable {
     /// Enable microphone concurrently while connecting.
     public let enableMicrophone: Bool
 
-    /// LiveKit server protocol version to use. Generally, it's not recommended to change this.
+    /// media server protocol version to use. Generally, it's not recommended to change this.
     public let protocolVersion: ProtocolVersion
 
     /// Client-to-client protocol version advertised to other participants.

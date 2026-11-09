@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 import Combine
 import Foundation
 
-/// A ``Session`` represents a connection to a LiveKit Room that can contain an ``Agent``.
+/// A ``Session`` represents a connection to a the transport Room that can contain an ``Agent``.
 ///
-/// ``Session`` is the main entry point for interacting with a LiveKit agent. It encapsulates
-/// the connection to a LiveKit ``Room``, manages the agent's lifecycle, and handles
+/// ``Session`` is the main entry point for interacting with a the transport agent. It encapsulates
+/// the connection to a the transport ``Room``, manages the agent's lifecycle, and handles
 /// communication between the user and the agent.
 ///
 /// ``Session`` is created with a token source and optional configuration. The ``start()``
@@ -49,8 +49,8 @@ import Foundation
 /// ``SessionOptions/init(room:preConnectAudio:agentConnectTimeout:)``. Use
 /// ``setEncryptionEnabled(_:)`` to toggle encryption at runtime.
 ///
-/// - SeeAlso: [LiveKit SwiftUI Agent Starter](https://github.com/livekit-examples/agent-starter-swift).
-/// - SeeAlso: [LiveKit Agents documentation](https://docs.livekit.io/agents/).
+/// - SeeAlso: [the transport SwiftUI Agent Starter](https://docs.applooma.dev/).
+/// - SeeAlso: [the transport Agents documentation](https://docs.applooma.dev/).
 @MainActor
 open class Session: ObservableObject {
     private static let agentNameAttribute = "lk.agent_name"

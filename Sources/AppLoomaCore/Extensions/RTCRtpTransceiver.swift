@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ extension LKRTCRtpTransceiver: Loggable {
         do {
             try setCodecPreferences(combinedCapabilities, error: ())
         } catch {
-            throw LiveKitError(.webRTC, message: "Failed to set codec preferences", internalError: error)
+            throw TransportError(.webRTC, message: "Failed to set codec preferences", internalError: error)
         }
 
         log("codecPreferences set: \(codecPreferences.map { String(describing: $0) }.joined(separator: ", "))")

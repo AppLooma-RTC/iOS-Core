@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ final class JoinDependencies: Sendable {
     /// hand-off of the data track channel to the connection-scoped subsystem.
     static func make(room: Room,
                      connection: ConnectionDependencies,
-                     joinResponse: Livekit_JoinResponse,
+                     joinResponse: Applooma_JoinResponse,
                      rtcConfiguration: LKRTCConfiguration,
                      singlePeerConnection: Bool) async throws -> JoinDependencies
     {
@@ -186,7 +186,7 @@ extension DependencyStage {
     /// `cleanUp()` must have retired it first.
     mutating func begin(_ connection: ConnectionDependencies) throws {
         guard case .idle = self else {
-            throw LiveKitError(.invalidState, message: "Cannot begin a connection while one is staged")
+            throw TransportError(.invalidState, message: "Cannot begin a connection while one is staged")
         }
         self = .connecting(connection)
     }
@@ -195,7 +195,7 @@ extension DependencyStage {
     /// against a retired connection.
     mutating func join(_ join: JoinDependencies) throws {
         guard case let .connecting(connection) = self, join.connection === connection else {
-            throw LiveKitError(.invalidState, message: "JOIN is only valid for the currently connecting connection")
+            throw TransportError(.invalidState, message: "JOIN is only valid for the currently connecting connection")
         }
         self = .connected(join)
     }

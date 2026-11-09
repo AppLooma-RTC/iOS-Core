@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public extension Room {
     /// ```
     ///
     /// - See: ``PreConnectAudioBuffer``
-    /// - Important: Requires microphone permission. It is requested automatically while the app is active, so call this once the app has become active and the system prompt can appear. At app launch the scene may not be active yet, so when calling this early, request permission first with ``LiveKitSDK/ensureDeviceAccess(for:)``. Otherwise it throws ``LiveKitError`` of type ``LiveKitErrorType/deviceAccessDenied``.
+    /// - Important: Requires microphone permission. It is requested automatically while the app is active, so call this once the app has become active and the system prompt can appear. At app launch the scene may not be active yet, so when calling this early, request permission first with ``TransportSDK/ensureDeviceAccess(for:)``. Otherwise it throws ``TransportError`` of type ``TransportErrorType/deviceAccessDenied``.
     ///
     func withPreConnectAudio<T>(timeout: TimeInterval = PreConnectAudioBuffer.Constants.timeout,
                                 _ operation: @Sendable @escaping () async throws -> T,

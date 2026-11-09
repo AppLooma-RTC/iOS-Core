@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class RegionInfo: NSObject, @unchecked Sendable {
     }
 }
 
-extension Livekit_RegionInfo {
+extension Applooma_RegionInfo {
     func toLKType() -> RegionInfo? {
         RegionInfo(region: region,
                    url: url,

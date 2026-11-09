@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,7 +147,7 @@ class Utils: Loggable {
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
 
         guard var builder = components else {
-            throw LiveKitError(.failedToParseUrl)
+            throw TransportError(.failedToParseUrl)
         }
 
         let wsScheme = url.isSecure ? "wss" : "ws"
@@ -173,7 +173,7 @@ class Utils: Loggable {
         var queryItems = [
             URLQueryItem(name: "protocol", value: connectOptions.protocolVersion.description),
             URLQueryItem(name: "sdk", value: "swift"),
-            URLQueryItem(name: "version", value: LiveKitSDK.version),
+            URLQueryItem(name: "version", value: TransportSDK.version),
             URLQueryItem(name: "client_protocol", value: String(connectOptions.clientProtocol.rawValue)),
             // Additional client info
             URLQueryItem(name: "os", value: String(describing: os())),
@@ -202,7 +202,7 @@ class Utils: Loggable {
         builder.queryItems = queryItems
 
         guard let result = builder.url else {
-            throw LiveKitError(.failedToParseUrl)
+            throw TransportError(.failedToParseUrl)
         }
 
         return result
@@ -218,7 +218,7 @@ class Utils: Loggable {
         let connectOptions = connectOptions ?? ConnectOptions()
 
         guard var builder = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-            throw LiveKitError(.failedToParseUrl)
+            throw TransportError(.failedToParseUrl)
         }
 
         let wsScheme = url.isSecure ? "wss" : "ws"
@@ -244,7 +244,7 @@ class Utils: Loggable {
         builder.queryItems = [URLQueryItem(name: "join_request", value: encoded)]
 
         guard let result = builder.url else {
-            throw LiveKitError(.failedToParseUrl)
+            throw TransportError(.failedToParseUrl)
         }
 
         return result
@@ -255,14 +255,14 @@ class Utils: Loggable {
     /// - `wss://host/rtc/v1?...` → `https://host/rtc/v1/validate?...`
     static func toValidateUrl(_ wsUrl: URL) throws -> URL {
         guard var components = URLComponents(url: wsUrl, resolvingAgainstBaseURL: false) else {
-            throw LiveKitError(.failedToParseUrl)
+            throw TransportError(.failedToParseUrl)
         }
         components.scheme = components.scheme == "wss" ? "https" : "http"
         components.path = components.path.hasSuffix("/")
             ? components.path + "validate"
             : components.path + "/validate"
         guard let result = components.url else {
-            throw LiveKitError(.failedToParseUrl)
+            throw TransportError(.failedToParseUrl)
         }
         return result
     }
@@ -273,10 +273,10 @@ class Utils: Loggable {
         participantSid: Participant.Sid?,
         adaptiveStream: Bool,
     ) throws -> String {
-        let joinRequest = Livekit_JoinRequest.with { request in
-            request.clientInfo = Livekit_ClientInfo.with {
+        let joinRequest = Applooma_JoinRequest.with { request in
+            request.clientInfo = Applooma_ClientInfo.with {
                 $0.sdk = .swift
-                $0.version = LiveKitSDK.version
+                $0.version = TransportSDK.version
                 $0.protocol = Int32(connectOptions.protocolVersion.rawValue)
                 $0.clientProtocol = Int32(connectOptions.clientProtocol.rawValue)
                 $0.os = String(describing: os())
@@ -284,7 +284,7 @@ class Utils: Loggable {
                 if let model = modelIdentifier() { $0.deviceModel = model }
                 if let network = networkTypeString() { $0.network = network }
             }
-            request.connectionSettings = Livekit_ConnectionSettings.with {
+            request.connectionSettings = Applooma_ConnectionSettings.with {
                 $0.autoSubscribe = connectOptions.autoSubscribe
                 $0.adaptiveStream = adaptiveStream
             }
@@ -305,14 +305,14 @@ class Utils: Loggable {
         // handshake even starts on a lossy link. Mirrors client-sdk-js and
         // rust-sdks: gzip, but keep the compressed form only when it is actually
         // smaller — gzip framing exceeds the savings on a small request.
-        let (payload, compression): (Data, Livekit_WrappedJoinRequest_Compression) =
+        let (payload, compression): (Data, Applooma_WrappedJoinRequest_Compression) =
             if let compressed = Gzip.compress(joinRequestData), compressed.count < joinRequestData.count {
                 (compressed, .gzip)
             } else {
                 (joinRequestData, .none)
             }
 
-        let wrappedData = try Livekit_WrappedJoinRequest.with {
+        let wrappedData = try Applooma_WrappedJoinRequest.with {
             $0.compression = compression
             $0.joinRequest = payload
         }.serializedData()

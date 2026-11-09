@@ -4,19 +4,19 @@
 // one generic NanopbMsg<Storage> — this file adds only a storage
 // conformance, a typealias and the field accessors, so the schema
 // contributes no Swift types of its own. Mutation goes through the
-// noncopyable Builder. See Sources/LiveKitNanopb.
+// noncopyable Builder. See Sources/AppLoomaNanopb.
 
 import Foundation
 
 // Single-module builds compile these sources into the product directly:
 // CocoaPods surfaces the C declarations through the umbrella header, while
-// the prebuilt xcframework resolves CLiveKitProto via its modulemap — the
+// the prebuilt xcframework resolves CAppLoomaProto via its modulemap — the
 // internal import keeps it out of the emitted .swiftinterface.
 #if LK_XCFRAMEWORK
-package import CLiveKitProto
+package import CAppLoomaProto
 #elseif !COCOAPODS
-import CLiveKitProto
-import LiveKitNanopb
+import CAppLoomaProto
+import AppLoomaNanopb
 #endif
 
 extension google_protobuf_Timestamp: NanopbStorage {

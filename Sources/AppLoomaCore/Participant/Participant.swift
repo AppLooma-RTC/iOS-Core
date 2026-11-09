@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 #if !COCOAPODS && !LK_XCFRAMEWORK
-import LiveKitNanopb
+import AppLoomaNanopb
 #endif
 import Combine
 import Foundation
@@ -74,7 +74,7 @@ public class Participant: NSObject, @unchecked Sendable, ObservableObject, Logga
         _state.trackPublications.values.filter { $0.kind == .video }
     }
 
-    var info: Livekit_ParticipantInfo?
+    var info: Applooma_ParticipantInfo?
 
     // Reference to the Room this Participant belongs to
     weak var _room: Room?
@@ -189,7 +189,7 @@ public class Participant: NSObject, @unchecked Sendable, ObservableObject, Logga
                     }
                 } else if oldState.state == .active, newState.state != .active {
                     Task {
-                        await room.activeParticipantCompleters.resume(throwing: LiveKitError(.participantRemoved, message: "Participant removed \(identity)"), for: identity)
+                        await room.activeParticipantCompleters.resume(throwing: TransportError(.participantRemoved, message: "Participant removed \(identity)"), for: identity)
                     }
                 }
             }
@@ -239,7 +239,7 @@ public class Participant: NSObject, @unchecked Sendable, ObservableObject, Logga
         publication.track?._state.mutate { $0.sid = publication.sid }
     }
 
-    func set(info: Livekit_ParticipantInfo, connectionState _: ConnectionState) {
+    func set(info: Applooma_ParticipantInfo, connectionState _: ConnectionState) {
         _state.mutate {
             $0.sid = Sid(from: info.sid)
             $0.identity = Identity(from: info.identity)
@@ -264,7 +264,7 @@ public class Participant: NSObject, @unchecked Sendable, ObservableObject, Logga
         set(permissions: info.permission.toLKType())
     }
 
-    func set(enabledPublishCodecs codecs: [Livekit_Codec]) {
+    func set(enabledPublishCodecs codecs: [Applooma_Codec]) {
         log("enabledPublishCodecs: \(codecs.map(\.mime).joined(separator: ", "))")
         _internalState.mutate {
             $0.enabledPublishVideoCodecs = codecs.map { VideoCodec.from(mimeType: $0.mime) }.compactMap(\.self)
@@ -331,7 +331,7 @@ extension Participant {
     func requireRoom() throws -> Room {
         guard let room = _room else {
             log("Room is nil", .error)
-            throw LiveKitError(.invalidState, message: "Room is nil")
+            throw TransportError(.invalidState, message: "Room is nil")
         }
 
         return room
@@ -340,7 +340,7 @@ extension Participant {
     func requireIdentity() throws -> Participant.Identity {
         guard let identity else {
             log("Identity is nil", .error)
-            throw LiveKitError(.invalidState, message: "Identity is nil")
+            throw TransportError(.invalidState, message: "Identity is nil")
         }
 
         return identity

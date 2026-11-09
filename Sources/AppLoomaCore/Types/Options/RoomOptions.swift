@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public final class RoomOptions: NSObject, Sendable, Loggable {
 
     public let defaultDataPublishOptions: DataPublishOptions
 
-    /// AdaptiveStream lets LiveKit automatically manage quality of subscribed
+    /// AdaptiveStream lets the transport automatically manage quality of subscribed
     /// video tracks to optimize for bandwidth and CPU.
     /// When attached video elements are visible, it'll choose an appropriate
     /// resolution based on the size of largest video element it's attached to.
@@ -62,7 +62,7 @@ public final class RoomOptions: NSObject, Sendable, Loggable {
 
     /// Use a single peer connection for both publishing and subscribing.
     ///
-    /// - Note: Requires LiveKit Cloud or LiveKit OSS >= 1.9.2.
+    /// - Note: Requires the hosted media service or the transport OSS >= 1.9.2.
     public let singlePeerConnection: Bool
 
     override public init() {

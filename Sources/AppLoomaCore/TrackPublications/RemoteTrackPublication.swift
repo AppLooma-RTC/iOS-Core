@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class RemoteTrackPublication: TrackPublication, @unchecked Sendable {
     // this must be on .main queue
     private var _asTimer = AsyncTimer(interval: 0.3)
 
-    override func updateFromInfo(info: Livekit_TrackInfo) {
+    override func updateFromInfo(info: Applooma_TrackInfo) {
         super.updateFromInfo(info: info)
         track?.set(muted: info.muted)
         set(metadataMuted: info.muted)
@@ -212,7 +212,7 @@ private extension RemoteTrackPublication {
     func checkUserCanModifyTrackSettings() async throws {
         // adaptiveStream must be disabled and must be subscribed
         if isAdaptiveStreamEnabled || !isSubscribed {
-            throw LiveKitError(.invalidState, message: "adaptiveStream must be disabled and track must be subscribed")
+            throw TransportError(.invalidState, message: "adaptiveStream must be disabled and track must be subscribed")
         }
     }
 }
@@ -277,7 +277,7 @@ extension RemoteTrackPublication {
         if state.isSendingTrackSettings {
             log("send(trackSettings:) called while previous send not completed", .error)
             // Previous send hasn't completed yet...
-            throw LiveKitError(.invalidState, message: "Already busy sending new track settings")
+            throw TransportError(.invalidState, message: "Already busy sending new track settings")
         }
 
         // update state

@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,7 +118,7 @@ public class AudioSessionEngineObserver: AudioEngineObserver, Loggable, @uncheck
     /// (e.g., ``SoundPlayer``) that need playout or recording independently
     /// of the WebRTC engine lifecycle.
     ///
-    /// - Throws: ``LiveKitError`` if the audio session fails to configure or activate.
+    /// - Throws: ``TransportError`` if the audio session fails to configure or activate.
     public func acquire(requirement: SessionRequirement) throws -> SessionRequirementHandle {
         let id = UUID()
         try set(requirement: requirement, for: id)
@@ -165,7 +165,7 @@ public class AudioSessionEngineObserver: AudioEngineObserver, Loggable, @uncheck
                 try configureIfNeeded(oldState: oldState, newState: $0)
             } catch {
                 $0 = oldState
-                throw LiveKitError(.audioSession, message: "Failed to configure audio session")
+                throw TransportError(.audioSession, message: "Failed to configure audio session")
             }
         }
     }

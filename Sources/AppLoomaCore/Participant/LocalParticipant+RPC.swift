@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public extension LocalParticipant {
         do {
             try await room.registerRpcMethod(method, handler: handler)
         } catch {
-            guard let error = error as? LiveKitError,
+            guard let error = error as? TransportError,
                   let message = error.message else { return }
             log("\(message)", .error)
         }

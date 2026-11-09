@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 LiveKit
+ * Copyright 2026 the transport
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import Foundation
 /// Apple's Compression framework has no gzip container: `COMPRESSION_ZLIB`
 /// produces a raw DEFLATE stream ([RFC 1951](https://datatracker.ietf.org/doc/html/rfc1951))
 /// with no header, checksum or length trailer. This wraps that stream in the
-/// gzip framing the LiveKit server expects, rather than linking zlib just for
+/// gzip framing the media server expects, rather than linking zlib just for
 /// its container.
 enum Gzip {
     /// Fixed 10-byte gzip header: magic, DEFLATE method, no flags, no mtime,

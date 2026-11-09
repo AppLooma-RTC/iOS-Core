@@ -1,6 +1,6 @@
 /*
- * LiveKit configuration for the vendored nanopb runtime. Included from pb.h's
- * marked LiveKit block — the only modification to that upstream file — so
+ * the transport configuration for the vendored nanopb runtime. Included from pb.h's
+ * marked the transport block — the only modification to that upstream file — so
  * every translation unit (runtime .c, generated .c, and the Swift importer)
  * sees the same configuration.
  *
