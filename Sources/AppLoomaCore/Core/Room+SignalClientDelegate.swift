@@ -274,7 +274,7 @@ extension Room: SignalClientDelegate {
                 }
 
                 if info.state == .disconnected {
-                    $0.remoteParticipants[infoIdentity]?.lastDisconnectReason = info.disconnectReason
+                    $0.remoteParticipants[infoIdentity]?.lastDisconnectReasonCode = Int(info.disconnectReason.rawValue)
                     // when it's disconnected, send updates
                     disconnectedParticipantIdentities.append(infoIdentity)
                 } else {

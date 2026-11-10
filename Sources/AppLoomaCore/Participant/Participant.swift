@@ -41,8 +41,8 @@ public class Participant: NSObject, @unchecked Sendable, ObservableObject, Logga
     public var lastSpokeAt: Date? { _state.lastSpokeAt }
 
     public var metadata: String? { _state.metadata }
-    /// The server's reason for this participant's disconnect, set just before the disconnect callback.
-    public internal(set) var lastDisconnectReason: Applooma_DisconnectReason?
+    /// The server's reason for this participant's disconnect (protocol code), set just before the disconnect callback.
+    public internal(set) var lastDisconnectReasonCode: Int?
 
     public var attributes: [String: String] { _state.attributes }
 
